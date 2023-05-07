@@ -1,5 +1,5 @@
 {
-  "name": "loadbalancer",
+  "name": "loadbalancerjs",
   "version": "1.0.0",
   "description": "A simple threaded and clustered load balancer for nodejs",
   "main": "index.js",
