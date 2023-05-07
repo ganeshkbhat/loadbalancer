@@ -16,7 +16,7 @@
 
 'use strict';
 
-import { default as loader, loadbalancer, serverutils } from "./index.js";
+import { default as balancer, loadbalancer, serverutils } from "./index.js";
 
-export default loader;
+export default balancer;
 export { loadbalancer, serverutils };
