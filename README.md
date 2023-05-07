@@ -1,5 +1,5 @@
 # loadbalancer
-A simple threaded and clustered load balancer for nodejs
+A simple threaded and clustered load balancer for nodejs with different forwarding algorithms and server request handling options
 
 ### DO NOT INSTALL - IN DEVELOPMENT
 

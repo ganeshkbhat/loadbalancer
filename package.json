@@ -1,7 +1,7 @@
 {
   "name": "loadbalancerjs",
   "version": "1.0.0",
-  "description": "A simple threaded and clustered load balancer for nodejs",
+  "description": "A simple threaded and clustered load balancer for nodejs with different forwarding algorithms and server request handling options",
   "main": "index.js",
   "exports": {
     "require": "./index.js",
