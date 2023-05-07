@@ -80,5 +80,5 @@ function loader(pools) {
     }
 }
 
-loadingAlgorithms(["127.0.0.1:8000"]);
+// loadingAlgorithms(["127.0.0.1:8000"]);
 
