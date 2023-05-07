@@ -392,8 +392,14 @@ function websocket(server, port, callbacks, options) {
 }
 
 
+function sqlKvStore() {
+
+}
+
 module.exports.server = server;
 module.exports.proxy = proxy;
 module.exports.websocket_secure = websocket_secure;
 module.exports.websocket = websocket;
 module.exports.createProxy = createProxy;
+module.exports.sqlKvStore = sqlKvStore;
+
