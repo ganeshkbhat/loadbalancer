@@ -1,5 +1,6 @@
 {
     "protocol": "",
+    "createCerts": true,
     "host": "localhost",
     "proxy": {
         "proxy": true,
