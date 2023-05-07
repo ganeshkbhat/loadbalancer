@@ -1,0 +1,30 @@
+{
+  "name": "loadbalancer",
+  "version": "1.0.0",
+  "description": "A simple threaded and clustered load balancer for nodejs",
+  "main": "index.js",
+  "exports": {
+    "require": "./index.js",
+    "import": "./index.mjs"
+  },
+  "directories": {
+    "test": "test",
+    "lib": "./src/**"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "express": "^4.18.2",
+    "mocha": "^10.2.0",
+    "sinon": "^15.0.4"
+  },
+  "dependencies": {
+    "hasher-apis": "^0.2.7",
+    "noserve": "^1.1.0"
+  }
+}

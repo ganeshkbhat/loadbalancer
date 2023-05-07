@@ -1,0 +1,13 @@
+{
+    "protocol": "",
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "target": "localhost",
+        "host": 7000
+    },
+    "port": 8080,
+    "ws": true,
+    "mainProcessCallback": null,
+    "forkCallback": null
+}
