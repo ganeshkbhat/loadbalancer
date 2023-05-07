@@ -392,7 +392,7 @@ function websocket(server, port, callbacks, options) {
 }
 
 
-function sqlKvStore() {
+function sqlKvStore(filepath, tablename) {
 
 }
 
