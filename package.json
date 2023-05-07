@@ -15,8 +15,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Ganesh B <ganeshsurfs@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^4.3.7",
     "express": "^4.18.2",
