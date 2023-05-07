@@ -15,3 +15,8 @@
 /* eslint no-console: 0 */
 
 'use strict';
+
+import { default as loader, loadbalancer, serverutils } from "./index.js";
+
+export default loader;
+export { loadbalancer, serverutils };

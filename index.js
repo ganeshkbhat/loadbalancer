@@ -17,6 +17,13 @@
 'use strict';
 
 const { loadbalancer, threadingMultiple, threading } = require("./src/loadbalancer");
+const { server, proxy, websocket_secure, websocket, createProxy, sqlKvStore } = require("./src/serverutils");
 
-module.exports = { loadbalancer, threadingMultiple, threading };
 
+module.exports.loadbalancer = { loadbalancer, threadingMultiple, threading };
+module.exports.serverutils = { server, proxy, websocket_secure, websocket, createProxy, sqlKvStore };
+
+module.exports.default = {
+    loadbalancer, threadingMultiple, threading,
+    server, proxy, websocket_secure, websocket, createProxy, sqlKvStore
+}
