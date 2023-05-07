@@ -15,3 +15,14 @@
 /* eslint no-console: 0 */
 
 'use strict';
+
+
+function generateCertificates() {
+
+    return {
+        publicKey,
+        privateKey
+    }
+}
+
+module.exports.generateCertificates = generateCertificates;
