@@ -86,6 +86,9 @@ function proxy(serverOptions, callbacks) {
  * @param {*} hostname
  * @param {*} port
  * @param {*} certs
+ * 
+ * Credit: https://stackoverflow.com/a/32104777/3204942
+ * 
  */
 function createProxy(protocol, hostname, port, certs) {
     const net = require('net');
