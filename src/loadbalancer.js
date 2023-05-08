@@ -58,23 +58,23 @@ function threadingMultiple(serverOptions, workerFunctions) {
     threadingMultiple(serverOptions?.threads - 1, workerFunctions.slice(1)); // recursive call with remaining functions
 
     // // Example usage
-    // threadingMultiple(3, [
+    // threadingMultiple(serverOptions, [
     //     () => {
-    //     // This is the worker function that will run in the first thread
-    //     console.log(`Worker thread ${worker.threadId} started`);
-    //     setInterval(() => {
-    //         worker.postMessage(`Hello from thread ${worker.threadId}`);
-    //     }, 1000);
+    //          // This is the worker function that will run in the first thread
+    //          console.log(`Worker thread ${worker.threadId} started`);
+    //          setInterval(() => {
+    //              worker.postMessage(`Hello from thread ${worker.threadId}`);
+    //          }, 1000);
     //     },
     //     () => {
-    //     // This is the worker function that will run in the second thread
-    //     console.log(`Worker thread ${worker.threadId} started`);
-    //     // ...
+    //          // This is the worker function that will run in the second thread
+    //          console.log(`Worker thread ${worker.threadId} started`);
+    //          // ...
     //     },
     //     () => {
-    //     // This is the worker function that will run in the third thread
-    //     console.log(`Worker thread ${worker.threadId} started`);
-    //     // ...
+    //          // This is the worker function that will run in the third thread
+    //          console.log(`Worker thread ${worker.threadId} started`);
+    //          // ...
     //     }
     // ]);
 }
@@ -136,9 +136,24 @@ function threading(serverOptions, workerFunction) {
 /**
  *
  *
- * @param {*} size
- * @param {boolean} [proxy=true]
- * @param {string} [serverOptions = { protocol: "", createCerts: true, host: "localhost", proxy: { proxy: true, target: "localhost", host: 7000 }, port: 8080, ws: true, mainProcessCallback: () => { }, forkCallback: () => { } }]
+ * @param {string} serverOptions
+ * Default value: {
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "target": "localhost",
+            "host": 7000
+        },
+        "port": 8080,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { }
+    }
  */
 function loadbalancer(serverOptions) {
     serverOptions = serverOptions || {
@@ -166,21 +181,15 @@ function loadbalancer(serverOptions) {
 
     // cluster.js
     if (cluster.isMaster) {
-        const cpus = serverOptions?.size || os.cpus().length;
+        const cpus = serverOptions?.processes || os.cpus().length;
         // console.log(`Forking for ${cpus} CPUs`);
 
         for (let i = 0; i < cpus; i++) {
             cluster.fork();
         }
 
-        // const numberOfProcesses = function (cpus) {
-        //     this.count = cpus;
-        //     return this.count;
-        // }
-
         // Right after the fork loop within the isMaster=true block
         const updateWorkers = (cpus) => {
-            // const usersCount = numberOfProcesses(cpus);
             const usersCount = cpus;
             Object.values(cluster.workers).forEach(worker => {
                 worker.send({ usersCount });
