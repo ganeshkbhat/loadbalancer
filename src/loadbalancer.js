@@ -42,7 +42,11 @@ function threadingMultiple(serverOptions, workerFunctions) {
         "processes": 5,
         "threads": 10,
         "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { }
+        "forkCallback": (opts, pr) => { },
+        "callbacks": { 
+            "server": null, 
+            "listen": null 
+        }
     }
 
     if (serverOptions?.threads <= 0) return; // base case: stop recursion when n is 0 or negative
@@ -109,7 +113,11 @@ function threading(serverOptions, workerFunction) {
         "processes": 5,
         "threads": 10,
         "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { }
+        "forkCallback": (opts, pr) => { },
+        "callbacks": { 
+            "server": null, 
+            "listen": null 
+        }
     }
 
     // base case: stop recursion when n is 0 or negative
@@ -169,7 +177,11 @@ function threading(serverOptions, workerFunction) {
         "processes": 5,
         "threads": 10,
         "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { }
+        "forkCallback": (opts, pr) => { },
+        "callbacks": { 
+            "server": null, 
+            "listen": null 
+        }
     }
  */
 function loadbalancer(serverOptions) {
@@ -193,7 +205,11 @@ function loadbalancer(serverOptions) {
         "processes": 5,
         "threads": 10,
         "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { }
+        "forkCallback": (opts, pr) => { },
+        "callbacks": { 
+            "server": null, 
+            "listen": null 
+        }
     }
 
     const cluster = require('cluster');
