@@ -30,8 +30,8 @@ function server(serverOptions, callback = (req, res) => { res.end(`Handled by pr
     const http = require(serverOptions?.protocol || 'http');
     const pid = process.pid;
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
-        key: fs.readFileSync(serverOptions.key || './certs/ssl.key'),
-        cert: fs.readFileSync(serverOptions.cert || './certs/ssl.cert')
+        key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
+        cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
     }, callback);
 
     srv.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
@@ -176,15 +176,28 @@ function createProxy(protocol, hostname, port, certs) {
 }
 
 
-function websocket_secure(server, port, keys, callbacks, options) {
+function websocket_secure(serverOptions, callbacks = {}, options = {}) {
     const fs = require('fs');
     const https = require('https');
     const crypto = require('crypto');
 
-    const srv = https.createServer({
-        key: fs.readFileSync(key.key || '../certs/ssl.key'),
-        cert: fs.readFileSync(key.cert || '../certs/ssl.cert')
-    });
+    serverOptions = serverOptions || {
+        server: server,
+        host: host,
+        port: port,
+        keys: {
+            key: './certs/ssl.key',
+            cert: './certs/ssl.cert'
+        }
+    }
+
+    const srv = (!server) ? https.createServer({
+        key: fs.readFileSync(serverOptions.keys.key),
+        cert: fs.readFileSync(serverOptions.keys.cert)
+    }) : https.createServer({
+        key: fs.readFileSync(serverOptions.keys.key),
+        cert: fs.readFileSync(serverOptions.keys.cert)
+    }, serverOptions.server);
 
     const connections = new Set();
 
@@ -282,16 +295,27 @@ function websocket_secure(server, port, keys, callbacks, options) {
     }
 
     srv.on('upgrade', callbacks["upgrade"]);
-    srv.listen(port, callbacks["listen"]);
+    srv.listen(serverOptions?.port, serverOptions?.host, callbacks["listen"]);
     return srv;
 }
 
 
-function websocket(server, port, callbacks, options) {
+function websocket(serverOptions, callbacks = {}, options = {}) {
+
+    serverOptions = serverOptions || {
+        server: server,
+        host: host,
+        port: port,
+        keys: {
+            key: './certs/ssl.key',
+            cert: './certs/ssl.cert'
+        }
+    }
+
     const http = require('http');
     const crypto = require('crypto');
 
-    const srv = http.createServer();
+    const srv = (!server) ? http.createServer() : http.createServer(serverOptions?.server);
     const connections = new Set();
 
     if (!callbacks) {
@@ -387,8 +411,8 @@ function websocket(server, port, callbacks, options) {
         }
     }
 
-    srv.on('upgrade', callbacks["upgrade"]);
-    srv.listen(port, callbacks["listen"]);
+    srv.on('upgrade', callbacks["upgrade"] || function () { console.log("Test") });
+    srv.listen(serverOptions?.port, serverOptions?.host, callbacks["listen"]);
     return srv;
 }
 

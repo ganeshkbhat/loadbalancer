@@ -1,8 +1,8 @@
 
 var loadbalancer = require("../index").loadbalancer;
-var server = require("../index").serverutils.server;
+var websocket = require("../index").serverutils.websocket_secure;
 
-loadbalancer.loadbalancer(5, {
+loadbalancer.loadbalancer({
     "protocol": "http",
     "createCerts": true,
     "host": "localhost",
@@ -19,9 +19,9 @@ loadbalancer.loadbalancer(5, {
 
     },
     "forkCallback": (opts, pr) => {
-        // console.log(opts, pr)
-        // console.log(opts)
-        server(opts)
+        // console.log(opts, pr);
+        // console.log(opts);
+        websocket(opts);
     }
 })
 

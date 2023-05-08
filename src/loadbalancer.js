@@ -104,6 +104,7 @@ function threading(size, workerFunction, serverOptions) {
  */
 function loadbalancer(serverOptions) {
     serverOptions = serverOptions || {
+        "server": null,
         "protocol": "",
         "createCerts": true,
         "host": "localhost",

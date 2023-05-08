@@ -1,0 +1,30 @@
+
+var loadbalancer = require("../index").loadbalancer;
+var websocket = require("../index").serverutils.websocket;
+var server = require("./server");
+
+loadbalancer.loadbalancer({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "target": "localhost",
+        "host": 7000
+    },
+    "port": 8080,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => {
+
+    },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        websocket(opts);
+    }
+})
+
+
