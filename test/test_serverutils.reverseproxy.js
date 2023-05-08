@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const http = require('http');
-const createReverseProxy = require('../index').serverutils;
+const createReverseProxy = require('../index').serverutils.createReverseProxy;
 
 describe('reverse proxy', () => {
     let proxyServer, targetServer, requestSpy;
