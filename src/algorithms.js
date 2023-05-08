@@ -111,10 +111,9 @@ function closeConnections(pools, index) {
 /**
  *
  *
- * @param {*} pools
  * @return {*} 
  */
-function weighted(pools) {
+function weighted() {
     this.pools = sortPoolsByKeys(this.pools, "currentWeight", "weight", "desc");
     this.pools[0].open = this.pools[0].open + 1;
     this.pools[0].requests = this.pools[0].requests + 1;
