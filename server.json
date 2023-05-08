@@ -1,5 +1,6 @@
 {
-    "protocol": "",
+    "server": null,
+    "protocol": "http",
     "createCerts": true,
     "host": "localhost",
     "proxy": {
@@ -7,8 +8,14 @@
         "target": "localhost",
         "host": 7000
     },
+    "keys": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
     "port": 8080,
     "ws": true,
+    "processes": 5,
+    "threads": 10,
     "mainProcessCallback": null,
     "forkCallback": null
 }
