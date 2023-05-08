@@ -156,7 +156,7 @@ function reverseProxy(serverOptions) {
  * Credit: https://stackoverflow.com/a/32104777/3204942
  * 
  */
-function createProxy(protocol, hostname, port, certs) {
+function createNetProxy(protocol, hostname, port, certs) {
     const net = require('net');
     const url = require('url');
     hostname = hostname || "127.0.0.1";
@@ -253,12 +253,13 @@ function websocket_secure(serverOptions, callbacks = { "upgrade": () => { consol
         "host": "localhost",
         "proxy": {
             "proxy": true,
-            "target": "localhost",
-            "host": 7000
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000
         },
         "keys": {
-            "key": './certs/ssl.key',
-            "cert": './certs/ssl.cert'
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
         },
         "port": 8080,
         "ws": true,
@@ -386,12 +387,13 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
         "host": "localhost",
         "proxy": {
             "proxy": true,
-            "target": "localhost",
-            "host": 7000
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000
         },
         "keys": {
-            "key": './certs/ssl.key',
-            "cert": './certs/ssl.cert'
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
         },
         "port": 8080,
         "ws": true,
@@ -515,6 +517,6 @@ module.exports.serverProxy = serverProxy;
 module.exports.reverseProxy = reverseProxy;
 module.exports.websocket_secure = websocket_secure;
 module.exports.websocket = websocket;
-module.exports.createProxy = createProxy;
+module.exports.createNetProxy = createNetProxy;
 module.exports.sqlKvStore = sqlKvStore;
 
