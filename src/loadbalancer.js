@@ -16,10 +16,30 @@
 
 'use strict';
 
-function threadingMultiple(size, workerFunction, serverOptions) {
+const { ServerResponse } = require('http');
+
+function threadingMultiple(serverOptions, workerFunctions) {
     const { Worker } = require('worker_threads');
 
-    if (size <= 0) return; // base case: stop recursion when n is 0 or negative
+    serverOptions = serverOptions || {
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "target": "localhost",
+            "host": 7000
+        },
+        "port": 8080,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { }
+    }
+
+    if (serverOptions?.threads <= 0) return; // base case: stop recursion when n is 0 or negative
 
     const worker = new Worker(workerFunctions[0]);
 
@@ -35,7 +55,7 @@ function threadingMultiple(size, workerFunction, serverOptions) {
         console.log(`Thread ${worker.threadId} exited with code ${code}`);
     });
 
-    threadingMultiple(size - 1, workerFunctions.slice(1)); // recursive call with remaining functions
+    threadingMultiple(serverOptions?.threads - 1, workerFunctions.slice(1)); // recursive call with remaining functions
 
     // // Example usage
     // threadingMultiple(3, [
@@ -59,11 +79,29 @@ function threadingMultiple(size, workerFunction, serverOptions) {
     // ]);
 }
 
-function threading(size, workerFunction, serverOptions) {
+function threading(serverOptions, workerFunction) {
     const { Worker } = require('worker_threads');
 
+    serverOptions = serverOptions || {
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "target": "localhost",
+            "host": 7000
+        },
+        "port": 8080,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { }
+    }
+
     // base case: stop recursion when n is 0 or negative
-    if (size <= 0) {
+    if (serverOptions?.threads <= 0) {
         // worker.postMessage(serverOptions)
         return;
     };
@@ -82,7 +120,7 @@ function threading(size, workerFunction, serverOptions) {
         console.log(`Thread ${worker.threadId} exited with code ${code}`);
     });
 
-    threading(size - 1, workerFunction); // recursive call
+    threading(serverOptions?.threads - 1, workerFunction); // recursive call
 
     // // USAGE
     // // Example usage
@@ -105,7 +143,7 @@ function threading(size, workerFunction, serverOptions) {
 function loadbalancer(serverOptions) {
     serverOptions = serverOptions || {
         "server": null,
-        "protocol": "",
+        "protocol": "http",
         "createCerts": true,
         "host": "localhost",
         "proxy": {
@@ -115,8 +153,10 @@ function loadbalancer(serverOptions) {
         },
         "port": 8080,
         "ws": true,
+        "processes": 5,
+        "threads": 10,
         "mainProcessCallback": () => { },
-        "forkCallback": () => { }
+        "forkCallback": (opts, pr) => { }
     }
 
     this.count = 0;

@@ -3,6 +3,7 @@ var loadbalancer = require("../index").loadbalancer;
 var server = require("../index").serverutils.server;
 
 loadbalancer.loadbalancer({
+    "server": null,
     "protocol": "http",
     "createCerts": true,
     "host": "localhost",
