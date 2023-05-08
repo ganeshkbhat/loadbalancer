@@ -29,13 +29,13 @@ function server(serverOptions, callback = (req, res) => { res.end(`Handled by pr
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
     const pid = process.pid;
-    let server = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
+    let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
         key: fs.readFileSync(serverOptions.key || './certs/ssl.key'),
         cert: fs.readFileSync(serverOptions.cert || './certs/ssl.cert')
     }, callback);
 
-    server.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
-    return server;
+    srv.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
+    return srv;
 }
 
 
