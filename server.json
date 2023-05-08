@@ -9,7 +9,7 @@
         "host": "localhost",
         "port": 7000,
         "proxyHost": "localhost",
-        "proxyPort": 7000
+        "proxyPort": 9000
     },
     "keys": {
         "key": "./certs/ssl.key",
