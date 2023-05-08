@@ -5,8 +5,9 @@
     "host": "localhost",
     "proxy": {
         "proxy": true,
-        "target": "localhost",
-        "host": 7000
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000
     },
     "keys": {
         "key": "./certs/ssl.key",

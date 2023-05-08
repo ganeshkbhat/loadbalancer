@@ -18,6 +18,7 @@
 
 const { ServerResponse } = require('http');
 
+
 function threadingMultiple(serverOptions, workerFunctions) {
     const { Worker } = require('worker_threads');
 
@@ -28,12 +29,13 @@ function threadingMultiple(serverOptions, workerFunctions) {
         "host": "localhost",
         "proxy": {
             "proxy": true,
-            "target": "localhost",
-            "host": 7000
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000
         },
         "keys": {
-            "key": './certs/ssl.key',
-            "cert": './certs/ssl.cert'
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
         },
         "port": 8080,
         "ws": true,
@@ -83,6 +85,7 @@ function threadingMultiple(serverOptions, workerFunctions) {
     // ]);
 }
 
+
 function threading(serverOptions, workerFunction) {
     const { Worker } = require('worker_threads');
 
@@ -93,8 +96,13 @@ function threading(serverOptions, workerFunction) {
         "host": "localhost",
         "proxy": {
             "proxy": true,
-            "target": "localhost",
-            "host": 7000
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000
+        },
+        "keys": {
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
         },
         "port": 8080,
         "ws": true,
@@ -148,8 +156,13 @@ function threading(serverOptions, workerFunction) {
         "host": "localhost",
         "proxy": {
             "proxy": true,
-            "target": "localhost",
-            "host": 7000
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000
+        },
+        "keys": {
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
         },
         "port": 8080,
         "ws": true,
@@ -167,8 +180,13 @@ function loadbalancer(serverOptions) {
         "host": "localhost",
         "proxy": {
             "proxy": true,
-            "target": "localhost",
-            "host": 7000
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000
+        },
+        "keys": {
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
         },
         "port": 8080,
         "ws": true,
@@ -177,8 +195,6 @@ function loadbalancer(serverOptions) {
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { }
     }
-
-    this.count = 0;
 
     const cluster = require('cluster');
     const os = require('os');
@@ -225,6 +241,7 @@ function loadbalancer(serverOptions) {
         }
     }
 }
+
 
 module.exports.loadbalancer = loadbalancer;
 module.exports.threading = threading;

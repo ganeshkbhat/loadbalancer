@@ -1,6 +1,6 @@
 
 var loadbalancer = require("../index").loadbalancer;
-var websocket = require("../index").serverutils.websocket;
+var reverseProxy = require("../index").serverutils.reverseProxy;
 var server = require("./server");
 
 loadbalancer.loadbalancer({
@@ -27,7 +27,7 @@ loadbalancer.loadbalancer({
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        websocket(opts);
+        reverseProxy(opts);
     }
 })
 

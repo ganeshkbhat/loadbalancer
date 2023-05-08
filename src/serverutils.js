@@ -25,9 +25,13 @@
  * @param {string} [listencallback=() => { console.log('Started process ' + port); }]
  * @return {*} 
  */
-function server(serverOptions, callback = (req, res) => { res.end(`Handled by process ${pid}`); }, listencallback = () => { console.log('Started process ' + serverOptions?.port); }) {
+function server(serverOptions, callback, listencallback) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
+
+    callback = (req, res) => { res.end(`Handled by process ${pid}`); }
+    listencallback = () => { console.log('Started process ' + serverOptions?.port); }
+
     const pid = process.pid;
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
         key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
@@ -43,39 +47,100 @@ function server(serverOptions, callback = (req, res) => { res.end(`Handled by pr
  *
  *
  * @param {*} serverOptions
+ * @param {string} [callback=(req, res) => { res.end(`Handled by process ${pid}`); }]
+ * @param {string} [listencallback=() => { console.log('Started process ' + port); }]
+ * @return {*} 
  */
-function proxy(serverOptions, callbacks) {
-    const { targetHost, targetPort, port, protocol } = serverOptions;
+function serverProxy(serverOptions, callback, listencallback) {
+    const fs = require("fs");
+    const http = require(serverOptions?.protocol || 'http');
+
+    callback = (req, res) => {
+        const options = {
+            hostname: serverOptions?.proxy?.host,
+            port: serverOptions?.proxy?.port,
+            path: req.url,
+            method: req.method,
+            headers: req.headers
+        };
+
+        const proxyReq = https.request(options, (proxyRes) => {
+            res.writeHead(proxyRes.statusCode, proxyRes.headers);
+            proxyRes.pipe(res);
+        });
+
+        req.pipe(proxyReq);
+
+        proxyReq.on('error', (err) => {
+            console.error(err);
+            res.statusCode = 502;
+            res.end('Bad gateway');
+        });
+    }
+
+    listencallback = () => { console.log(`Proxy server listening on port ${serverOptions?.port}`); }
+
+    const pid = process.pid;
+    let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
+        key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
+        cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
+    }, (!!serverOptions?.server) ? serverOptions?.server : callback);
+
+    srv.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
+    return srv;
+}
+
+/**
+ *
+ *
+ * @param {*} serverOptions
+ */
+function reverseProxy(serverOptions) {
+    const { proxy, host, port, protocol } = serverOptions?.proxy;
     const http = require(protocol || 'http');
     const pid = process.pid;
-
-    // const targetHost = 'example.com'; // the host you want to proxy
-    // const targetPort = 80; // the port of the target host
 
     if (!callback) {
         if (!callback["server"]) {
             callback["server"] = (req, res) => {
-                const proxyReq = http.request({
-                    hostname: targetHost,
-                    port: targetPort,
+                const options = {
+                    hostname: serverOptions?.proxy?.host,
+                    port: serverOptions?.proxy?.port,
                     path: req.url,
                     method: req.method,
-                    headers: req.headers,
-                }, (proxyRes) => {
+                    headers: req.headers
+                };
+
+                const proxyReq = https.request(options, (proxyRes) => {
                     res.writeHead(proxyRes.statusCode, proxyRes.headers);
                     proxyRes.pipe(res);
                 });
+
                 req.pipe(proxyReq);
+
+                proxyReq.on('error', (err) => {
+                    console.error(err);
+                    res.statusCode = 502;
+                    res.end('Bad gateway');
+                });
             }
         }
 
         if (!callback["listen"]) {
-            callback["listen"] = () => { console.log('Proxy server listening on port 8080'); }
+            callback["listen"] = () => { console.log(`Proxy server listening on port ${serverOptions?.port}`); }
         }
     }
 
-    const srv = http.createServer(callback["server"]);
-    srv.listen(port, callback["listen"]);
+    let srv;
+    if (protocol === "https") {
+        srv = http.createServer({
+            key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
+            cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
+        }, callback["server"]);
+    } else {
+        srv = http.createServer(callback["server"]);
+    }
+    srv.listen(serverOptions?.port, serverOptions?.host, callback["listen"]);
     return srv;
 }
 
@@ -96,7 +161,7 @@ function createProxy(protocol, hostname, port, certs) {
     const url = require('url');
     hostname = hostname || "127.0.0.1";
     port = port || process.env.PORT || 9191;
-    const http = require(protocol || (!!certs?.cert && !!certs?.key) ? "https" : "http");
+    const http = require(!!protocol || (!!certs?.cert && !!certs?.key) ? "https" : "http");
 
     const requestHandler = (req, res) => { // discard all request to proxy server except HTTP/1.1 CONNECT method
         res.writeHead(405, { 'Content-Type': 'text/plain' })
@@ -446,7 +511,8 @@ function sqlKvStore(filepath, tablename) {
 }
 
 module.exports.server = server;
-module.exports.proxy = proxy;
+module.exports.serverProxy = serverProxy;
+module.exports.reverseProxy = reverseProxy;
 module.exports.websocket_secure = websocket_secure;
 module.exports.websocket = websocket;
 module.exports.createProxy = createProxy;
