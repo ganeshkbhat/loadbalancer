@@ -99,7 +99,7 @@ function reverseProxy(serverOptions) {
     const { proxy, host, port, protocol } = serverOptions?.proxy;
     const http = require(protocol || 'http');
     const pid = process.pid;
-    let callback = { "server": null, "listen": null };
+    let callback = serverOptions.callback || { "server": null, "listen": null };
     
     if (!!callback) {
         if (!callback["server"]) {
@@ -267,7 +267,11 @@ function websocket_secure(serverOptions, callbacks = { "upgrade": () => { consol
         "processes": 5,
         "threads": 10,
         "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { }
+        "forkCallback": (opts, pr) => { },
+        "callbacks": { 
+            "server": null, 
+            "listen": null 
+        }
     }
 
     const srv = (!server) ? https.createServer({
@@ -401,7 +405,11 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
         "processes": 5,
         "threads": 10,
         "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { }
+        "forkCallback": (opts, pr) => { },
+        "callbacks": { 
+            "server": null, 
+            "listen": null 
+        }
     }
 
     const http = require('http');

@@ -18,5 +18,9 @@
     "processes": 5,
     "threads": 10,
     "mainProcessCallback": null,
-    "forkCallback": null
+    "forkCallback": null,
+    "callbacks": { 
+        "server": null, 
+        "listen": null 
+    }
 }
