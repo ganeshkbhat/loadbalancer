@@ -102,8 +102,7 @@ function threading(size, workerFunction, serverOptions) {
  * @param {boolean} [proxy=true]
  * @param {string} [serverOptions = { protocol: "", createCerts: true, host: "localhost", proxy: { proxy: true, target: "localhost", host: 7000 }, port: 8080, ws: true, mainProcessCallback: () => { }, forkCallback: () => { } }]
  */
-function loadbalancer(size, serverOptions) {
-
+function loadbalancer(serverOptions) {
     serverOptions = serverOptions || {
         "protocol": "",
         "createCerts": true,
@@ -119,32 +118,35 @@ function loadbalancer(size, serverOptions) {
         "forkCallback": () => { }
     }
 
+    this.count = 0;
+
     const cluster = require('cluster');
     const os = require('os');
 
     // cluster.js
     if (cluster.isMaster) {
-        const cpus = size || os.cpus().length;
+        const cpus = serverOptions?.size || os.cpus().length;
         // console.log(`Forking for ${cpus} CPUs`);
 
         for (let i = 0; i < cpus; i++) {
             cluster.fork();
         }
 
-        const numberOfProcesses = function () {
-            this.count = cpus;
-            return this.count;
-        }
+        // const numberOfProcesses = function (cpus) {
+        //     this.count = cpus;
+        //     return this.count;
+        // }
 
         // Right after the fork loop within the isMaster=true block
-        const updateWorkers = () => {
-            const usersCount = numberOfProcesses();
+        const updateWorkers = (cpus) => {
+            // const usersCount = numberOfProcesses(cpus);
+            const usersCount = cpus;
             Object.values(cluster.workers).forEach(worker => {
                 worker.send({ usersCount });
             });
         };
 
-        updateWorkers();
+        updateWorkers(cpus);
         setInterval(updateWorkers, 10000);
 
         cluster.on('exit', (worker, code, signal) => {
@@ -162,7 +164,6 @@ function loadbalancer(size, serverOptions) {
             serverOptions.mainProcessCallback(serverOptions);
         }
     } else {
-        serverOptions = serverOptions || require("../server.json");
         if (!!serverOptions?.forkCallback) {
             serverOptions.forkCallback(serverOptions, process);
         } else {

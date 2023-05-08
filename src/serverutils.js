@@ -25,15 +25,16 @@
  * @param {string} [listencallback=() => { console.log('Started process ' + port); }]
  * @return {*} 
  */
-function server(serverOptions, callback = (req, res) => { res.end(`Handled by process ${pid}`); }, listencallback = () => { console.log('Started process ' + port); }) {
+function server(serverOptions, callback = (req, res) => { res.end(`Handled by process ${pid}`); }, listencallback = () => { console.log('Started process ' + serverOptions?.port); }) {
+    const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
     const pid = process.pid;
-    let server = (!serverOptions?.protocol === "https") ? http.createServer(callback) : https.createServer({
-        key: fs.readFileSync(key.key || '../certs/ssl.key'),
-        cert: fs.readFileSync(key.cert || '../certs/ssl.cert')
+    let server = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
+        key: fs.readFileSync(serverOptions.key || './certs/ssl.key'),
+        cert: fs.readFileSync(serverOptions.cert || './certs/ssl.cert')
     }, callback);
 
-    server.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, port));
+    server.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
     return server;
 }
 
@@ -73,9 +74,9 @@ function proxy(serverOptions, callbacks) {
         }
     }
 
-    const server = http.createServer(callback["server"]);
-    server.listen(port, callback["listen"]);
-    return server;
+    const srv = http.createServer(callback["server"]);
+    srv.listen(port, callback["listen"]);
+    return srv;
 }
 
 
@@ -180,7 +181,7 @@ function websocket_secure(server, port, keys, callbacks, options) {
     const https = require('https');
     const crypto = require('crypto');
 
-    const server = https.createServer({
+    const srv = https.createServer({
         key: fs.readFileSync(key.key || '../certs/ssl.key'),
         cert: fs.readFileSync(key.cert || '../certs/ssl.cert')
     });
@@ -280,9 +281,9 @@ function websocket_secure(server, port, keys, callbacks, options) {
         }
     }
 
-    server.on('upgrade', callbacks["upgrade"]);
-    server.listen(port, callbacks["listen"]);
-    return server;
+    srv.on('upgrade', callbacks["upgrade"]);
+    srv.listen(port, callbacks["listen"]);
+    return srv;
 }
 
 
@@ -290,7 +291,7 @@ function websocket(server, port, callbacks, options) {
     const http = require('http');
     const crypto = require('crypto');
 
-    const server = http.createServer();
+    const srv = http.createServer();
     const connections = new Set();
 
     if (!callbacks) {
@@ -386,9 +387,9 @@ function websocket(server, port, callbacks, options) {
         }
     }
 
-    server.on('upgrade', callbacks["upgrade"]);
-    server.listen(port, callbacks["listen"]);
-    return server;
+    srv.on('upgrade', callbacks["upgrade"]);
+    srv.listen(port, callbacks["listen"]);
+    return srv;
 }
 
 
