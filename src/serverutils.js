@@ -32,7 +32,7 @@ function server(serverOptions, callback = (req, res) => { res.end(`Handled by pr
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
         key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
         cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
-    }, callback);
+    }, (!!serverOptions?.server) ? serverOptions?.server : callback);
 
     srv.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
     return srv;
@@ -176,27 +176,39 @@ function createProxy(protocol, hostname, port, certs) {
 }
 
 
-function websocket_secure(serverOptions, callbacks = {}, options = {}) {
+function websocket_secure(serverOptions, callbacks = { "upgrade": () => { console.log("Upgrade Function Invoked"); } }, options = {}) {
     const fs = require('fs');
     const https = require('https');
     const crypto = require('crypto');
 
     serverOptions = serverOptions || {
-        server: server,
-        host: host,
-        port: port,
-        keys: {
-            key: './certs/ssl.key',
-            cert: './certs/ssl.cert'
-        }
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "target": "localhost",
+            "host": 7000
+        },
+        "keys": {
+            "key": './certs/ssl.key',
+            "cert": './certs/ssl.cert'
+        },
+        "port": 8080,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { }
     }
 
     const srv = (!server) ? https.createServer({
-        key: fs.readFileSync(serverOptions.keys.key),
-        cert: fs.readFileSync(serverOptions.keys.cert)
+        key: fs.readFileSync(serverOptions?.keys?.key),
+        cert: fs.readFileSync(serverOptions?.keys?.cert)
     }) : https.createServer({
-        key: fs.readFileSync(serverOptions.keys.key),
-        cert: fs.readFileSync(serverOptions.keys.cert)
+        key: fs.readFileSync(serverOptions?.keys?.key),
+        cert: fs.readFileSync(serverOptions?.keys?.cert)
     }, serverOptions.server);
 
     const connections = new Set();
@@ -303,13 +315,25 @@ function websocket_secure(serverOptions, callbacks = {}, options = {}) {
 function websocket(serverOptions, callbacks = {}, options = {}) {
 
     serverOptions = serverOptions || {
-        server: server,
-        host: host,
-        port: port,
-        keys: {
-            key: './certs/ssl.key',
-            cert: './certs/ssl.cert'
-        }
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "target": "localhost",
+            "host": 7000
+        },
+        "keys": {
+            "key": './certs/ssl.key',
+            "cert": './certs/ssl.cert'
+        },
+        "port": 8080,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { }
     }
 
     const http = require('http');

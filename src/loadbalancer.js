@@ -31,6 +31,10 @@ function threadingMultiple(serverOptions, workerFunctions) {
             "target": "localhost",
             "host": 7000
         },
+        "keys": {
+            "key": './certs/ssl.key',
+            "cert": './certs/ssl.cert'
+        },
         "port": 8080,
         "ws": true,
         "processes": 5,
