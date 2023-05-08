@@ -158,13 +158,13 @@ function loadbalancer(size, serverOptions) {
             worker.send(`Hello Worker ${worker.id}`);
         });
 
-        if (!!serverOptions.mainProcessCallback) {
+        if (!!serverOptions?.mainProcessCallback) {
             serverOptions.mainProcessCallback(serverOptions);
         }
     } else {
         serverOptions = serverOptions || require("../server.json");
-        if (!!serverOptions.forkCallback) {
-            serverOptions.forkCallback(serverOptions, process.pid);
+        if (!!serverOptions?.forkCallback) {
+            serverOptions.forkCallback(serverOptions, process);
         } else {
             throw new Error("No forkCallback specified in serverOptions");
         }
