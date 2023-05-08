@@ -99,8 +99,9 @@ function reverseProxy(serverOptions) {
     const { proxy, host, port, protocol } = serverOptions?.proxy;
     const http = require(protocol || 'http');
     const pid = process.pid;
-
-    if (!callback) {
+    let callback = { "server": null, "listen": null };
+    
+    if (!!callback) {
         if (!callback["server"]) {
             callback["server"] = (req, res) => {
                 const options = {
