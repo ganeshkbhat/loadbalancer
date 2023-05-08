@@ -141,7 +141,7 @@ function reverseProxy(serverOptions) {
     } else {
         srv = http.createServer(callback["server"]);
     }
-    srv.listen(serverOptions?.port, serverOptions?.host, callback["listen"]);
+    srv.listen(serverOptions?.proxy?.targetPort, serverOptions?.proxy?.targetHost, callback["listen"]);
     return srv;
 }
 
