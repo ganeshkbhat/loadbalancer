@@ -100,9 +100,25 @@ function threading(size, workerFunction, serverOptions) {
  *
  * @param {*} size
  * @param {boolean} [proxy=true]
- * @param {string} [serverOptions={ protocol: "", host: "", port: 8080 }]
+ * @param {string} [serverOptions = { protocol: "", createCerts: true, host: "localhost", proxy: { proxy: true, target: "localhost", host: 7000 }, port: 8080, ws: true, mainProcessCallback: () => { }, forkCallback: () => { } }]
  */
-function loadbalancer(size, serverOptions = { protocol: "", host: "localhost", proxy: { proxy: true, target: "localhost", host: 7000 }, port: 8080, ws: true, mainProcessCallback: () => { }, forkCallback: () => { } }) {
+function loadbalancer(size, serverOptions) {
+
+    serverOptions = serverOptions || {
+        "protocol": "",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "target": "localhost",
+            "host": 7000
+        },
+        "port": 8080,
+        "ws": true,
+        "mainProcessCallback": () => { },
+        "forkCallback": () => { }
+    }
+
     const cluster = require('cluster');
     const os = require('os');
 
