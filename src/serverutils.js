@@ -55,7 +55,7 @@ function serverProxy(serverOptions, callback, listencallback) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
 
-    callback = (req, res) => {
+    callback = callback || function (req, res) {
         const options = {
             hostname: serverOptions?.proxy?.host,
             port: serverOptions?.proxy?.port,
@@ -78,7 +78,7 @@ function serverProxy(serverOptions, callback, listencallback) {
         });
     }
 
-    listencallback = () => { console.log(`Proxy server listening on port ${serverOptions?.port}`); }
+    listencallback = listencallback || function () { console.log(`Proxy server listening on port ${serverOptions?.port}`); }
 
     const pid = process.pid;
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
