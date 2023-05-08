@@ -100,7 +100,7 @@ function reverseProxy(serverOptions) {
     const http = require(protocol || 'http');
     const pid = process.pid;
     let callback = serverOptions.callback || { "server": null, "listen": null };
-    
+
     if (!!callback) {
         if (!callback["server"]) {
             callback["server"] = (req, res) => {
@@ -141,7 +141,7 @@ function reverseProxy(serverOptions) {
     } else {
         srv = http.createServer(callback["server"]);
     }
-    srv.listen(serverOptions?.proxy?.targetPort, serverOptions?.proxy?.targetHost, callback["listen"]);
+    srv.listen(serverOptions?.port, serverOptions?.host, callback["listen"]);
     return srv;
 }
 
@@ -256,9 +256,7 @@ function websocket_secure(serverOptions, callbacks = { "upgrade": () => { consol
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000,
-            "proxyHost": "localhost",
-            "proxyPort": 9000
+            "port": 7000
         },
         "keys": {
             "key": "./certs/ssl.key",
@@ -270,9 +268,9 @@ function websocket_secure(serverOptions, callbacks = { "upgrade": () => { consol
         "threads": 10,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
-        "callbacks": { 
-            "server": null, 
-            "listen": null 
+        "callbacks": {
+            "server": null,
+            "listen": null
         }
     }
 
@@ -396,9 +394,7 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000,
-            "proxyHost": "localhost",
-            "proxyPort": 9000
+            "port": 7000
         },
         "keys": {
             "key": "./certs/ssl.key",
@@ -410,9 +406,9 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
         "threads": 10,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
-        "callbacks": { 
-            "server": null, 
-            "listen": null 
+        "callbacks": {
+            "server": null,
+            "listen": null
         }
     }
 
@@ -511,7 +507,7 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
         }
 
         if (!callbacks["listen"]) {
-            callbacks["listen"] = () => { console.log('Listening on http://localhost:8080'); }
+            callbacks["listen"] = () => { console.log(`Listening on ${serverOptions?.host} and on port ${serverOptions?.port}`); }
         }
     }
 
