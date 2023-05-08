@@ -16,8 +16,15 @@
 
 'use strict';
 
+var hashapis = require("hasher-apis");
 
-function generateCertificates() {
+/**
+ *
+ *
+ * @param {*} folderpath
+ * @return {*} 
+ */
+function generateCertificates(folderpath) {
 
     return {
         publicKey,
