@@ -1,18 +1,33 @@
 
-var lb = require("../index");
-
-
+var lb = require("../index").loadbalancer.loadbalancer;
 
 lb.loadbalancer(10, {
-    protocol: "",
-    host: "localhost",
-    proxy: false,
-    port: 8080,
-    ws: true,
+    "server": null,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000
+    },
+    "keys": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8080,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
     mainProcessCallback: (opts) => { },
     forkCallback: function (opts) {
         console.log(arguments[1]);
         require("../demos/server.js");
+    },
+    "callbacks": { 
+        "server": null, 
+        "listen": null 
     }
 })
 

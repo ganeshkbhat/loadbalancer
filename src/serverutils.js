@@ -256,7 +256,9 @@ function websocket_secure(serverOptions, callbacks = { "upgrade": () => { consol
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000
+            "port": 7000,
+            "proxyHost": "localhost",
+            "proxyPort": 9000
         },
         "keys": {
             "key": "./certs/ssl.key",
@@ -394,7 +396,9 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000
+            "port": 7000,
+            "proxyHost": "localhost",
+            "proxyPort": 9000
         },
         "keys": {
             "key": "./certs/ssl.key",
