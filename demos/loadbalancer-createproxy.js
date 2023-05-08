@@ -1,6 +1,23 @@
+/**
+ * 
+ * Package: loadbalancer
+ * Author: Ganesh B
+ * Description: A simple threaded and clustered load balancer for nodejs
+ * Install: npm i loadbalancer --save
+ * Github: https://github.com/ganeshkbhat/loadbalancer
+ * npmjs Link: https://www.npmjs.com/package/loadbalancer
+ * File: demos/loadbalancer-createproxy.js
+ * File Description: A simple threaded and clustered load balancer for nodejs
+ * 
+ * 
+*/
+
+/* eslint no-console: 0 */
+
+'use strict';
 
 var loadbalancer = require("../index").loadbalancer;
-var websocket = require("../index").serverutils.websocket;
+var createNetProxy = require("../index").serverutils.createNetProxy;
 var server = require("./server");
 
 loadbalancer.loadbalancer({
@@ -27,7 +44,7 @@ loadbalancer.loadbalancer({
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        websocket(opts);
+        createNetProxy(opts);
     }
 })
 
