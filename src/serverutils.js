@@ -29,8 +29,8 @@ function server(serverOptions, callback, listencallback) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
 
-    callback = (req, res) => { res.end(`Handled by process ${pid}`); }
-    listencallback = () => { console.log('Started process ' + serverOptions?.port); }
+    callback = callback || function (req, res) { res.end(`Handled by process ${pid}`); }
+    listencallback = listencallback || function () { console.log('Started process ' + serverOptions?.port); }
 
     const pid = process.pid;
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
