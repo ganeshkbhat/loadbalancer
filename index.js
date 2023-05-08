@@ -18,12 +18,18 @@
 
 const { loadbalancer, threadingMultiple, threading } = require("./src/loadbalancer");
 const { server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore } = require("./src/serverutils");
+const { loaderRandom, loaderSequential, loaderSticky, loaderWeighted, loaderSingleMaxload } = require("./src/algorithms");
+const { generateCertificates } = require("./src/certificates");
 
 
 module.exports.loadbalancer = { loadbalancer, threadingMultiple, threading };
 module.exports.serverutils = { server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore };
+module.exports.algorithms = { loaderRandom, loaderSequential, loaderSticky, loaderWeighted, loaderSingleMaxload };
+module.exports.certificates = { generateCertificates };
 
 module.exports.default = {
     loadbalancer, threadingMultiple, threading,
-    server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore
+    server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore,
+    loaderRandom, loaderSequential, loaderSticky, loaderWeighted, loaderSingleMaxload,
+    generateCertificates
 }
