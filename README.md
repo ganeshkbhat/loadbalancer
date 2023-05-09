@@ -20,7 +20,9 @@ server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore
 
 ### .algorithms module
 
-randomize, sequential, sticky, weighted, singlemaxload, Randomize, Sequential, Sticky, Weighted, SingleMaxload
+randomize, sequential, sticky, weighted, singlemaxload
+
+Randomize, Sequential, Sticky, Weighted, SingleMaxload
 
 ### .certificates module
 
