@@ -12,7 +12,7 @@ Find the demos in the [demo folder](https://github.com/ganeshkbhat/loadbalancer/
 
 ### .loadbalancer module
 
-loadbalancer, threadingMultiple, threading
+loadbalancer (clustered processes), threadingMultiple, threading
 
 ### .serverutils module
 
