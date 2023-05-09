@@ -129,7 +129,7 @@ function weighted() {
  *
  * @return {*} 
  */
-function random() {
+function randomize() {
     let min = 0, max = pools.length;
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -189,7 +189,7 @@ function singlemaxload() {
         if (algorithm === "sequential") {
             this.lastIndex = this.nextIndex;
             this.nextIndex = this.lastIndex + 1;
-        } else if (algorithm === "random") {
+        } else if (algorithm === "randomize") {
 
         } else if (algorithm === "weighted") {
 
@@ -228,7 +228,7 @@ function Weighted(pools) {
  *
  * @param {*} pools
  */
-function Random(pools) {
+function Randomize(pools) {
     Object.assign(this, poolsInstance(pools));
 
     this.min = 0;
@@ -238,7 +238,7 @@ function Random(pools) {
     this.lastIndex = 0;
     this.nextIndex = 0; // not needed
 
-    this.random = function () { return random() }.bind(this);
+    this.randomize = function () { return randomize() }.bind(this);
 }
 
 /**
@@ -285,7 +285,7 @@ function Sticky(pools) {
  *
  *
  * @param {*} pools
- * @param {string} [algorithm="sequential"] Options: sequential, random, weighted, sticky
+ * @param {string} [algorithm="sequential"] Options: sequential, randomize, weighted, sticky
  */
 function SingleMaxload(pools, algorithm = "sequential") {
     Object.assign(this, poolsInstance(pools));
@@ -308,14 +308,14 @@ module.exports.sortPoolsByKey = sortPoolsByKey;
 module.exports.closeConnections = closeConnections;
 
 
-module.exports.random = random;
+module.exports.randomize = randomize;
 module.exports.sequential = sequential;
 module.exports.sticky = sticky;
 module.exports.seighted = weighted;
 module.exports.singlemaxload = singlemaxload;
 
 
-module.exports.Random = Random;
+module.exports.Randomize = Randomize;
 module.exports.Sequential = Sequential;
 module.exports.Sticky = Sticky;
 module.exports.Weighted = Weighted;

@@ -21,22 +21,22 @@ const { loadbalancer, threadingMultiple, threading } = require("./src/loadbalanc
 const { server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore } = require("./src/serverutils");
 const {
     poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
-    random, sequential, sticky, weighted, singleMaxload,
-    Random, Sequential, Sticky, Weighted, SingleMaxload
+    randomize, sequential, sticky, weighted, singleMaxload,
+    Randomize, Sequential, Sticky, Weighted, SingleMaxload
 } = require("./src/algorithms");
 const { generateCertificates } = require("./src/certificates");
 
 
 module.exports.loadbalancer = { loadbalancer, threadingMultiple, threading };
 module.exports.serverutils = { server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore };
-module.exports.algorithms = { poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections, random, sequential, sticky, weighted, singleMaxload, Random, Sequential, Sticky, Weighted, SingleMaxload };
+module.exports.algorithms = { poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections, randomize, sequential, sticky, weighted, singleMaxload, Random, Sequential, Sticky, Weighted, SingleMaxload };
 module.exports.certificates = { generateCertificates };
 
 module.exports.default = {
     loadbalancer, threadingMultiple, threading,
     server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore,
     poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
-    random, sequential, sticky, weighted, singleMaxload,
+    randomize, sequential, sticky, weighted, singleMaxload,
     Random, Sequential, Sticky, Weighted, SingleMaxload,
     generateCertificates
 }
