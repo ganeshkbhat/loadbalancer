@@ -15,3 +15,12 @@
 /* eslint no-console: 0 */
 
 'use strict';
+
+var loadbalancer = require("../index").loadbalancer;
+var algorithms = require("../index").algorithms;
+
+let wInst = new algorithms.Weighted(["127.0.0.1:8000", "127.0.0.1:8001"]);
+console.log(wInst.pools);
+
+
+

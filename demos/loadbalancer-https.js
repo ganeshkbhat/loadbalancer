@@ -17,11 +17,12 @@
 'use strict';
 
 var loadbalancer = require("../index").loadbalancer;
-var server = require("../index").serverutils.server;
+var createNetProxy = require("../index").serverutils.createNetProxy;
+var server = require("./express-app");
 
 loadbalancer.loadbalancer({
-    "server": null,
-    "protocol": "https",
+    "server": server,
+    "protocol": "http",
     "createCerts": true,
     "host": "localhost",
     "proxy": {
@@ -29,16 +30,20 @@ loadbalancer.loadbalancer({
         "target": "localhost",
         "host": 7000
     },
+    "keys": {
+        "key": './certs/ssl.key',
+        "cert": './certs/ssl.cert'
+    },
     "port": 8080,
     "ws": true,
     "processes": 5,
     "threads": 10,
-    "mainProcessCallback": () => { },
+    "mainProcessCallback": () => {
+
+    },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        server(opts);
+        createNetProxy(opts);
     }
 })
-
-

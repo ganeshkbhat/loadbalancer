@@ -15,3 +15,36 @@
 /* eslint no-console: 0 */
 
 'use strict';
+
+var loadbalancer = require("../index").loadbalancer;
+var createNetProxy = require("../index").serverutils.createNetProxy;
+var server = require("./express-app");
+
+loadbalancer.loadbalancer({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "target": "localhost",
+        "host": 7000
+    },
+    "keys": {
+        "key": './certs/ssl.key',
+        "cert": './certs/ssl.cert'
+    },
+    "port": 8080,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => {
+
+    },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        createNetProxy(opts);
+    }
+})
+
