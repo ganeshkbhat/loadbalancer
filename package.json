@@ -14,6 +14,10 @@
   "scripts": {
     "test": "mocha --reporter spec --recursive  --timeout 60000"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ganeshkbhat/loadbalancer.git"
+  },
   "keywords": [],
   "author": "Ganesh B <ganeshsurfs@gmail.com>",
   "license": "MIT",
