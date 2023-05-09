@@ -34,3 +34,17 @@ console.log("wInst.lastIndex", wInst.lastIndex);
 console.log("wInst.nextIndex", wInst.nextIndex);
 
 
+
+let rInst = new algorithms.Randomize(["127.0.0.1:8000", "127.0.0.1:8001"]);
+
+console.log("rInst.len(): should be 2: ", rInst.pools.length);
+console.log("Adding a new item as an array , ['127.0.0.1:9001']");
+rInst.addPools(["127.0.0.1:9001"]);
+console.log("rInst.len(): should be 3: ", rInst.len());
+console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001"]: ', rInst.pools.length);
+console.log("Adding a new item as an array , ['127.0.0.1:9002']");
+rInst.addPools("127.0.0.1:9002");
+console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001", "127.0.0.1:9002"]: ', rInst.pools);
+console.log("rInst.randomize()", rInst.randomize());
+console.log("rInst.lastIndex", rInst.lastIndex);
+console.log("rInst.nextIndex", rInst.nextIndex);

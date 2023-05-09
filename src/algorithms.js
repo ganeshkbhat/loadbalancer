@@ -234,16 +234,22 @@ function Weighted(pools) {
  * @param {*} pools
  */
 function Randomize(pools) {
-    poolsInstance.call(this, pools);
+    poolsInstance.call(this);
+    this.addPools(pools);
 
     this.min = 0;
-    this.max = this.pools.length;
+    this.max = this.len();
 
     this.count = 0;
     this.lastIndex = 0;
     this.nextIndex = 0; // not needed
 
-    this.randomize = function () { return randomize() }.bind(this);
+    this.randomize = function () {
+        let { result, lastIndex, nextIndex } = randomize(this.pools, this.lastIndex, this.nextIndex);
+        this.lastIndex = lastIndex;
+        this.nextIndex = nextIndex;
+        return result;
+    }.bind(this);
 }
 
 /**
