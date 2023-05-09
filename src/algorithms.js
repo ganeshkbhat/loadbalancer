@@ -23,7 +23,7 @@
  * @return {*} 
  */
 function poolsInstance(pools) {
-    this.pools = (!!pools) ? pools : [];
+    this.pools = [];
     this.addPools = function (pools) {
         if (typeof pools === "string") {
             this.pools.push({ host: pools, weight: 1, max: pools?.max || 1000, requests: 0, total: 0, open: 0, closed: 0, currentWeight: 0 });
@@ -39,7 +39,9 @@ function poolsInstance(pools) {
         } else if (typeof pools === "object") {
             this.pools.push({ host: pools[i]?.host, weight: (!pools[i]?.weight) ? pools[i]?.weight : 1, max: pools?.max || 1000, requests: 0, total: 0, currentWeight: 0 })
         }
-    }
+    }.bind(this);
+
+    this.pools = (!!pools) ? this.addPools(pools) : [];
 
     this.len = () => this.pools.length;
 }
@@ -207,13 +209,13 @@ function singlemaxload() {
  * @param {*} pools
  */
 function Weighted(pools) {
-    poolsInstance.call(this, pools);
-
-    this.min = 0;
-    this.max = this.pools.length;
-
+    poolsInstance.call(this);
+    this.addPools(pools);
     this.pools = sortPoolsByKey(this.pools, "weight", "desc");
 
+    this.min = 0;
+    this.max = this.len(this.pools);
+    
     this.count = 0;
     this.lastIndex = 0;
     this.nextIndex = 1;
