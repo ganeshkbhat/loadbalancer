@@ -29,7 +29,7 @@ const { generateCertificates } = require("./src/certificates");
 
 module.exports.loadbalancer = { loadbalancer, threadingMultiple, threading };
 module.exports.serverutils = { server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore };
-module.exports.algorithms = { poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections, randomize, sequential, sticky, weighted, singleMaxload, Random, Sequential, Sticky, Weighted, SingleMaxload };
+module.exports.algorithms = { poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections, randomize, sequential, sticky, weighted, singleMaxload, Randomize, Sequential, Sticky, Weighted, SingleMaxload };
 module.exports.certificates = { generateCertificates };
 
 module.exports.default = {
@@ -37,7 +37,7 @@ module.exports.default = {
     server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore,
     poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
     randomize, sequential, sticky, weighted, singleMaxload,
-    Random, Sequential, Sticky, Weighted, SingleMaxload,
+    Randomize, Sequential, Sticky, Weighted, SingleMaxload,
     generateCertificates
 }
 
