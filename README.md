@@ -16,7 +16,7 @@ loadbalancer (clustered processes), threadingMultiple, threading
 
 ### .serverutils module
 
-server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore
+server, reverseProxy, createNetProxy, websocket_secure, websocket, sqlKvStore
 
 ### .algorithms module
 
