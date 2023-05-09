@@ -523,8 +523,11 @@ function sqlKvStore(filepath, tablename) {
 
 function clusterMasterCallback(cluster, proc, algorithm) {
 
+    var algorithms = require("./algorithms");
+
     function algorithmCallback(alg, data) {
         const uuid = require("uuid");
+        let results;
         let messageId = uuid.uuidv5();
         if (alg === "all") {
             Object.values(cluster.workers).forEach(worker => {
@@ -533,11 +536,22 @@ function clusterMasterCallback(cluster, proc, algorithm) {
                     message: `Cluster Worker Messaging: ${worker.id}: ${messageId}`
                 });
             });
+        } else if (alg === "randomize") {
+            
+        } else if (alg === "sequential") {
+            
+        } else if (alg === "weighted") {
+            
+        } else if (alg === "sticky") {
+            
+        } else if (alg === "singlemaxload") {
+            
         }
+        return results;
     }
 
-    function sendMessage(data) {
-        algorithmCallback("all", { test: "testing data from master" })
+    function sendMessage(alg, data) {
+        algorithmCallback(alg, { test: "testing data from master" })
     }
 
     function listenMessage() {
@@ -554,15 +568,11 @@ function clusterMasterCallback(cluster, proc, algorithm) {
 function clusterChildCallback(cluster, proc) {
 
     function sendMessage(data) {
-
-    }
-
-    function sendMessage(data) {
         process.send(data)
     }
 
-    function listenMessage() {
-
+    function listenMessage(data) {
+        
     }
 
 }

@@ -141,7 +141,15 @@ function randomize(pools, lastIndex, nextIndex) {
     return { result: { host: pools[idx], index: idx }, lastIndex: idx, nextIndex: nextIndex };
 }
 
-
+/**
+ *
+ *
+ * @param {*} pools
+ * @param {*} lastIndex
+ * @param {*} nextIndex
+ * @param {*} max
+ * @return {*} 
+ */
 function sequential(pools, lastIndex, nextIndex, max) {
     if (nextIndex > max) {
         lastIndex = 0;
@@ -156,50 +164,58 @@ function sequential(pools, lastIndex, nextIndex, max) {
 /**
  *
  *
+ * @param {*} pools
+ * @param {*} lastIndex
+ * @param {*} nextIndex
  * @return {*} 
  */
-function sticky() {
+function sticky(pools, lastIndex, nextIndex) {
     // sticky === singlemaxload + index stickyness till end or exit of connection
-    if (this.pools[this.lastIndex].requests < this.pools[this.lastIndex].max) {
-        this.pools[this.lastIndex].requests += 1;
-        this.pools[this.lastIndex].total += 1;
-        this.pools[this.lastIndex]["stick"] = this.lastIndex;
-        return { host: this.pools[this.lastIndex], index: this.lastIndex };
-    } else if (this.pools[this.lastIndex].requests === this.pools[this.lastIndex].max) {
-        this.lastIndex = this.nextIndex;
-        this.nextIndex = this.lastIndex + 1;
-        this.pools[this.lastIndex].requests = 0;
-        this.pools[this.lastIndex].total += 1;
-        this.pools[this.lastIndex]["stick"] = this.lastIndex;
-        return { host: this.pools[this.lastIndex], index: this.lastIndex };
+    if (pools[lastIndex].requests < pools[lastIndex].max) {
+        pools[lastIndex].requests += 1;
+        pools[lastIndex].total += 1;
+        pools[lastIndex]["stick"] = lastIndex;
+        return { host: pools[lastIndex], index: lastIndex };
+    } else if (pools[lastIndex].requests === pools[lastIndex].max) {
+        lastIndex = nextIndex;
+        nextIndex = lastIndex + 1;
+        pools[lastIndex].requests = 0;
+        pools[lastIndex].total += 1;
+        pools[lastIndex]["stick"] = lastIndex;
+        return { result: { host: pools[lastIndex], index: lastIndex }, lastIndex: lastIndex, nextIndex: nextIndex };
     }
 }
 
 /**
  *
  *
+ * @param {*} pools
+ * @param {*} lastIndex
+ * @param {*} nextIndex
+ * @param {string} [algorithm="sequential"]
  * @return {*} 
  */
-function singlemaxload() {
-    if (this.pools[this.lastIndex].requests < this.pools[this.lastIndex].max) {
-        this.pools[this.lastIndex].requests += 1;
-        this.pools[this.lastIndex].total += 1;
-        return { host: this.pools[this.lastIndex], index: this.lastIndex };
-    } else if (this.pools[this.lastIndex].requests === this.pools[this.lastIndex].max) {
+function singlemaxload(pools, lastIndex, nextIndex, algorithm = "sequential") {
+    if (pools[lastIndex].requests < pools[lastIndex].max) {
+        pools[lastIndex].requests += 1;
+        pools[lastIndex].total += 1;
+        return { result: { host: pools[lastIndex], index: lastIndex }, lastIndex: lastIndex, nextIndex: nextIndex };
+    } else if (pools[lastIndex].requests === pools[lastIndex].max) {
         if (algorithm === "sequential") {
-            this.lastIndex = this.nextIndex;
-            this.nextIndex = this.lastIndex + 1;
+            // lastIndex = nextIndex;
+            // nextIndex = lastIndex + 1;
+            results = sequential(pools, lastIndex, nextIndex, pools[lastIndex].max);
         } else if (algorithm === "randomize") {
-
+            results = randomize(pools, lastIndex, nextIndex);
         } else if (algorithm === "weighted") {
-
+            results = weighted(pools, lastIndex, nextIndex);
         } else if (algorithm === "sticky") {
-
+            results = sticky(pools, lastIndex, nextIndex);
         }
 
-        this.pools[this.lastIndex].requests = 0;
-        this.pools[this.lastIndex].total += 1;
-        return { host: this.pools[this.lastIndex], index: this.lastIndex };
+        pools[lastIndex].requests = 0;
+        pools[lastIndex].total += 1;
+        return { result: results.result, lastIndex: results.lastIndex, nextIndex: results.nextIndex };
     }
 }
 
@@ -296,7 +312,7 @@ function Sticky(pools) {
     this.lastIndex = -1;
     this.nextIndex = 0;
 
-    this.sticky = function () { 
+    this.sticky = function () {
         let { result, lastIndex, nextIndex } = sticky(this.pools, this.lastIndex, this.nextIndex);
         this.lastIndex = lastIndex;
         this.nextIndex = nextIndex;
@@ -312,16 +328,21 @@ function Sticky(pools) {
  */
 function SingleMaxload(pools, algorithm = "sequential") {
     poolsInstance.call(this, pools);
+    this.addPools(pools);
 
     this.min = 0;
-    this.max = this.pools.length;
+    this.max = this.len();
 
     this.count = 0;
     this.lastIndex = -1;
     this.nextIndex = 0;
 
-
-    this.singlemaxload = function () { return singlemaxload() }.bind(this, algorithm);
+    this.singlemaxload = function () {
+        let { result, lastIndex, nextIndex } = singlemaxload(this.pools, this.lastIndex, this.nextIndex);
+        this.lastIndex = lastIndex;
+        this.nextIndex = nextIndex;
+        return result;
+    }.bind(this, algorithm);
 }
 
 
