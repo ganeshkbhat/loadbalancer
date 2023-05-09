@@ -26,6 +26,7 @@
   "dependencies": {
     "@haxtra/kvstore-sqlite": "^0.9.0",
     "hasher-apis": "^0.2.7",
-    "noserve": "^1.1.0"
+    "noserve": "^1.1.0",
+    "uuid": "^9.0.0"
   }
 }

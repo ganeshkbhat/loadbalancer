@@ -521,6 +521,52 @@ function sqlKvStore(filepath, tablename) {
 
 }
 
+function clusterMasterCallback(cluster, proc, algorithm) {
+
+    function algorithmCallback(alg, data) {
+        const uuid = require("uuid");
+        let messageId = uuid.uuidv5();
+        if (alg === "all") {
+            Object.values(cluster.workers).forEach(worker => {
+                worker.send({
+                    data: data,
+                    message: `Cluster Worker Messaging: ${worker.id}: ${messageId}`
+                });
+            });
+        }
+    }
+
+    function sendMessage(data) {
+        algorithmCallback("all", { test: "testing data from master" })
+    }
+
+    function listenMessage() {
+        cluster.on("message", function (worker) {
+            worker.on("message", (data) => {
+                console.log(`Cluster Child to Master Messaging: ${data}`);
+            });
+        });
+    }
+
+}
+
+
+function clusterChildCallback(cluster, proc) {
+
+    function sendMessage(data) {
+
+    }
+
+    function sendMessage(data) {
+        process.send(data)
+    }
+
+    function listenMessage() {
+
+    }
+
+}
+
 module.exports.server = server;
 module.exports.serverProxy = serverProxy;
 module.exports.reverseProxy = reverseProxy;
@@ -529,3 +575,5 @@ module.exports.websocket = websocket;
 module.exports.createNetProxy = createNetProxy;
 module.exports.sqlKvStore = sqlKvStore;
 
+module.exports.clusterMasterCallback = clusterMasterCallback;
+module.exports.clusterChildCallback = clusterChildCallback;

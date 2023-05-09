@@ -43,9 +43,9 @@ function threadingMultiple(serverOptions, workerFunctions) {
         "threads": 10,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
-        "callbacks": { 
-            "server": null, 
-            "listen": null 
+        "callbacks": {
+            "server": null,
+            "listen": null
         }
     }
 
@@ -114,9 +114,9 @@ function threading(serverOptions, workerFunction) {
         "threads": 10,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
-        "callbacks": { 
-            "server": null, 
-            "listen": null 
+        "callbacks": {
+            "server": null,
+            "listen": null
         }
     }
 
@@ -206,13 +206,14 @@ function loadbalancer(serverOptions) {
         "threads": 10,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
-        "callbacks": { 
-            "server": null, 
-            "listen": null 
+        "callbacks": {
+            "server": null,
+            "listen": null
         }
     }
 
     const cluster = require('cluster');
+    const process = require('process');
     const os = require('os');
 
     // cluster.js
@@ -221,6 +222,10 @@ function loadbalancer(serverOptions) {
         // console.log(`Forking for ${cpus} CPUs`);
 
         for (let i = 0; i < cpus; i++) {
+            if (!!serverOptions.setupPrimary) {
+                // { exec: 'worker.js', args: ['--use', 'http'] }
+                cluster.setupPrimary(serverOptions.setupPrimary);
+            }
             cluster.fork();
         }
 
@@ -235,20 +240,58 @@ function loadbalancer(serverOptions) {
         updateWorkers(cpus);
         setInterval(updateWorkers, 10000);
 
+        const workerEvents = () => {
+            Object.values(cluster.workers).forEach(worker => {
+                worker.on("close", function (data) {
+                    console.log(`A worker ${worker.id} is now closing connection to ${data} - ${arguments}`);
+                });
+
+                worker.on("exit", function (code, signal) {
+                    console.log(`A worker ${worker.id} is now exiting connection: ${code}, ${signal} - ${arguments}`);
+                });
+
+                worker.on("error", function (err) {
+                    console.log(`A worker ${worker.id} is facing error in connection to - ${err} - ${arguments}`);
+                });
+            });
+        }
+
+        cluster.on('disconnect', (worker) => {
+            console.log(`A worker ${worker.id} is now disconnected.`);
+        });
+
         cluster.on('exit', (worker, code, signal) => {
             if (code !== 0 && !worker.exitedAfterDisconnect) {
-                console.log(`Worker ${worker.id} crashed. ` + 'Starting a new worker...');
+                console.log(`Worker ${worker.id} crashed. ` + 'Starting a new worker.');
                 cluster.fork();
             }
         });
 
+        cluster.on('listening', (worker, address) => {
+            console.log(`A worker ${worker.id} is now connected to ${address.address}:${address.port}.`);
+        });
+
+        cluster.on('online', (worker) => {
+            console.log(`A worker ${worker.id} has responded after it was forked.`);
+        });
+
+        cluster.on('setup', (worker) => {
+            console.log(`A worker ${worker.id} has responded after it was forked setup.`);
+        });
+
+        cluster.on('fork', (worker) => {
+            console.log(`A worker ${worker.id} has responded after it was forked.`);
+        });
+
         Object.values(cluster.workers).forEach(worker => {
-            worker.send(`Hello Worker ${worker.id}`);
+            worker.send(`Hello to Worker - ${worker.id}`);
         });
 
         if (!!serverOptions?.mainProcessCallback) {
             serverOptions.mainProcessCallback(serverOptions);
         }
+
+        console.log(`Cluster started on ${process.env.NODE_UNIQUE_ID}`);
     } else {
         if (!!serverOptions?.forkCallback) {
             serverOptions.forkCallback(serverOptions, process);

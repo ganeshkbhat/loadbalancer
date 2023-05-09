@@ -6,7 +6,7 @@
  * Install: npm i loadbalancer --save
  * Github: https://github.com/ganeshkbhat/loadbalancer
  * npmjs Link: https://www.npmjs.com/package/loadbalancer
- * File: demos/createnetproxy.js
+ * File: demos/loadbalancer-threads.js
  * File Description: A simple threaded and clustered load balancer for nodejs
  * 
  * 

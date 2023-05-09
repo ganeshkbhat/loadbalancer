@@ -6,7 +6,7 @@
  * Install: npm i loadbalancer --save
  * Github: https://github.com/ganeshkbhat/loadbalancer
  * npmjs Link: https://www.npmjs.com/package/loadbalancer
- * File: test/test_threadsmultiple.js
+ * File: test/test_loadbalancer.threads.js
  * File Description: A simple threaded and clustered load balancer for nodejs
  * 
  * 
@@ -20,7 +20,7 @@
 // const sinon = require('sinon');
 // const { Worker } = require('worker_threads');
 
-// const createThreads = require('../index').loadbalancer.threadingMultiple;
+// const createThreads = require('../index').loadbalancer.threading;
 
 // describe('createThreads', () => {
 //   afterEach(() => {
@@ -29,53 +29,55 @@
 
 //   it('should create the specified number of threads', () => {
 //     const n = 3;
-//     const workerFunctions = [
-//       sinon.stub(),
-//       sinon.stub(),
-//       sinon.stub(),
-//     ];
-//     createThreads(n, workerFunctions);
+//     const workerFunction = sinon.stub().callsFake(() => {
+//       setInterval(() => {}, 1000);
+//     });
+
+//     createThreads(n, workerFunction);
 
 //     expect(Worker).to.have.callCount(n);
 //   });
 
-//   it('should start the correct worker function in each thread', () => {
-//     const n = 3;
-//     const workerFunctions = [
-//       sinon.stub().callsFake(() => console.log('Worker function 1')),
-//       sinon.stub().callsFake(() => console.log('Worker function 2')),
-//       sinon.stub().callsFake(() => console.log('Worker function 3')),
-//     ];
-//     createThreads(n, workerFunctions);
+//   it('should handle worker messages', () => {
+//     const n = 1;
+//     const workerFunction = sinon.stub().callsFake(() => {
+//       setInterval(() => {
+//         worker.postMessage('Test message');
+//       }, 1000);
+//     });
+//     const consoleLog = sinon.stub(console, 'log');
 
-//     expect(workerFunctions[0]).to.have.callCount(1);
-//     expect(workerFunctions[1]).to.have.callCount(1);
-//     expect(workerFunctions[2]).to.have.callCount(1);
+//     createThreads(n, workerFunction);
+
+//     expect(consoleLog).to.have.callCount(n);
+//     expect(consoleLog.firstCall.args[0]).to.match(/Received message from thread \d:/);
 //   });
 
 //   it('should handle worker errors', () => {
 //     const n = 1;
-//     const workerFunctions = [
-//       sinon.stub().throws(new Error('Worker error')),
-//     ];
+//     const workerFunction = sinon.stub().callsFake(() => {
+//       throw new Error('Worker error');
+//     });
 //     const consoleError = sinon.stub(console, 'error');
 
-//     createThreads(n, workerFunctions);
+//     createThreads(n, workerFunction);
 
-//     expect(consoleError).to.have.callCount(1);
+//     expect(consoleError).to.have.callCount(n);
 //     expect(consoleError.firstCall.args[0]).to.match(/Error in thread \d:/);
 //   });
 
 //   it('should handle worker exit', () => {
 //     const n = 1;
-//     const workerFunctions = [
-//       sinon.stub(),
-//     ];
+//     const workerFunction = sinon.stub().callsFake(() => {
+//       setTimeout(() => {
+//         process.exit(1);
+//       }, 1000);
+//     });
 //     const consoleLog = sinon.stub(console, 'log');
 
-//     createThreads(n, workerFunctions);
+//     createThreads(n, workerFunction);
 
-//     expect(consoleLog).to.have.callCount(1);
+//     expect(consoleLog).to.have.callCount(n);
 //     expect(consoleLog.firstCall.args[0]).to.match(/Thread \d exited with code \d/);
 //   });
 // });
