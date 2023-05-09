@@ -23,7 +23,7 @@
  * @return {*} 
  */
 function poolsInstance(pools) {
-    this.pools = [];
+    this.pools = pools || [];
     this.addPools = function (pools) {
         if (typeof pools === "string") {
             this.pools.push({ host: pools, weight: 1, max: pools?.max || 1000, requests: 0, total: 0, open: 0, closed: 0, currentWeight: 0 });
@@ -208,7 +208,7 @@ function singlemaxload() {
  *
  * @param {*} pools
  */
-function loaderWeighted(pools) {
+function Weighted(pools) {
     Object.assign(this, poolsInstance(pools));
 
     this.min = 0;
@@ -228,7 +228,7 @@ function loaderWeighted(pools) {
  *
  * @param {*} pools
  */
-function loaderRandom(pools) {
+function Random(pools) {
     Object.assign(this, poolsInstance(pools));
 
     this.min = 0;
@@ -246,7 +246,7 @@ function loaderRandom(pools) {
  *
  * @param {*} pools
  */
-function loaderSequential(pools) {
+function Sequential(pools) {
     Object.assign(this, poolsInstance(pools));
 
     this.min = 0;
@@ -266,7 +266,7 @@ function loaderSequential(pools) {
  *
  * @param {*} pools
  */
-function loaderSticky(pools) {
+function Sticky(pools) {
     Object.assign(this, poolsInstance(pools));
 
     this.min = 0;
@@ -287,7 +287,7 @@ function loaderSticky(pools) {
  * @param {*} pools
  * @param {string} [algorithm="sequential"] Options: sequential, random, weighted, sticky
  */
-function loaderSingleMaxload(pools, algorithm = "sequential") {
+function SingleMaxload(pools, algorithm = "sequential") {
     Object.assign(this, poolsInstance(pools));
 
     this.min = 0;
@@ -302,12 +302,22 @@ function loaderSingleMaxload(pools, algorithm = "sequential") {
 }
 
 
-// loadingAlgorithms(["127.0.0.1:8000"]);
+module.exports.poolsInstance = poolsInstance;
+module.exports.sortPoolsByKeys = sortPoolsByKeys;
+module.exports.sortPoolsByKey = sortPoolsByKey;
+module.exports.closeConnections = closeConnections;
 
 
-module.exports.loaderRandom = loaderRandom;
-module.exports.loaderSequential = loaderSequential;
-module.exports.loaderSticky = loaderSticky;
-module.exports.loaderWeighted = loaderWeighted;
-module.exports.loaderSingleMaxload = loaderSingleMaxload;
+module.exports.random = random;
+module.exports.sequential = sequential;
+module.exports.sticky = sticky;
+module.exports.seighted = weighted;
+module.exports.singleMaxload = singleMaxload;
+
+
+module.exports.Random = Random;
+module.exports.Sequential = Sequential;
+module.exports.Sticky = Sticky;
+module.exports.Weighted = Weighted;
+module.exports.SingleMaxload = SingleMaxload;
 
