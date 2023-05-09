@@ -170,18 +170,23 @@ function sequential(pools, lastIndex, nextIndex, max) {
  * @return {*} 
  */
 function sticky(pools, lastIndex, nextIndex) {
+    const uuid = require("uuid");
     // sticky === singlemaxload + index stickyness till end or exit of connection
     if (pools[lastIndex].requests < pools[lastIndex].max) {
         pools[lastIndex].requests += 1;
         pools[lastIndex].total += 1;
-        pools[lastIndex]["stick"] = lastIndex;
-        return { host: pools[lastIndex], index: lastIndex };
+        let messageId = uuid.uuidv5();
+        pools[lastIndex]["stick"] = messageId;
+        console.log("messageId: ", messageId);
+        return { result: { host: pools[lastIndex], index: lastIndex }, lastIndex: lastIndex, nextIndex: nextIndex };
     } else if (pools[lastIndex].requests === pools[lastIndex].max) {
         lastIndex = nextIndex;
         nextIndex = lastIndex + 1;
         pools[lastIndex].requests = 0;
         pools[lastIndex].total += 1;
-        pools[lastIndex]["stick"] = lastIndex;
+        let messageId = uuid.uuidv5();
+        console.log("messageId: ", messageId);
+        pools[lastIndex]["stick"] = messageId;
         return { result: { host: pools[lastIndex], index: lastIndex }, lastIndex: lastIndex, nextIndex: nextIndex };
     }
 }
