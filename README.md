@@ -12,22 +12,19 @@ Find the demos in the [demo folder](https://github.com/ganeshkbhat/loadbalancer/
 
 ### .loadbalancer module
 
-
+loadbalancer, threadingMultiple, threading
 
 ### .serverutils module
 
-
+server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore
 
 ### .algorithms module
 
 randomize, sequential, sticky, weighted, singlemaxload, Randomize, Sequential, Sticky, Weighted, SingleMaxload
 
-
-
-
 ### .certificates module
 
-
+generateCertificates
 
 ### Architechure
 
