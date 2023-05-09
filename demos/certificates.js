@@ -15,3 +15,12 @@
 /* eslint no-console: 0 */
 
 'use strict';
+
+var generateCertificates = require("../index").certificates.generateCertificates;
+
+var {
+    publicKey,
+    privateKey
+} = generateCertificates("./certs");
+
+
