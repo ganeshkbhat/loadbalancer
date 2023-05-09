@@ -32,8 +32,10 @@ console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001", "127.0.0.1:9
 console.log("wInst.weighted()", wInst.weighted());
 console.log("wInst.lastIndex", wInst.lastIndex);
 console.log("wInst.nextIndex", wInst.nextIndex);
-
-
+console.log("wInst.weighted()", wInst.weighted());
+console.log("wInst.lastIndex", wInst.lastIndex);
+console.log("wInst.nextIndex", wInst.nextIndex);
+console.log("\n\n");
 
 let rInst = new algorithms.Randomize(["127.0.0.1:8000", "127.0.0.1:8001"]);
 
@@ -48,3 +50,26 @@ console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001", "127.0.0.1:9
 console.log("rInst.randomize()", rInst.randomize());
 console.log("rInst.lastIndex", rInst.lastIndex);
 console.log("rInst.nextIndex", rInst.nextIndex);
+console.log("rInst.randomize()", rInst.randomize());
+console.log("rInst.lastIndex", rInst.lastIndex);
+console.log("rInst.nextIndex", rInst.nextIndex);
+console.log("\n\n");
+
+let sInst = new algorithms.Sequential(["127.0.0.1:8000", "127.0.0.1:8001"]);
+
+console.log("sInst.len(): should be 2: ", sInst.pools.length);
+console.log("Adding a new item as an array , ['127.0.0.1:9001']");
+sInst.addPools(["127.0.0.1:9001"]);
+console.log("sInst.len(): should be 3: ", sInst.len());
+console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001"]: ', sInst.pools.length);
+console.log("Adding a new item as an array , ['127.0.0.1:9002']");
+sInst.addPools("127.0.0.1:9002");
+console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001", "127.0.0.1:9002"]: ', sInst.pools);
+console.log("sInst.sequential()", sInst.sequential());
+console.log("sInst.lastIndex", sInst.lastIndex);
+console.log("sInst.nextIndex", sInst.nextIndex);
+console.log("sInst.sequential()", sInst.sequential());
+console.log("sInst.lastIndex", sInst.lastIndex);
+console.log("sInst.nextIndex", sInst.nextIndex);
+console.log("\n\n");
+

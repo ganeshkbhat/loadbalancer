@@ -138,7 +138,7 @@ function randomize(pools, lastIndex, nextIndex) {
     min = Math.ceil(min);
     max = Math.floor(max);
     let idx = Math.floor(Math.random() * (max - min + 1)) + min;
-    return { result: { host: pools[idx], index: idx }, lastIndex: lastIndex, nextIndex: nextIndex };
+    return { result: { host: pools[idx], index: idx }, lastIndex: idx, nextIndex: nextIndex };
 }
 
 
@@ -217,8 +217,8 @@ function Weighted(pools) {
     this.max = this.len(this.pools);
 
     this.count = 0;
-    this.lastIndex = 0;
-    this.nextIndex = 1;
+    this.lastIndex = -1;
+    this.nextIndex = 0;
 
     this.weighted = function () {
         let { result, lastIndex, nextIndex } = weighted(this.pools, this.lastIndex, this.nextIndex);
@@ -242,7 +242,7 @@ function Randomize(pools) {
 
     this.count = 0;
     this.lastIndex = 0;
-    this.nextIndex = 0; // not needed
+    this.nextIndex = 1; // not needed
 
     this.randomize = function () {
         let { result, lastIndex, nextIndex } = randomize(this.pools, this.lastIndex, this.nextIndex);
@@ -258,18 +258,24 @@ function Randomize(pools) {
  * @param {*} pools
  */
 function Sequential(pools) {
-    poolsInstance.call(this, pools);
+    poolsInstance.call(this);
+    this.addPools(pools);
 
     this.min = 0;
-    this.max = this.pools.length;
+    this.max = this.len();
 
     this.pools = sortPoolsByKey(this.pools, "weight", "desc");
 
     this.count = 0;
-    this.lastIndex = 0;
-    this.nextIndex = 1;
+    this.lastIndex = -1;
+    this.nextIndex = 0;
 
-    this.sequential = function () { return sequential() }.bind(this);
+    this.sequential = function () {
+        let { result, lastIndex, nextIndex } = sequential(this.pools, this.lastIndex, this.nextIndex, this.max);
+        this.lastIndex = lastIndex;
+        this.nextIndex = nextIndex;
+        return result;
+    }.bind(this);
 }
 
 /**
@@ -278,18 +284,24 @@ function Sequential(pools) {
  * @param {*} pools
  */
 function Sticky(pools) {
-    poolsInstance.call(this, pools);
+    poolsInstance.call(this);
+    this.addPools(pools);
 
     this.min = 0;
-    this.max = this.pools.length;
+    this.max = this.len();
 
     this.pools = sortPoolsByKey(this.pools, "weight", "desc");
 
     this.count = 0;
-    this.lastIndex = 0;
+    this.lastIndex = -1;
     this.nextIndex = 0;
 
-    this.sticky = function () { return sticky() }.bind(this);
+    this.sticky = function () { 
+        let { result, lastIndex, nextIndex } = sticky(this.pools, this.lastIndex, this.nextIndex);
+        this.lastIndex = lastIndex;
+        this.nextIndex = nextIndex;
+        return result;
+    }.bind(this);
 }
 
 /**
@@ -305,8 +317,8 @@ function SingleMaxload(pools, algorithm = "sequential") {
     this.max = this.pools.length;
 
     this.count = 0;
-    this.lastIndex = 0;
-    this.nextIndex = 1;
+    this.lastIndex = -1;
+    this.nextIndex = 0;
 
 
     this.singlemaxload = function () { return singlemaxload() }.bind(this, algorithm);
