@@ -527,8 +527,8 @@ function clusterMasterCallback(cluster, proc, algorithm) {
 
     function algorithmCallback(alg, data) {
         const uuid = require("uuid");
-        let results;
         let messageId = uuid.uuidv5();
+        let results;
         if (alg === "all") {
             Object.values(cluster.workers).forEach(worker => {
                 worker.send({
