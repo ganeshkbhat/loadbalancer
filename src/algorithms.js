@@ -122,7 +122,7 @@ function weighted(pools, lastIndex, nextIndex) {
     lastIndex = 0;
     nextIndex = 1;
     // currentWeight > recalculate
-    return { result: { host: pools[0], index: idx }, lastIndex: lastIndex, nextIndex: nextIndex };
+    return { result: { host: pools[0], index: 0 }, lastIndex: lastIndex, nextIndex: nextIndex };
 }
 
 /**
@@ -215,7 +215,7 @@ function Weighted(pools) {
 
     this.min = 0;
     this.max = this.len(this.pools);
-    
+
     this.count = 0;
     this.lastIndex = 0;
     this.nextIndex = 1;

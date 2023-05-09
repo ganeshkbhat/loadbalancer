@@ -29,4 +29,8 @@ console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001"]: ', wInst.po
 console.log("Adding a new item as an array , ['127.0.0.1:9002']");
 wInst.addPools("127.0.0.1:9002");
 console.log('["127.0.0.1:8000", "127.0.0.1:8001", "127.0.0.1:9001", "127.0.0.1:9002"]: ', wInst.pools);
+console.log("wInst.weighted()", wInst.weighted());
+console.log("wInst.lastIndex", wInst.lastIndex);
+console.log("wInst.nextIndex", wInst.nextIndex);
+
 
