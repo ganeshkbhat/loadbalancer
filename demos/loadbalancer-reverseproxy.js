@@ -18,7 +18,7 @@
 
 var loadbalancer = require("../index").loadbalancer;
 var reverseProxy = require("../index").serverutils.reverseProxy;
-var server = require("./server");
+var server = require("./express-app");
 
 loadbalancer.loadbalancer({
     "server": server,

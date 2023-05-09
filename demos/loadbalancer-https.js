@@ -6,7 +6,7 @@
  * Install: npm i loadbalancer --save
  * Github: https://github.com/ganeshkbhat/loadbalancer
  * npmjs Link: https://www.npmjs.com/package/loadbalancer
- * File: demos/loadbalancer-ws.js
+ * File: demos/loadbalancer-server.js
  * File Description: A simple threaded and clustered load balancer for nodejs
  * 
  * 
@@ -17,12 +17,11 @@
 'use strict';
 
 var loadbalancer = require("../index").loadbalancer;
-var websocket = require("../index").serverutils.websocket;
-var server = require("./express-app");
+var server = require("../index").serverutils.server;
 
 loadbalancer.loadbalancer({
-    "server": server,
-    "protocol": "http",
+    "server": null,
+    "protocol": "https",
     "createCerts": true,
     "host": "localhost",
     "proxy": {
@@ -30,21 +29,15 @@ loadbalancer.loadbalancer({
         "target": "localhost",
         "host": 7000
     },
-    "keys": {
-        "key": './certs/ssl.key',
-        "cert": './certs/ssl.cert'
-    },
     "port": 8080,
     "ws": true,
     "processes": 5,
     "threads": 10,
-    "mainProcessCallback": () => {
-
-    },
+    "mainProcessCallback": () => { },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        websocket(opts);
+        server(opts);
     }
 })
 

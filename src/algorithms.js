@@ -312,7 +312,7 @@ module.exports.random = random;
 module.exports.sequential = sequential;
 module.exports.sticky = sticky;
 module.exports.seighted = weighted;
-module.exports.singleMaxload = singleMaxload;
+module.exports.singlemaxload = singlemaxload;
 
 
 module.exports.Random = Random;
