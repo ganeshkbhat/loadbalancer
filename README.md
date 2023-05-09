@@ -20,6 +20,9 @@ Find the demos in the [demo folder](https://github.com/ganeshkbhat/loadbalancer/
 
 ### .algorithms module
 
+randomize, sequential, sticky, weighted, singlemaxload, Randomize, Sequential, Sticky, Weighted, SingleMaxload
+
+
 
 
 ### .certificates module

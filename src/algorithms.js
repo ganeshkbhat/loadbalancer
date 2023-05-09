@@ -311,7 +311,7 @@ module.exports.closeConnections = closeConnections;
 module.exports.randomize = randomize;
 module.exports.sequential = sequential;
 module.exports.sticky = sticky;
-module.exports.seighted = weighted;
+module.exports.weighted = weighted;
 module.exports.singlemaxload = singlemaxload;
 
 
