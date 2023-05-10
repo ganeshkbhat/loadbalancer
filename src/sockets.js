@@ -247,6 +247,12 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
 }
 
 
+/**
+ *
+ *
+ * @param {*} serverOptions
+ * @return {*} 
+ */
 function httpClient(serverOptions) {
     const https = require(protocol || 'https');
 
@@ -266,49 +272,36 @@ function httpClient(serverOptions) {
             agent: false
         };
 
-        options = {
-            ...options,
-            ...serverOptions
-        };
-
-        if (!!serverOptions.key || !!serverOptions.cert) {
+        options = { ...options, ...serverOptions };
+        if ((!!serverOptions.keyPath && !!serverOptions.certPath) && (!serverOptions.key || !serverOptions.cert)) {
             serverOptions = {
                 ...serverOptions,
                 key: fs.readFileSync(serverOptions.key),
                 cert: fs.readFileSync(serverOptions.cert)
-            }
+            };
+        } else {
+            throw new Error("Request Error: 'keyPath' and 'certPath' have to be specified OR 'key' and 'cert' have to be specified");
         }
 
-        if (!!serverOptions.agent) {
-            serverOptions.agent = new https.Agent(serverOptions);
-        }
+        if (!!serverOptions.agent) { serverOptions.agent = new https.Agent(serverOptions); }
 
         return new Promise((resolve, reject) => {
             const req = https.request(url, options, (res) => {
-                if (res.statusCode < 200 || res.statusCode > 299) {
-                    return reject(new Error(`HTTP status code ${res.statusCode}`));
-                }
-
-                const body = []
+                if (res.statusCode < 200 || res.statusCode > 299) reject(new Error(`HTTP status code ${res.statusCode}`));
+                const body = [];
                 res.on('data', (chunk) => body.push(chunk));
                 res.on('end', () => {
-                    const resString = Buffer.concat(body).toString()
-                    resolve(resString)
+                    const resString = Buffer.concat(body).toString();
+                    resolve(resString);
                 });
             });
 
-            req.on('error', (err) => {
-                reject(err);
-            });
-
+            req.on('error', (err) => { reject(err); });
             req.on('timeout', () => {
                 req.destroy();
                 reject(new Error('Request time out'));
             });
-
-            if (["post", "put", "patch"].includes(method.toLowerCase())) {
-                req.write(postData);
-            }
+            if (["post", "put", "patch"].includes(method.toLowerCase())) { req.write(postData); }
             req.end();
         })
     }
