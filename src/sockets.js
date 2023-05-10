@@ -309,10 +309,19 @@ function httpClient(serverOptions) {
 }
 
 
+/**
+ *
+ *
+ * @param {*} serverOptions
+ * @param {*} callback
+ * @param {*} listencallback
+ * @return {*} 
+ */
 function httpSocketServer(serverOptions, callback, listencallback) {
     serverOptions?.protocol = "http";
     return server(serverOptions, callback, listencallback);
 }
+
 
 /**
  *
@@ -326,10 +335,11 @@ function httpSocketClient(serverOptions) {
 }
 
 
-function httpsSocketServer() {
+function httpsSocketServer(serverOptions, callback, listencallback) {
     serverOptions?.protocol = "https";
     return server(serverOptions, callback, listencallback);
 }
+
 
 /**
  *
@@ -341,15 +351,20 @@ function httpsSocketClient(serverOptions) {
     return httpClient(serverOptions);
 }
 
+
 /**
  *
+ *
  * @param {*} serverOptions
+ * @param {*} callback
+ * @param {*} listencallback
  * @return {*} 
  */
-function wsSocketServer(serverOptions) {
+function wsSocketServer(serverOptions, callback, listencallback) {
     serverOptions?.protocol = "http";
     return websocket(serverOptions, callback, listencallback);
 }
+
 
 /**
  *
@@ -361,15 +376,18 @@ function wsSocketClient(serverOptions) {
     return
 }
 
+
 /**
  *
  *
  * @param {*} serverOptions
- * @return {*} HTTPS
+ * @param {*} callbacks
+ * @param {*} options
+ * @return {*} 
  */
-function wssSocketServer(serverOptions) {
+function wssSocketServer(serverOptions, callbacks, options) {
     serverOptions?.protocol = "https";
-    return websocket(serverOptions, callback, listencallback);
+    return websocket(serverOptions, callbacks, options);
 }
 
 
