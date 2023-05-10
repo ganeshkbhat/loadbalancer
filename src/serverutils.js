@@ -521,6 +521,7 @@ function sqlKvStore(filepath, tablename) {
 
 }
 
+
 function clusterMasterCallback(cluster, proc, algorithm) {
 
     var algorithms = require("./algorithms");
@@ -537,15 +538,15 @@ function clusterMasterCallback(cluster, proc, algorithm) {
                 });
             });
         } else if (alg === "randomize") {
-            
+
         } else if (alg === "sequential") {
-            
+
         } else if (alg === "weighted") {
-            
+
         } else if (alg === "sticky") {
-            
+
         } else if (alg === "singlemaxload") {
-            
+
         }
         return results;
     }
@@ -572,7 +573,7 @@ function clusterChildCallback(cluster, proc) {
     }
 
     function listenMessage(data) {
-        
+
     }
 
 }
