@@ -16,6 +16,59 @@
 
 'use strict';
 
+
+const checkServerIdentity = function (host, cert) {
+
+    const tls = require('tls');
+    const crypto = require('crypto');
+
+    // https://nodejs.org/docs/latest-v20.x/api/https.html#httpsrequesturl-options-callback
+    function sha256(s) {
+        return crypto.createHash('sha256').update(s).digest('base64');
+    }
+    const err = tls.checkServerIdentity(host, cert);
+    if (err) {
+        return err;
+    }
+
+    // Pin the public key, similar to HPKP pin-sha256 pinning
+    // change to your key 
+    const pubkey256 = 'pL1+qb9HTMRZJmuC/bB/ZI9d302BYrrqiVuRyW+DGrU=';
+    if (sha256(cert.pubkey) !== pubkey256) {
+        const msg = 'Certificate verification error: ' +
+            `The public key of '${cert.subject.CN}' ` +
+            'does not match our pinned fingerprint';
+        return new Error(msg);
+    }
+
+    // Pin the exact certificate, rather than the pub key
+    // change to your cert 
+    const cert256 = '25:FE:39:32:D9:63:8C:8A:FC:A1:9A:29:87:' +
+        'D8:3E:4C:1D:98:DB:71:E4:1A:48:03:98:EA:22:6A:BD:8B:93:16';
+    if (cert.fingerprint256 !== cert256) {
+        const msg = 'Certificate verification error: ' +
+            `The certificate of '${cert.subject.CN}' ` +
+            'does not match our pinned fingerprint';
+        return new Error(msg);
+    }
+
+    // // This loop is informational only.
+    // // Print the certificate and public key fingerprints of all certs in the
+    // // chain. Its common to pin the public key of the issuer on the public
+    // // internet, while pinning the public key of the service in sensitive
+    // // environments.
+    // do {
+    //     console.log('Subject Common Name:', cert.subject.CN);
+    //     console.log('  Certificate SHA256 fingerprint:', cert.fingerprint256);
+
+    //     hash = crypto.createHash('sha256');
+    //     console.log('  Public key ping-sha256:', sha256(cert.pubkey));
+
+    //     lastprint256 = cert.fingerprint256;
+    //     cert = cert.issuerCertificate;
+    // } while (cert.fingerprint256 !== lastprint256);
+}
+
 /**
  *
  *
@@ -54,10 +107,10 @@ function server(serverOptions, callback, listencallback) {
     const http = require(serverOptions?.protocol || 'http');
 
     callback = callback || echoServer();
-    serverOptions?.port = serverOptions?.port || 8000;
-    serverOptions?.host = serverOptions?.host || "localhost";
+    serverOptions.port = serverOptions?.port || 8000;
+    serverOptions.host = serverOptions?.host || "localhost";
 
-    serverOptions?.server = (!!serverOptions?.server) ? serverOptions?.server : callback;
+    serverOptions.server = (!!serverOptions?.server) ? serverOptions?.server : callback;
     serverOptions.callbacks.listen = listencallback || serverStartCallback(serverOptions?.host, serverOptions?.port);
 
     let srv = (!serverOptions?.protocol === "https") ?
@@ -129,10 +182,10 @@ function websocket(serverOptions, callbacks = {}, options = {}) {
         }
     }
 
-    serverOptions?.port = serverOptions?.port || 8000;
-    serverOptions?.host = serverOptions?.host || "localhost";
+    serverOptions.port = serverOptions?.port || 8000;
+    serverOptions.host = serverOptions?.host || "localhost";
 
-    serverOptions?.server = (!!serverOptions?.server) ? serverOptions?.server : callback
+    serverOptions.server = (!!serverOptions?.server) ? serverOptions?.server : callback
     serverOptions.callbacks.listen = listencallback || serverStartCallback(serverOptions?.host, serverOptions?.port);
     serverOptions.callbacks.upgrade = () => { console.log("Upgrade Function Invoked"); }
 
@@ -283,6 +336,7 @@ function httpClient(serverOptions) {
             throw new Error("Request Error: 'keyPath' and 'certPath' have to be specified OR 'key' and 'cert' have to be specified");
         }
 
+        serverOptions.checkServerIdentity = checkServerIdentity;
         if (!!serverOptions.agent) { serverOptions.agent = new https.Agent(serverOptions); }
 
         return new Promise((resolve, reject) => {
@@ -318,7 +372,7 @@ function httpClient(serverOptions) {
  * @return {*} 
  */
 function httpSocketServer(serverOptions, callback, listencallback) {
-    serverOptions?.protocol = "http";
+    serverOptions.protocol = "http";
     return server(serverOptions, callback, listencallback);
 }
 
@@ -336,7 +390,7 @@ function httpSocketClient(serverOptions) {
 
 
 function httpsSocketServer(serverOptions, callback, listencallback) {
-    serverOptions?.protocol = "https";
+    serverOptions.protocol = "https";
     return server(serverOptions, callback, listencallback);
 }
 
@@ -361,7 +415,7 @@ function httpsSocketClient(serverOptions) {
  * @return {*} 
  */
 function wsSocketServer(serverOptions, callback, listencallback) {
-    serverOptions?.protocol = "http";
+    serverOptions.protocol = "http";
     return websocket(serverOptions, callback, listencallback);
 }
 
@@ -386,7 +440,7 @@ function wsSocketClient(serverOptions) {
  * @return {*} 
  */
 function wssSocketServer(serverOptions, callbacks, options) {
-    serverOptions?.protocol = "https";
+    serverOptions.protocol = "https";
     return websocket(serverOptions, callbacks, options);
 }
 
