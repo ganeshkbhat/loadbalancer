@@ -16,14 +16,26 @@
 
 'use strict';
 
-
-function udpSocketServer() {
-
+/**
+ *
+ *
+ * @return {*} 
+ */
+function echoServer() {
+    const pid = process.pid;
+    return (req, res) => { res.end(`Handled by process ${pid}`); }
 }
 
 
-function udpSocketClient() {
-
+/**
+ *
+ *
+ * @param {*} host
+ * @param {*} port
+ * @return {*} 
+ */
+function serverStartCallback(host, port) {
+    return () => { console.log('Started process at ' + host + " and port " + port); };
 }
 
 
@@ -39,17 +51,31 @@ function server(serverOptions, callback, listencallback) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
 
-    callback = callback || function (req, res) { res.end(`Handled by process ${pid}`); }
-    listencallback = listencallback || function () { console.log('Started process ' + serverOptions?.port); }
+    callback = callback || echoServer();
+    serverOptions?.port = serverOptions?.port || 8000;
+    serverOptions?.host = serverOptions?.host || "localhost";
 
-    const pid = process.pid;
-    let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
-        key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
-        cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
-    }, (!!serverOptions?.server) ? serverOptions?.server : callback);
+    serverOptions?.server = (!!serverOptions?.server) ? serverOptions?.server : callback;
+    serverOptions.callbacks.listen = listencallback || serverStartCallback(serverOptions?.host, serverOptions?.port);
 
-    srv.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
+    let srv = (!serverOptions?.protocol === "https") ?
+        http.createServer(serverOptions?.server) : http.createServer({
+            key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
+            cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
+        }, serverOptions?.server);
+
+    srv.listen(serverOptions?.port, serverOptions?.host, serverOptions.callbacks.listen);
     return srv;
+}
+
+
+function udpSocketServer() {
+
+}
+
+
+function udpSocketClient() {
+
 }
 
 
@@ -76,23 +102,34 @@ function websocket(serverOptions, callbacks = { "upgrade": () => { console.log("
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
         },
         "keys": {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
-        "port": 8080,
+        "port": 8000,
         "ws": true,
         "processes": 5,
         "threads": 10,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
             "server": null,
             "listen": null
         }
     }
+
+    serverOptions?.port = serverOptions?.port || 8000;
+    serverOptions?.host = serverOptions?.host || "localhost";
+
+    serverOptions?.server = (!!serverOptions?.server) ? serverOptions?.server : callback
+    serverOptions.callbacks.listen = listencallback || serverStartCallback(serverOptions?.host, serverOptions?.port);
 
     let srv;
     if (serverOptions?.protocol === "http") {
@@ -195,7 +232,7 @@ function websocket(serverOptions, callbacks = { "upgrade": () => { console.log("
         }
 
         if (!callbacks["listen"]) {
-            callbacks["listen"] = () => { console.log(`Listening on ${serverOptions?.host} and on port ${serverOptions?.port}`); }
+            callbacks["listen"] = serverStartCallback(serverOptions?.host, serverOptions?.port);
         }
     }
 
@@ -233,7 +270,7 @@ function websocket(serverOptions, callbacks = { "upgrade": () => { console.log("
 //             "key": "./certs/ssl.key",
 //             "cert": "./certs/ssl.cert"
 //         },
-//         "port": 8080,
+//         "port": 8000,
 //         "ws": true,
 //         "processes": 5,
 //         "threads": 10,
@@ -384,7 +421,7 @@ function websocket(serverOptions, callbacks = { "upgrade": () => { console.log("
 //             "key": "./certs/ssl.key",
 //             "cert": "./certs/ssl.cert"
 //         },
-//         "port": 8080,
+//         "port": 8000,
 //         "ws": true,
 //         "processes": 5,
 //         "threads": 10,

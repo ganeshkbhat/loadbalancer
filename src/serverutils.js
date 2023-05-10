@@ -18,6 +18,7 @@
 
 
 const {
+    server, websocket,
     udpSocketServer, udpSocketClient, httpSocketServer, httpSocketClient,
     httpsSocketServer, httpsSocketClient, wsSocketServer, wsSocketClient,
     wssSocketServer, wssSocketClient, tcpSocketServer, tcpSocketClient,
@@ -68,7 +69,7 @@ function serverProxy(serverOptions, callback, listencallback) {
         cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
     }, (!!serverOptions?.server) ? serverOptions?.server : callback);
 
-    srv.listen(serverOptions?.port || 8080, serverOptions?.host || "localhost", listencallback.bind(this, serverOptions?.port));
+    srv.listen(serverOptions?.port, serverOptions?.host, listencallback.bind(this, serverOptions?.port));
     return srv;
 }
 

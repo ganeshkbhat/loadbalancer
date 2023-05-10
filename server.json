@@ -7,13 +7,15 @@
         "proxy": true,
         "protocol": "http",
         "host": "localhost",
-        "port": 7000
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
     },
     "keys": {
         "key": "./certs/ssl.key",
         "cert": "./certs/ssl.cert"
     },
-    "port": 8080,
+    "port": 8000,
     "ws": true,
     "processes": 5,
     "threads": 10,
