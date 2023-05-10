@@ -18,7 +18,6 @@
 
 
 const checkServerIdentity = function (host, cert) {
-
     const tls = require('tls');
     const crypto = require('crypto');
 
@@ -111,7 +110,8 @@ function server(serverOptions, callback, listencallback) {
     serverOptions.host = serverOptions?.host || "localhost";
 
     serverOptions.server = (!!serverOptions?.server) ? serverOptions?.server : callback;
-    serverOptions.callbacks.listen = listencallback || serverStartCallback(serverOptions?.host, serverOptions?.port);
+    serverOptions.callbacks = (!!serverOptions.callbacks) ? serverOptions.callbacks : {};
+    serverOptions.callbacks.listen = (!!listencallback) ? listencallback : serverStartCallback(serverOptions?.host, serverOptions?.port);
 
     let srv = (!serverOptions?.protocol === "https") ?
         http.createServer(serverOptions?.server) : http.createServer({

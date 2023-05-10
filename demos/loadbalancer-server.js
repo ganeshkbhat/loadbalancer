@@ -20,16 +20,23 @@ var loadbalancer = require("../index").loadbalancer;
 var server = require("../index").serverutils.server;
 
 loadbalancer.loadbalancer({
-    "server": null,
+    "server": server,
     "protocol": "http",
     "createCerts": true,
     "host": "localhost",
     "proxy": {
         "proxy": true,
-        "target": "localhost",
-        "host": 7000
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
     },
-    "port": 8080,
+    "keys": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8000,
     "ws": true,
     "processes": 5,
     "threads": 10,
@@ -38,6 +45,13 @@ loadbalancer.loadbalancer({
         // console.log(opts, pr);
         // console.log(opts);
         server(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
     }
 })
 

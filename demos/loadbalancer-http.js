@@ -17,7 +17,7 @@
 'use strict';
 
 var loadbalancer = require("../index").loadbalancer;
-var createNetProxy = require("../index").sockets.httpSocketServer;
+var httpSocketServer = require("../index").sockets.httpSocketServer;
 var server = require("./express-app");
 
 loadbalancer.loadbalancer({
@@ -27,23 +27,31 @@ loadbalancer.loadbalancer({
     "host": "localhost",
     "proxy": {
         "proxy": true,
-        "target": "localhost",
-        "host": 7000
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
     },
     "keys": {
-        "key": './certs/ssl.key',
-        "cert": './certs/ssl.cert'
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
     },
-    "port": 8080,
+    "port": 8000,
     "ws": true,
     "processes": 5,
     "threads": 10,
-    "mainProcessCallback": () => {
-
-    },
+    "mainProcessCallback": () => { },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        createNetProxy(opts);
+        httpSocketServer(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
     }
 })
