@@ -121,14 +121,14 @@ function server(serverOptions) {
     return srv;
 }
 
+
 /**
  *
  *
  * @param {*} serverOptions
- * @return {*} ServerInstance
- * 
+ * @return {*} 
  */
-function sockets(serverOptions) {
+function socketServer(serverOptions) {
     const fs = require("fs");
     const net = require("net");
 
@@ -153,25 +153,15 @@ function sockets(serverOptions) {
     return srv;
 }
 
+
 /**
  *
  *
  * @param {*} serverOptions
- * @return {*} ClientInstance
- * 
  */
-function socketsClient(serverOptions) {
-
-}
-
-
-function udpSocketServer() {
-
-}
-
-
-function udpSocketClient() {
-
+function socketClient(serverOptions) {
+    const fs = require("fs");
+    const net = require("net");
 }
 
 
@@ -486,37 +476,37 @@ function wssSocketServer(serverOptions, callbacks, options) {
 }
 
 
-function wssSocketClient() {
+function wssSocketClient(serverOptions) {
 
 }
 
 
-function tcpSocketServer() {
+function tcpSocketServer(serverOptions) {
 
 }
 
 
-function tcpSocketClient() {
+function tcpSocketClient(serverOptions) {
+
+}
+
+function udpSocketServer(serverOptions) {
 
 }
 
 
-function sshSocketServer() {
+function udpSocketClient(serverOptions) {
 
 }
 
 
-function sshSocketClient() {
+
+function sshSocketServer(serverOptions) {
 
 }
 
 
-function socketServer() {
-
-}
-
-
-function socketClient() {
+function sshSocketClient(serverOptions) {
 
 }
 
