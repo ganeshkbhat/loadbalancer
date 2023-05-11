@@ -15,3 +15,20 @@
 /* eslint no-console: 0 */
 
 'use strict';
+
+const { expect } = require('chai');
+const sinon = require('sinon');
+const { Worker } = require('worker_threads');
+
+const loadbalancer = require('../index').loadbalancer.loadbalancer;
+
+describe('cluster and loadbalancer', () => {
+    afterEach(() => {
+        sinon.restore();
+    });
+
+    it('should create the specified number of process', () => {
+
+    });
+
+});

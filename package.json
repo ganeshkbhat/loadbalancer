@@ -25,7 +25,8 @@
     "chai": "^4.3.7",
     "express": "^4.18.2",
     "mocha": "^10.2.0",
-    "sinon": "^15.0.4"
+    "sinon": "^15.0.4",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "@haxtra/kvstore-sqlite": "^0.9.0",
