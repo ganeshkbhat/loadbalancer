@@ -126,33 +126,158 @@ function server(serverOptions) {
 /**
  *
  *
- * @param {*} serverOptions
- * @return {*} 
+ * @param {*} socketOptions
+ * @return {*} SocketInstance
+ * 
  */
-function socketServer(serverOptions) {
+function socketCreate(socketOptions) {
     const fs = require("fs");
     const net = require("net");
 
-    if (!serverOptions.callbacks) serverOptions.callbacks = {};
-    serverOptions.callbacks.listen = serverStartCallback;
+    if (!socketOptions.callbacks) {
+        throw new Error(`
+            socketConnect: Callbacks not defined. 
+                Please define the connectlistener and other event callbacks.
+                Event callbacks - ready, connect, data, error, end, close, drain, timeout.
+        `);
+    }
 
-    const srv = net.createServer(function (socket) {
-        console.log("Sockets: Client connected");
-        socket.on("connection", (!serverOptions.callbacks?.connection) ? serverOptions.callbacks.connection : (stream) => { console.log("Sockets: Client Disconnected"); });
-        socket.on("data", (!serverOptions.callbacks?.data) ? serverOptions.callbacks.data : (data) => { console.log("Sockets: Client Data Sending"); });
-        socket.on("error", (!serverOptions.callbacks?.error) ? serverOptions.callbacks.error : (err) => { console.log("Sockets: Client Data Sending Ended"); });
-        socket.on('end', (!serverOptions.callbacks?.end) ? serverOptions.callbacks.end : () => { console.log("Sockets: Client Data Sending Ended"); });
-        socket.on("close", (!serverOptions.callbacks.close) ? serverOptions.callbacks.close : () => { console.log("Sockets: Client Connection Closed"); });
-        socket.write(data);
-        socket.pipe(socket);
-    });
+    const socket = new net.Socket(socketOptions?.options);
 
-    srv.on('error', (err) => {
-        throw err;
-    });
+    socket.on("connect", socketOptions?.callbacks?.connect);
+    socket.on("data", socketOptions?.callbacks?.data);
+    socket.on("drain", socketOptions?.callbacks?.drain);
+    socket.on("end", socketOptions?.callbacks?.end);
+    socket.on("error", socketOptions?.callbacks?.error);
+    socket.on("lookup", socketOptions?.callbacks?.lookup);
+    socket.on("ready", socketOptions?.callbacks?.ready);
+    socket.on("timeout", socketOptions?.callbacks?.timeout);
+    socket.on("close", socketOptions?.callbacks?.close);
 
-    srv.listen(serverOptions?.port, serverOptions?.host, serverOptions?.callbacks?.listen);
-    return srv;
+    return socket;
+}
+
+
+/**
+ *
+ *
+ * @param {*} socketOptions
+ * @param {*} socket
+ * @return {*} SocketInstance
+ * 
+ */
+function socketConnect(socketOptions, socket) {
+    if (!socket) {
+        socket = socketCreate(socketOptions);
+    }
+
+    if (!socketOptions.callbacks) {
+        throw new Error(`
+            socketConnect: Callbacks not defined. 
+                Please define the connectlistener and other event callbacks.
+                Event callbacks - ready, connect, data, error, end, close, drain, timeout.
+        `);
+    }
+
+    if (!!socketOptions.options) {
+        socket.connect(socketOptions.options, socketOptions.callbacks.connectlistener);
+    } else if (!!socketOptions.host && !!socketOptions.port) {
+        socket.connect(socketOptions.port, socketOptions.host, socketOptions.callbacks.connectlistener);
+    } else if (!!socketOptions.port) {
+        socket.connect(socketOptions.port, socketOptions.callbacks.connectlistener);
+    }
+
+    return socket;
+}
+
+
+/**
+ *
+ *
+ * @param {*} socketOptions
+ * @return {*} ServerInstance
+ * 
+ */
+function socketServerCreate(socketOptions) {
+    const fs = require("fs");
+    const net = require("net");
+
+    var socketServer;
+    if (!socketOptions?.options) {
+        socketServer = new net.Server(socketOptions?.options, socketOptions?.callbacks.serverlistener);
+    } else if (!!socketOptions?.host && !!socketOptions?.port) {
+        socketServer = new net.Server(socketOptions?.port, socketOptions?.host, socketOptions?.callbacks?.serverlistener);
+    } else if (!!socketOptions?.port) {
+        socketServer = new net.Server(socketOptions.port, socketOptions?.callbacks?.serverlistener);
+    }
+
+    socketServer.on("listening", socketOptions?.callbacks?.listening);
+    socketServer.on("connection",);
+    socketServer.on("error",);
+    socketServer.on("drop",);
+    socketServer.on("close",);
+
+    return socketServer;
+}
+
+
+/**
+ *
+ *
+ * @param {*} socketOptions
+ * @param {*} socket
+ * @return {*} ServerInstance
+ * 
+ */
+function socketServerListen(socketOptions, socket) {
+    if (!socket) {
+        socket = socketServerCreate(socketOptions);
+    }
+
+    if (!socketOptions?.callbacks?.serverlistener) {
+        throw new Error(`
+            socketConnect: Callbacks not defined. 
+                Please define the connectlistener and other event callbacks.
+                Event callbacks - ready, connect, data, error, end, close, drain, timeout.
+        `);
+    }
+
+    if (!!socketOptions?.backlog) {
+        if (!socketOptions?.host) {
+            server.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+        } else {
+            server.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.host, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+        }
+    } else if (socketOptions?.options) {
+        server.listen(socketOptions?.options, socketOptions?.callbacks?.serverlistening);
+    }
+    return server;
+}
+
+
+/**
+ *
+ *
+ * @param {*} socketOptions
+ * @return {*} ServerInstance
+ * 
+ */
+function socketServer(socketOptions) {
+    return socketServerListen(socketOptions);
+}
+
+
+/**
+ *
+ *
+ * @param {*} socketOptions
+ * @return {*} SocketInstance
+ * 
+ */
+function socketClient(socketOptions) {
+    const fs = require("fs");
+    const net = require("net");
+    return socketConnect(socketOptions);
 }
 
 
@@ -160,20 +285,6 @@ function socketServer(serverOptions) {
  *
  *
  * @param {*} serverOptions
- */
-function socketClient(serverOptions) {
-    const fs = require("fs");
-    const net = require("net");
-
-}
-
-
-/**
- *
- *
- * @param {*} serverOptions
- * @param {string} [callbacks={ "upgrade": () => { console.log("Upgrade Function Invoked"); } }]
- * @param {*} [options={}]
  * @return {*} ServerInstance
  * 
  *      ServerInstance : typeof Server<Request extends typeof IncomingMessage = typeof IncomingMessage,  Response extends typeof ServerResponse = typeof ServerResponse>
