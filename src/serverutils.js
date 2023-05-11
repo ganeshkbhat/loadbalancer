@@ -139,14 +139,20 @@ function reverseProxy(serverOptions) {
  *
  *
  * @param {*} socketOptions
+ * @param {*} proxySocketOptions
+ * @return {*} 
  * 
  * Credit: https://stackoverflow.com/a/32104777/3204942
  * 
  */
-function createNetProxy(socketOptions) {
+function createNetProxy(socketOptions, proxySocketOptions) {
     const net = require('net');
     const url = require('url');
-    
+
+    // create socket server
+    // create socket client
+    // take all incoming socket server requests to socket client
+    return { socketServer, proxySocket };
 }
 
 
