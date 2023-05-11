@@ -19,6 +19,13 @@
 const { ServerResponse } = require('http');
 
 
+/**
+ *
+ *
+ * @param {*} serverOptions
+ * @param {*} workerFunctions
+ * @return {*} 
+ */
 function threadingMultiple(serverOptions, workerFunctions) {
     const { Worker } = require('worker_threads');
 
@@ -95,6 +102,13 @@ function threadingMultiple(serverOptions, workerFunctions) {
 }
 
 
+/**
+ *
+ *
+ * @param {*} serverOptions
+ * @param {*} workerFunction
+ * @return {*} 
+ */
 function threading(serverOptions, workerFunction) {
     const { Worker } = require('worker_threads');
 
