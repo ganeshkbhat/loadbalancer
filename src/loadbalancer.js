@@ -31,7 +31,9 @@ function threadingMultiple(serverOptions, workerFunctions) {
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
         },
         "keys": {
             "key": "./certs/ssl.key",
@@ -44,6 +46,9 @@ function threadingMultiple(serverOptions, workerFunctions) {
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
             "server": null,
             "listen": null
         }
@@ -102,7 +107,9 @@ function threading(serverOptions, workerFunction) {
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
         },
         "keys": {
             "key": "./certs/ssl.key",
@@ -115,6 +122,9 @@ function threading(serverOptions, workerFunction) {
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
             "server": null,
             "listen": null
         }
@@ -166,7 +176,9 @@ function threading(serverOptions, workerFunction) {
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
         },
         "keys": {
             "key": "./certs/ssl.key",
@@ -178,9 +190,12 @@ function threading(serverOptions, workerFunction) {
         "threads": 10,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
-        "callbacks": { 
-            "server": null, 
-            "listen": null 
+        "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
+            "server": null,
+            "listen": null
         }
     }
  */
