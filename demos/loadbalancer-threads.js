@@ -17,7 +17,7 @@
 'use strict';
 
 var loadbalancer = require("../index").loadbalancer;
-var createNetProxy = require("../index").serverutils.createNetProxy;
+var createNetProxy = require("../index").serverutils.;
 var server = require("./express-app");
 
 loadbalancer.loadbalancer({
@@ -45,7 +45,7 @@ loadbalancer.loadbalancer({
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        createNetProxy(opts);
+        
     },
     "callbacks": {
         "wsOnData": null,
@@ -54,4 +54,4 @@ loadbalancer.loadbalancer({
         "server": null,
         "listen": null
     }
-})
+});

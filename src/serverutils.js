@@ -18,11 +18,12 @@
 
 
 const {
-    server, websocket,
-    udpSocketServer, udpSocketClient, httpSocketServer, httpSocketClient,
-    httpsSocketServer, httpsSocketClient, wsSocketServer, wsSocketClient,
-    wssSocketServer, wssSocketClient, tcpSocketServer, tcpSocketClient,
-    sshSocketServer, sshSocketClient, socketServer, socketClient
+    echoServer, checkServerIdentity, serverStartCallback,
+    server, websocket, socketServer, socketClient,
+    httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
+    wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
+    tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
+    sshSocketServer, sshSocketClient
 } = require("./sockets");
 
 
@@ -34,11 +35,11 @@ const {
  * @param {string} [listencallback=() => { console.log('Started process ' + port); }]
  * @return {*} 
  */
-function serverProxy(serverOptions, callback, listencallback) {
+function serverProxy(serverOptions) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
 
-    callback = callback || function (req, res) {
+    var callback = function (req, res) {
         const options = {
             hostname: serverOptions?.proxy?.host,
             port: serverOptions?.proxy?.port,
@@ -61,7 +62,7 @@ function serverProxy(serverOptions, callback, listencallback) {
         });
     }
 
-    listencallback = listencallback || function () { console.log(`Proxy server listening on port ${serverOptions?.port}`); }
+    var listencallback = (!serverOptions.callbacks.listen) ? serverOptions.callbacks.listen : serverStartCallback();
 
     const pid = process.pid;
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({

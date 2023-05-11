@@ -102,8 +102,8 @@ function serverStartCallback(host, port) {
 function server(serverOptions) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
-
-    callback = callback || echoServer();
+    var callback;
+    if (!callback) callback = echoServer();
     serverOptions.port = serverOptions?.port || 8000;
     serverOptions.host = serverOptions?.host || "localhost";
 

@@ -29,6 +29,6 @@ express.get("/test", (req, res) => {
 })
 
 // // express.listen(8000);
-// module.exports = express;
+module.exports = express;
 
-app.handle(req, res, next);
+// app.handle(req, res, next);
