@@ -70,7 +70,7 @@ function serverProxy(serverOptions) {
         cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
     }, (!!serverOptions?.server) ? serverOptions?.server : callback);
 
-    srv.listen(serverOptions?.port, serverOptions?.host, listencallback.bind(this, serverOptions?.port));
+    srv.listen(serverOptions?.port, serverOptions?.host, listencallback.bind(this, serverOptions?.host, serverOptions?.port));
     return srv;
 }
 
@@ -84,11 +84,10 @@ function reverseProxy(serverOptions) {
     const { proxy, host, port, protocol } = serverOptions?.proxy;
     const http = require(protocol || 'http');
     const pid = process.pid;
-    let callback = serverOptions.callback || { "server": null, "listen": null };
 
-    if (!!callback) {
-        if (!callback["server"]) {
-            callback["server"] = (req, res) => {
+    if (!!serverOptions?.callbacks) {
+        if (!serverOptions?.callbacks?.server) {
+            serverOptions.callbacks.server = (req, res) => {
                 const options = {
                     hostname: serverOptions?.proxy?.host,
                     port: serverOptions?.proxy?.port,
@@ -112,8 +111,8 @@ function reverseProxy(serverOptions) {
             }
         }
 
-        if (!callback["listen"]) {
-            callback["listen"] = () => { console.log(`Proxy server listening on port ${serverOptions?.port}`); }
+        if (!serverOptions?.callbacks?.listen) {
+            serverOptions.callbacks.listen = serverOptions?.callbacks?.listen || serverStartCallback();
         }
     }
 
@@ -122,11 +121,11 @@ function reverseProxy(serverOptions) {
         srv = http.createServer({
             key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
             cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
-        }, callback["server"]);
+        }, serverOptions?.callbacks?.server);
     } else {
-        srv = http.createServer(callback["server"]);
+        srv = http.createServer(serverOptions?.callbacks?.server);
     }
-    srv.listen(serverOptions?.port, serverOptions?.host, callback["listen"]);
+    srv.listen(serverOptions?.port, serverOptions?.host, serverOptions?.callbacks?.listen.bind(this, serverOptions?.host, serverOptions?.port));
     return srv;
 }
 
@@ -145,8 +144,8 @@ function reverseProxy(serverOptions) {
 function createNetProxy(protocol, hostname, port, certs) {
     const net = require('net');
     const url = require('url');
-    hostname = hostname || "127.0.0.1";
-    port = port || process.env.PORT || 9191;
+    hostname = hostname // || "127.0.0.1";
+    port = port // || process.env.PORT || 9191;
     const http = require(!!protocol || (!!certs?.cert && !!certs?.key) ? "https" : "http");
 
     const requestHandler = (req, res) => { // discard all request to proxy server except HTTP/1.1 CONNECT method

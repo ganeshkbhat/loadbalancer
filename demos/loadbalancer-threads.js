@@ -17,10 +17,10 @@
 'use strict';
 
 var loadbalancer = require("../index").loadbalancer;
-var createNetProxy = require("../index").serverutils.;
+var httpSocketServer = require("../index").sockets.httpSocketServer;
 var server = require("./express-app");
 
-loadbalancer.loadbalancer({
+loadbalancer.threading({
     "server": server,
     "protocol": "http",
     "createCerts": true,
@@ -45,7 +45,7 @@ loadbalancer.loadbalancer({
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        
+        httpSocketServer(opts);
     },
     "callbacks": {
         "wsOnData": null,

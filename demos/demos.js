@@ -46,7 +46,7 @@ lb.loadbalancer(10, {
         "server": null, 
         "listen": null 
     }
-})
+});
 
 
 // if (!serverOptions.proxy) {

@@ -177,7 +177,7 @@ function socketClient(serverOptions) {
  * 
  *      ServerInstance : typeof Server<Request extends typeof IncomingMessage = typeof IncomingMessage,  Response extends typeof ServerResponse = typeof ServerResponse>
  */
-function websocket(serverOptions, callbacks = {}, options = {}) {
+function websocket(serverOptions) {
     const fs = require('fs');
     const http = require('http');
     const https = require('https');
@@ -404,9 +404,9 @@ function httpClient(serverOptions) {
  * @param {*} listencallback
  * @return {*} 
  */
-function httpSocketServer(serverOptions, callback, listencallback) {
+function httpSocketServer(serverOptions) {
     serverOptions.protocol = "http";
-    return server(serverOptions, callback, listencallback);
+    return server(serverOptions);
 }
 
 
@@ -422,9 +422,9 @@ function httpSocketClient(serverOptions) {
 }
 
 
-function httpsSocketServer(serverOptions, callback, listencallback) {
+function httpsSocketServer(serverOptions) {
     serverOptions.protocol = "https";
-    return server(serverOptions, callback, listencallback);
+    return server(serverOptions);
 }
 
 
