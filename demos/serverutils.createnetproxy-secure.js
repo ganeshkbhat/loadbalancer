@@ -6,7 +6,7 @@
  * Install: npm i loadbalancer --save
  * Github: https://github.com/ganeshkbhat/loadbalancer
  * npmjs Link: https://www.npmjs.com/package/loadbalancer
- * File: demos/loadbalancer-wss.js
+ * File: demos/secureutils.createnetproxy.js
  * File Description: A simple threaded and clustered load balancer for nodejs
  * 
  * 
@@ -17,17 +17,17 @@
 'use strict';
 
 var loadbalancer = require("../index").loadbalancer;
-var wssSocketServer = require("../index").sockets.wssSocketServer;
+var createNetProxy = require("../index").serverutils.createNetProxy;
 var server = require("./express-app");
 
 loadbalancer.loadbalancer({
     "server": server,
-    "protocol": "https",
+    "protocol": "http",
     "createCerts": true,
     "host": "localhost",
     "proxy": {
         "proxy": true,
-        "protocol": "https",
+        "protocol": "http",
         "host": "localhost",
         "port": 7000,
         "proxyHost": "",
@@ -45,7 +45,7 @@ loadbalancer.loadbalancer({
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        wssSocketServer(opts);
+        createNetProxy(opts);
     },
     "callbacks": {
         "wsOnData": null,
@@ -54,4 +54,4 @@ loadbalancer.loadbalancer({
         "server": null,
         "listen": null
     }
-})
+});
