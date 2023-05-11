@@ -114,8 +114,8 @@ function server(serverOptions) {
 
     let srv = (!serverOptions?.protocol === "https") ?
         http.createServer(serverOptions?.server) : http.createServer({
-            key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
-            cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
+            key: fs.readFileSync(serverOptions?.certs?.key || './certs/ssl.key'),
+            cert: fs.readFileSync(serverOptions?.certs?.cert || './certs/ssl.cert')
         }, serverOptions?.server);
     srv.listen(serverOptions?.port, serverOptions?.host, serverOptions.callbacks.listen);
     return srv;
@@ -196,7 +196,7 @@ function websocket(serverOptions) {
             "proxyHost": "",
             "proxyPort": 9000
         },
-        "keys": {
+        "certs": {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
@@ -228,8 +228,8 @@ function websocket(serverOptions) {
             http.createServer() : http.createServer(serverOptions?.server);
     } else if (serverOptions?.protocol === "https") {
         srv = (!serverOptions?.server) ?
-            https.createServer({ key: fs.readFileSync(serverOptions?.keys?.key), cert: fs.readFileSync(serverOptions?.keys?.cert) }) :
-            https.createServer({ key: fs.readFileSync(serverOptions?.keys?.key), cert: fs.readFileSync(serverOptions?.keys?.cert) }, serverOptions.server);
+            https.createServer({ key: fs.readFileSync(serverOptions?.certs?.key), cert: fs.readFileSync(serverOptions?.certs?.cert) }) :
+            https.createServer({ key: fs.readFileSync(serverOptions?.certs?.key), cert: fs.readFileSync(serverOptions?.certs?.cert) }, serverOptions.server);
     }
 
     const connections = new Set();
@@ -422,6 +422,12 @@ function httpSocketClient(serverOptions) {
 }
 
 
+/**
+ *
+ *
+ * @param {*} serverOptions
+ * @return {*} 
+ */
 function httpsSocketServer(serverOptions) {
     serverOptions.protocol = "https";
     return server(serverOptions);
@@ -447,9 +453,9 @@ function httpsSocketClient(serverOptions) {
  * @param {*} listencallback
  * @return {*} 
  */
-function wsSocketServer(serverOptions, callback, listencallback) {
+function wsSocketServer(serverOptions) {
     serverOptions.protocol = "http";
-    return websocket(serverOptions, callback, listencallback);
+    return websocket(serverOptions,);
 }
 
 

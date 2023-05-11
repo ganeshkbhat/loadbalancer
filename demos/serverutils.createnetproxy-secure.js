@@ -33,7 +33,7 @@ loadbalancer.loadbalancer({
         "proxyHost": "",
         "proxyPort": 9000
     },
-    "keys": {
+    "certs": {
         "key": "./certs/ssl.key",
         "cert": "./certs/ssl.cert"
     },

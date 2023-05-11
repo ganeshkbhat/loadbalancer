@@ -29,7 +29,7 @@ lb.loadbalancer(10, {
         "host": "localhost",
         "port": 7000
     },
-    "keys": {
+    "certs": {
         "key": "./certs/ssl.key",
         "cert": "./certs/ssl.cert"
     },

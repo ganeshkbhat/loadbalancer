@@ -66,8 +66,8 @@ function serverProxy(serverOptions) {
 
     const pid = process.pid;
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
-        key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
-        cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
+        key: fs.readFileSync(serverOptions?.certs?.key || './certs/ssl.key'),
+        cert: fs.readFileSync(serverOptions?.certs?.cert || './certs/ssl.cert')
     }, (!!serverOptions?.server) ? serverOptions?.server : callback);
 
     srv.listen(serverOptions?.port, serverOptions?.host, listencallback.bind(this, serverOptions?.host, serverOptions?.port));
@@ -119,8 +119,8 @@ function reverseProxy(serverOptions) {
     let srv;
     if (protocol === "https") {
         srv = http.createServer({
-            key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
-            cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
+            key: fs.readFileSync(serverOptions?.certs?.key || './certs/ssl.key'),
+            cert: fs.readFileSync(serverOptions?.certs?.cert || './certs/ssl.cert')
         }, serverOptions?.callbacks?.server);
     } else {
         srv = http.createServer(serverOptions?.callbacks?.server);
@@ -141,30 +141,31 @@ function reverseProxy(serverOptions) {
  * Credit: https://stackoverflow.com/a/32104777/3204942
  * 
  */
-function createNetProxy(protocol, hostname, port, certs) {
+function createNetProxy(serverOptions) {
     const net = require('net');
     const url = require('url');
-    hostname = hostname // || "127.0.0.1";
-    port = port // || process.env.PORT || 9191;
-    const http = require(!!protocol || (!!certs?.cert && !!certs?.key) ? "https" : "http");
+    hostname = serverOptions?.host;
+    port = serverOptions?.port; // || process.env.PORT || 9191;
+    const http = require(!!serverOptions?.protocol || (!!serverOptions?.certs?.cert && !!serverOptions?.certs?.key) ? "https" : "http");
 
-    const requestHandler = (req, res) => { // discard all request to proxy server except HTTP/1.1 CONNECT method
-        res.writeHead(405, { 'Content-Type': 'text/plain' })
-        res.end('Method not allowed')
+    const requestHandler = (req, res) => {
+        // discard all request to proxy server except HTTP/1.1 CONNECT method
+        res.writeHead(405, { 'Content-Type': 'text/plain' });
+        res.end('Method not allowed');
     }
 
     let server;
-    if (protocol === "https") {
-        server = http.createServer(requestHandler);
+    if (serverOptions?.protocol === "https") {
+        server = (!serverOptions?.server) ?
+            https.createServer({ key: fs.readFileSync(serverOptions?.certs?.key), cert: fs.readFileSync(serverOptions?.certs?.cert) }) :
+            https.createServer({ key: fs.readFileSync(serverOptions?.certs?.key), cert: fs.readFileSync(serverOptions?.certs?.cert) }, serverOptions.server);
     } else {
         server = http.createServer(requestHandler);
     }
 
     const listener = server.listen(port, hostname, (err) => {
-        if (err) {
-            return console.error(err)
-        }
-        const info = listener.address()
+        if (err) return console.error(err);
+        const info = listener.address();
         console.log(`Server is listening on address ${info.address} port ${info.port}`)
     });
 
@@ -222,7 +223,7 @@ function createNetProxy(protocol, hostname, port, certs) {
             clientSocket.end('HTTP/1.1 400 Bad Request\r\n')
             clientSocket.destroy()
         }
-    })
+    });
 }
 
 

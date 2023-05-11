@@ -35,7 +35,7 @@ function threadingMultiple(serverOptions, workerFunctions) {
             "proxyHost": "",
             "proxyPort": 9000
         },
-        "keys": {
+        "certs": {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
@@ -111,7 +111,7 @@ function threading(serverOptions, workerFunction) {
             "proxyHost": "",
             "proxyPort": 9000
         },
-        "keys": {
+        "certs": {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
@@ -180,7 +180,7 @@ function threading(serverOptions, workerFunction) {
             "proxyHost": "",
             "proxyPort": 9000
         },
-        "keys": {
+        "certs": {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
@@ -211,7 +211,7 @@ function loadbalancer(serverOptions) {
             "host": "localhost",
             "port": 7000
         },
-        "keys": {
+        "certs": {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
