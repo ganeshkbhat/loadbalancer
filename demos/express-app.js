@@ -17,15 +17,18 @@
 'use strict';
 
 var express = require("express")();
+
 express.all("/", (req, res) => {
         console.log("TESTING CLUSTER PROCESS ", process.pid);
         res.status(200).send(`{ 'hello': 'server', 'pid': ${process.pid} }`)
 })
+
 express.get("/test", (req, res) => {
         console.log("TESTING CLUSTER PROCESS ", process.pid);
         res.status(200).send(`{ 'hello': 'server', 'pid': ${process.pid} }`)
 })
 
-// express.listen(8000);
-module.exports = express;
+// // express.listen(8000);
+// module.exports = express;
 
+app.handle(req, res, next);

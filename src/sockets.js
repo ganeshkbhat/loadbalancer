@@ -95,13 +95,11 @@ function serverStartCallback(host, port) {
  *
  *
  * @param {*} serverOptions
- * @param {string} callback
- * @param {string} listencallback
  * @return {*} ServerInstance 
  * 
  * ServerInstance : typeof Server<Request extends typeof IncomingMessage = typeof IncomingMessage,  Response extends typeof ServerResponse = typeof ServerResponse>
  */
-function server(serverOptions, callback, listencallback) {
+function server(serverOptions) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
 
@@ -109,18 +107,61 @@ function server(serverOptions, callback, listencallback) {
     serverOptions.port = serverOptions?.port || 8000;
     serverOptions.host = serverOptions?.host || "localhost";
 
-    serverOptions.server = (!!serverOptions?.server) ? serverOptions?.server : callback;
-    serverOptions.callbacks = (!!serverOptions.callbacks) ? serverOptions.callbacks : {};
-    serverOptions.callbacks.listen = (!!listencallback) ? listencallback : serverStartCallback(serverOptions?.host, serverOptions?.port);
+    if (!serverOptions.server) throw new Error("Error: serverOptions.server - server or callback is not defined.");
+    if (!serverOptions.callbacks) serverOptions.callbacks = {}
+
+    serverOptions.callbacks.listen = (!!serverOptions.callbacks?.listen) ? serverOptions.callbacks.listen : serverStartCallback(serverOptions.host, serverOptions.port);
 
     let srv = (!serverOptions?.protocol === "https") ?
         http.createServer(serverOptions?.server) : http.createServer({
             key: fs.readFileSync(serverOptions?.keys?.key || './certs/ssl.key'),
             cert: fs.readFileSync(serverOptions?.keys?.cert || './certs/ssl.cert')
         }, serverOptions?.server);
-
     srv.listen(serverOptions?.port, serverOptions?.host, serverOptions.callbacks.listen);
     return srv;
+}
+
+/**
+ *
+ *
+ * @param {*} serverOptions
+ * @return {*} ServerInstance
+ * 
+ */
+function sockets(serverOptions) {
+    const fs = require("fs");
+    const net = require("net");
+
+    serverOptions.callbacks.listen = serverStartCallback;
+
+    const srv = net.createServer(function (socket) {
+        console.log("Sockets: Client connected");
+        socket.on("connection", (stream) => { });
+        socket.on("data", (data) => { });
+        socket.on("error", (err) => { });
+        socket.on('end', () => { console.log("Sockets: Client Disconnected"); });
+        socket.on("close", () => { console.log("Sockets: Client Connection Closed"); });
+        socket.write(data);
+        socket.pipe(socket);
+    });
+
+    srv.on('error', (err) => {
+        throw err;
+    });
+
+    srv.listen(serverOptions?.port, serverOptions?.callbacks?.listen);
+    return srv;
+}
+
+/**
+ *
+ *
+ * @param {*} serverOptions
+ * @return {*} ClientInstance
+ * 
+ */
+function socketsClient(serverOptions) {
+
 }
 
 
