@@ -150,7 +150,7 @@ function socketServer(serverOptions) {
         throw err;
     });
 
-    srv.listen(serverOptions?.port, serverOptions?.callbacks?.listen);
+    srv.listen(serverOptions?.port, serverOptions?.host, serverOptions?.callbacks?.listen);
     return srv;
 }
 
@@ -163,7 +163,7 @@ function socketServer(serverOptions) {
 function socketClient(serverOptions) {
     const fs = require("fs");
     const net = require("net");
-    
+
 }
 
 
