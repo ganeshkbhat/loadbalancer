@@ -108,7 +108,7 @@ function server(serverOptions) {
     serverOptions.host = serverOptions?.host || "localhost";
 
     if (!serverOptions.server) throw new Error("Error: serverOptions.server - server or callback is not defined.");
-    if (!serverOptions.callbacks) serverOptions.callbacks = {}
+    if (!serverOptions.callbacks) serverOptions.callbacks = {};
 
     serverOptions.callbacks.listen = (!!serverOptions.callbacks?.listen) ? serverOptions.callbacks.listen : serverStartCallback(serverOptions.host, serverOptions.port);
 
@@ -132,15 +132,16 @@ function socketServer(serverOptions) {
     const fs = require("fs");
     const net = require("net");
 
+    if (!serverOptions.callbacks) serverOptions.callbacks = {};
     serverOptions.callbacks.listen = serverStartCallback;
 
     const srv = net.createServer(function (socket) {
         console.log("Sockets: Client connected");
-        socket.on("connection", (stream) => { });
-        socket.on("data", (data) => { });
-        socket.on("error", (err) => { });
-        socket.on('end', () => { console.log("Sockets: Client Disconnected"); });
-        socket.on("close", () => { console.log("Sockets: Client Connection Closed"); });
+        socket.on("connection", (!serverOptions.callbacks?.connection) ? serverOptions.callbacks.connection : (stream) => { console.log("Sockets: Client Disconnected"); });
+        socket.on("data", (!serverOptions.callbacks?.data) ? serverOptions.callbacks.data : (data) => { console.log("Sockets: Client Data Sending"); });
+        socket.on("error", (!serverOptions.callbacks?.error) ? serverOptions.callbacks.error : (err) => { console.log("Sockets: Client Data Sending Ended"); });
+        socket.on('end', (!serverOptions.callbacks?.end) ? serverOptions.callbacks.end : () => { console.log("Sockets: Client Data Sending Ended"); });
+        socket.on("close", (!serverOptions.callbacks.close) ? serverOptions.callbacks.close : () => { console.log("Sockets: Client Connection Closed"); });
         socket.write(data);
         socket.pipe(socket);
     });
