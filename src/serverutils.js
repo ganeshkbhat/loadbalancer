@@ -60,9 +60,9 @@ function serverProxy(serverOptions) {
             res.statusCode = 502;
             res.end('Bad gateway');
         });
-    }
+    };
 
-    var listencallback = (!serverOptions.callbacks.listen) ? serverOptions.callbacks.listen : serverStartCallback();
+    var listencallback = (!serverOptions?.callbacks?.listen) ? serverOptions?.callbacks?.listen : serverStartCallback();
 
     const pid = process.pid;
     let srv = (!serverOptions?.protocol === "https") ? http.createServer(callback) : http.createServer({
@@ -96,7 +96,12 @@ function reverseProxy(serverOptions) {
                     headers: req.headers
                 };
 
-                const proxyReq = https.request(options, (proxyRes) => {
+                // const proxyReq = https.request(options, (proxyRes) => {
+                //     res.writeHead(proxyRes.statusCode, proxyRes.headers);
+                //     proxyRes.pipe(res);
+                // });
+
+                const proxyReq = https.request(req, (proxyRes) => {
                     res.writeHead(proxyRes.statusCode, proxyRes.headers);
                     proxyRes.pipe(res);
                 });

@@ -68,6 +68,7 @@ const checkServerIdentity = function (host, cert) {
     // } while (cert.fingerprint256 !== lastprint256);
 }
 
+
 /**
  *
  *
