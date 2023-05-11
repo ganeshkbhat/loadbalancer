@@ -6,7 +6,7 @@
  * Install: npm i loadbalancer --save
  * Github: https://github.com/ganeshkbhat/loadbalancer
  * npmjs Link: https://www.npmjs.com/package/loadbalancer
- * File: demos/serverutils.cluster.js
+ * File: demos/sockets.cluster.js
  * File Description: A simple threaded and clustered load balancer for nodejs
  * 
  * 
