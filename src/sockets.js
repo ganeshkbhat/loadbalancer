@@ -201,6 +201,9 @@ function socketConnect(socketOptions, socket) {
 function socketServerCreate(socketOptions) {
     const fs = require("fs");
     const net = require("net");
+    const controller = new AbortController();
+
+    socketOptions["signal"] = controller.signal;
 
     var socketServer;
     if (!socketOptions?.options) {
@@ -208,16 +211,16 @@ function socketServerCreate(socketOptions) {
     } else if (!!socketOptions?.host && !!socketOptions?.port) {
         socketServer = new net.Server(socketOptions?.port, socketOptions?.host, socketOptions?.callbacks?.serverlistener);
     } else if (!!socketOptions?.port) {
-        socketServer = new net.Server(socketOptions.port, socketOptions?.callbacks?.serverlistener);
+        socketServer = new net.Server(socketOptions?.port, socketOptions?.callbacks?.serverlistener);
     }
 
     socketServer.on("listening", socketOptions?.callbacks?.listening);
-    socketServer.on("connection",);
-    socketServer.on("error",);
-    socketServer.on("drop",);
-    socketServer.on("close",);
+    socketServer.on("connection", socketOptions?.callbacks?.connection);
+    socketServer.on("error", socketOptions?.callbacks?.error);
+    socketServer.on("drop", socketOptions?.callbacks?.drop);
+    socketServer.on("close", socketOptions?.callbacks?.close);
 
-    return socketServer;
+    return { socketServer, controller };
 }
 
 
@@ -229,9 +232,11 @@ function socketServerCreate(socketOptions) {
  * @return {*} ServerInstance
  * 
  */
-function socketServerListen(socketOptions, socket) {
-    if (!socket) {
-        socket = socketServerCreate(socketOptions);
+function socketServerListen(socketOptions, socketServer) {
+    if (!socketServer) {
+        let sc = socketServerCreate(socketOptions);
+        socketServer = sc.socketServer;
+        controller = sc.controller;
     }
 
     if (!socketOptions?.callbacks?.serverlistener) {
@@ -244,14 +249,14 @@ function socketServerListen(socketOptions, socket) {
 
     if (!!socketOptions?.backlog) {
         if (!socketOptions?.host) {
-            server.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+            socketServer.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
         } else {
-            server.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.host, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+            socketServer.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.host, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
         }
     } else if (socketOptions?.options) {
-        server.listen(socketOptions?.options, socketOptions?.callbacks?.serverlistening);
+        socketServer.listen(socketOptions?.options, socketOptions?.callbacks?.serverlistening);
     }
-    return server;
+    return { socketServer, controller };
 }
 
 
@@ -634,9 +639,6 @@ function sshSocketClient(serverOptions) {
 module.exports.server = server;
 module.exports.websocket = websocket;
 
-module.exports.udpSocketServer = udpSocketServer;
-module.exports.udpSocketClient = udpSocketClient;
-
 module.exports.httpSocketServer = httpSocketServer;
 module.exports.httpSocketClient = httpSocketClient;
 module.exports.httpsSocketServer = httpsSocketServer;
@@ -646,6 +648,9 @@ module.exports.wsSocketServer = wsSocketServer;
 module.exports.wsSocketClient = wsSocketClient;
 module.exports.wssSocketServer = wssSocketServer;
 module.exports.wssSocketClient = wssSocketClient;
+
+module.exports.udpSocketServer = udpSocketServer;
+module.exports.udpSocketClient = udpSocketClient;
 
 module.exports.tcpSocketServer = tcpSocketServer;
 module.exports.tcpSocketClient = tcpSocketClient;
