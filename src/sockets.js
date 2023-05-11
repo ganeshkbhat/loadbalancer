@@ -133,6 +133,9 @@ function server(serverOptions) {
 function socketCreate(socketOptions) {
     const fs = require("fs");
     const net = require("net");
+    const controller = new AbortController();
+
+    socketOptions["signal"] = controller.signal;
 
     if (!socketOptions.callbacks) {
         throw new Error(`
@@ -154,7 +157,7 @@ function socketCreate(socketOptions) {
     socket.on("timeout", socketOptions?.callbacks?.timeout);
     socket.on("close", socketOptions?.callbacks?.close);
 
-    return socket;
+    return { socket, controller };
 }
 
 
@@ -168,10 +171,12 @@ function socketCreate(socketOptions) {
  */
 function socketConnect(socketOptions, socket) {
     if (!socket) {
-        socket = socketCreate(socketOptions);
+        let sc = socketCreate(socketOptions);
+        socket = sc.socket;
+        controller = sc.controller;
     }
 
-    if (!socketOptions.callbacks) {
+    if (!socketOptions?.callbacks) {
         throw new Error(`
             socketConnect: Callbacks not defined. 
                 Please define the connectlistener and other event callbacks.
@@ -180,14 +185,14 @@ function socketConnect(socketOptions, socket) {
     }
 
     if (!!socketOptions.options) {
-        socket.connect(socketOptions.options, socketOptions.callbacks.connectlistener);
-    } else if (!!socketOptions.host && !!socketOptions.port) {
-        socket.connect(socketOptions.port, socketOptions.host, socketOptions.callbacks.connectlistener);
+        socket.connect(socketOptions?.options, socketOptions?.callbacks?.connectlistener);
+    } else if (!!socketOptions?.host && !!socketOptions?.port) {
+        socket.connect(socketOptions?.port, socketOptions?.host, socketOptions?.callbacks?.connectlistener);
     } else if (!!socketOptions.port) {
-        socket.connect(socketOptions.port, socketOptions.callbacks.connectlistener);
+        socket.connect(socketOptions?.port, socketOptions?.callbacks?.connectlistener);
     }
 
-    return socket;
+    return { socket, controller };
 }
 
 
