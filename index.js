@@ -24,11 +24,13 @@ const {
     randomize, sequential, sticky, weighted, singleMaxload,
     Randomize, Sequential, Sticky, Weighted, SingleMaxload
 } = require("./src/algorithms");
-const { 
-    udpSocketServer, udpSocketClient, httpSocketServer, httpSocketClient, 
-    httpsSocketServer, httpsSocketClient, wsSocketServer, wsSocketClient, 
-    wssSocketServer, wssSocketClient, tcpSocketServer, tcpSocketClient, 
-    sshSocketServer, sshSocketClient, socketServer, socketClient
+const {
+    echoServer, checkServerIdentity, serverStartCallback,
+    server, websocket, socketServer, socketClient,
+    httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
+    wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
+    tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
+    sshSocketServer, sshSocketClient
 } = require("./src/sockets");
 
 const { generateCertificates } = require("./src/certificates");
@@ -36,26 +38,40 @@ const { generateCertificates } = require("./src/certificates");
 
 module.exports.loadbalancer = { loadbalancer, threadingMultiple, threading };
 module.exports.serverutils = { server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore };
-module.exports.algorithms = { 
-    poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections, 
-    randomize, sequential, sticky, weighted, singleMaxload, 
-    Randomize, Sequential, Sticky, Weighted, SingleMaxload 
+
+module.exports.algorithms = {
+    poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
+    randomize, sequential, sticky, weighted, singleMaxload,
+    Randomize, Sequential, Sticky, Weighted, SingleMaxload
 };
-module.exports.sockets = { 
-    udpSocketServer, udpSocketClient, httpSocketServer, httpSocketClient, 
-    httpsSocketServer, httpsSocketClient, wsSocketServer, wsSocketClient, 
-    wssSocketServer, wssSocketClient, tcpSocketServer, tcpSocketClient, 
-    sshSocketServer, sshSocketClient, socketServer, socketClient
+
+module.exports.sockets = {
+    echoServer, checkServerIdentity, serverStartCallback,
+    server, websocket, socketServer, socketClient,
+    httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
+    wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
+    tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
+    sshSocketServer, sshSocketClient
 };
+
 module.exports.certificates = { generateCertificates };
 
 module.exports.default = {
-    loadbalancer, threadingMultiple, threading,
     server, reverseProxy, websocket_secure, websocket, createNetProxy, sqlKvStore,
+
+    loadbalancer, threadingMultiple, threading,
+
     poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
     randomize, sequential, sticky, weighted, singleMaxload,
     Randomize, Sequential, Sticky, Weighted, SingleMaxload,
+
+    echoServer, checkServerIdentity, serverStartCallback,
+    server, websocket, socketServer, socketClient,
+    httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
+    wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
+    tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
+    sshSocketServer, sshSocketClient,
+
     generateCertificates
 }
-
 
