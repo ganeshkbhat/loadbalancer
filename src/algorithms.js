@@ -16,6 +16,7 @@
 
 'use strict';
 
+
 /**
  *
  *
@@ -46,6 +47,7 @@ function poolsInstance(pools) {
     this.len = () => this.pools.length;
 }
 
+
 /**
  *
  *
@@ -62,6 +64,7 @@ function sortPoolsByKey(arr, key, order = "desc") {
     }
     return arr;
 }
+
 
 /**
  *
@@ -93,6 +96,7 @@ function sortPoolsByKeys(arr, key, key2, order = "desc") {
     return arr;
 }
 
+
 /**
  *
  *
@@ -105,6 +109,7 @@ function closeConnections(pools, index) {
     pools[index].closed = pools[index].closed + 1;
     return pools;
 }
+
 
 /**
  *
@@ -125,6 +130,7 @@ function weighted(pools, lastIndex, nextIndex) {
     return { result: { host: pools[0], index: 0 }, lastIndex: lastIndex, nextIndex: nextIndex };
 }
 
+
 /**
  *
  *
@@ -140,6 +146,7 @@ function randomize(pools, lastIndex, nextIndex) {
     let idx = Math.floor(Math.random() * (max - min + 1)) + min;
     return { result: { host: pools[idx], index: idx }, lastIndex: idx, nextIndex: nextIndex };
 }
+
 
 /**
  *
@@ -160,6 +167,7 @@ function sequential(pools, lastIndex, nextIndex, max) {
     }
     return { result: { host: pools[lastIndex], index: lastIndex }, lastIndex: lastIndex, nextIndex: nextIndex };
 }
+
 
 /**
  *
@@ -190,6 +198,7 @@ function sticky(pools, lastIndex, nextIndex) {
         return { result: { host: pools[lastIndex], index: lastIndex }, lastIndex: lastIndex, nextIndex: nextIndex };
     }
 }
+
 
 /**
  *
@@ -224,6 +233,7 @@ function singlemaxload(pools, lastIndex, nextIndex, algorithm = "sequential") {
     }
 }
 
+
 /**
  *
  *
@@ -249,6 +259,7 @@ function Weighted(pools) {
     }.bind(this);
 }
 
+
 /**
  *
  *
@@ -272,6 +283,7 @@ function Randomize(pools) {
         return result;
     }.bind(this);
 }
+
 
 /**
  *
@@ -299,6 +311,7 @@ function Sequential(pools) {
     }.bind(this);
 }
 
+
 /**
  *
  *
@@ -324,6 +337,7 @@ function Sticky(pools) {
         return result;
     }.bind(this);
 }
+
 
 /**
  *
