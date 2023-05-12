@@ -726,13 +726,24 @@ function sshSocketClient(serverOptions) {
 
 
 module.exports.server = server;
-module.exports.websocket = websocket;
+
+module.exports.socketServerCreate = socketServerCreate;
+module.exports.socketServerListen = socketServerListen;
+
+module.exports.socketCreate = socketCreate;
+module.exports.socketConnect = socketConnect;
+module.exports.socketCreateConnection = socketCreateConnection;
+
+module.exports.socketClient = socketClient;
+module.exports.socketServer = socketServer;
 
 module.exports.httpSocketServer = httpSocketServer;
 module.exports.httpSocketClient = httpSocketClient;
 module.exports.httpsSocketServer = httpsSocketServer;
 module.exports.httpsSocketClient = httpsSocketClient;
 
+
+module.exports.websocket = websocket;
 module.exports.wsSocketServer = wsSocketServer;
 module.exports.wsSocketClient = wsSocketClient;
 module.exports.wssSocketServer = wssSocketServer;

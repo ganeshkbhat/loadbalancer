@@ -27,6 +27,7 @@ const {
 const {
     echoServer, checkServerIdentity, serverStartCallback,
     server, websocket, socketServer, socketClient,
+    socketServerCreate, socketServerListen, socketCreate, socketConnect, socketCreateConnection,
     httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
@@ -48,6 +49,7 @@ module.exports.algorithms = {
 module.exports.sockets = {
     echoServer, checkServerIdentity, serverStartCallback,
     server, websocket, socketServer, socketClient,
+    socketServerCreate, socketServerListen, socketCreate, socketConnect, socketCreateConnection,
     httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
@@ -67,6 +69,7 @@ module.exports.default = {
 
     echoServer, checkServerIdentity, serverStartCallback,
     server, websocket, socketServer, socketClient,
+    socketServerCreate, socketServerListen, socketCreate, socketConnect, socketCreateConnection,
     httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
