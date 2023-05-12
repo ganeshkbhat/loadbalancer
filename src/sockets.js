@@ -135,7 +135,12 @@ function socketCreate(socketOptions) {
     const net = require("net");
     const controller = new AbortController();
 
-    socketOptions["signal"] = controller.signal;
+    socketOptions.options = {
+        fd: null, allowHalfOpen: false,
+        readable: false, writable: false,
+        signal: controller.signal,
+        ...socketOptions?.options
+    };
 
     if (!socketOptions.callbacks) {
         throw new Error(`
@@ -170,6 +175,25 @@ function socketCreate(socketOptions) {
  * 
  */
 function socketConnect(socketOptions, socket) {
+
+    socketOptions.options = {
+        fd: null, allowHalfOpen: false,
+        readable: false, writable: false,
+        signal: null,
+        ...socketOptions?.options
+    }
+
+    socketOptions["connectOptions"] = {
+        port: null, host: 'localhost',
+        localAddress: "", localPort: null,
+        family: 0, hints: null,
+        lookup: () => { }, noDelay: false,
+        keepAlive: false, keepAliveInitialDelay: 0,
+        autoSelectFamily: net.getDefaultAutoSelectFamily(),
+        autoSelectFamilyAttemptTimeout: net.getDefaultAutoSelectFamilyAttemptTimeout(),
+        ...socketOptions?.connectOptions
+    }
+
     if (!socket) {
         let sc = socketCreate(socketOptions);
         socket = sc.socket;
@@ -184,15 +208,50 @@ function socketConnect(socketOptions, socket) {
         `);
     }
 
-    if (!!socketOptions.options) {
-        socket.connect(socketOptions?.options, socketOptions?.callbacks?.connectlistener);
+    if (!!socketOptions.connectOptions) {
+        socket.connect(socketOptions?.connectOptions, socketOptions?.callbacks?.connectlistener);
     } else if (!!socketOptions?.host && !!socketOptions?.port) {
         socket.connect(socketOptions?.port, socketOptions?.host, socketOptions?.callbacks?.connectlistener);
-    } else if (!!socketOptions.port) {
+    } else if (!!socketOptions.port && !socketOptions?.host) {
         socket.connect(socketOptions?.port, socketOptions?.callbacks?.connectlistener);
     }
 
     return { socket, controller };
+}
+
+
+/**
+ *
+ *
+ * @param {*} socketOptions
+ * @return {*} SocketInstance || ErrorInstance
+ */
+function socketCreateConnection(socketOptions) {
+    const net = require("net");
+
+    socketOptions.options = {
+        fd: null, allowHalfOpen: false,
+        readable: false, writable: false,
+        signal: null, port: null, host: 'localhost',
+        localAddress: "", localPort: null,
+        family: 0, hints: null,
+        lookup: () => { }, noDelay: false,
+        keepAlive: false, keepAliveInitialDelay: 0,
+        autoSelectFamily: net.getDefaultAutoSelectFamily(),
+        autoSelectFamilyAttemptTimeout: net.getDefaultAutoSelectFamilyAttemptTimeout(),
+        ...socketOptions?.options
+    }
+
+    let connect = (method === "connect") ? net.connect : net.createConnection;
+    if (!!socketOptions?.options) {
+        return connect(socketOptions?.options, socketOptions?.callbacks?.connectlistener);
+    } else if (!!socketOptions.path && !!socketOptions.host) {
+        return connect(socketOptions?.path, socketOptions?.host, socketOptions?.callbacks?.connectlistener);
+    } else if (!!socketOptions?.path && !socketOptions?.host) {
+        return connect(socketOptions?.path, socketOptions?.callbacks?.connectlistener);
+    };
+
+    throw new Error("socketCreateConnection: Required socket connection options are not provided");
 }
 
 
@@ -208,15 +267,17 @@ function socketServerCreate(socketOptions) {
     const net = require("net");
     const controller = new AbortController();
 
-    socketOptions["signal"] = controller.signal;
+    socketOptions.options = {
+        allowHalfOpen: false, highWaterMark: stream.getDefaultHighWaterMark(),
+        pauseOnConnect: false, noDelay: false,
+        keepAlive: false, keepAliveInitialDelay: 0,
+        signal: controller.signal,
+        ...socketOptions?.options
+    }
 
     var socketServer;
     if (!socketOptions?.options) {
         socketServer = new net.Server(socketOptions?.options, socketOptions?.callbacks.serverlistener);
-    } else if (!!socketOptions?.host && !!socketOptions?.port) {
-        socketServer = new net.Server(socketOptions?.port, socketOptions?.host, socketOptions?.callbacks?.serverlistener);
-    } else if (!!socketOptions?.port) {
-        socketServer = new net.Server(socketOptions?.port, socketOptions?.callbacks?.serverlistener);
     }
 
     socketServer.on("listening", socketOptions?.callbacks?.listening);
@@ -233,33 +294,33 @@ function socketServerCreate(socketOptions) {
  *
  *
  * @param {*} socketOptions
- * @param {*} socketServer
- */
-function socketServerConnect(socketOptions, socketServer) {
-    if (!!socketOptions?.host && !!socketOptions?.port) {
-        socketServer.connect(socketOptions?.port, socketOptions?.host, socketOptions?.callbacks?.connect);
-    } else if (!!socketOptions?.port) {
-        socketServer.connect(socketOptions?.port, socketOptions?.callbacks?.connect);
-    } else if (!!socketOptions?.options) {
-        socketServer.connect(socketOptions?.options, socketOptions?.callbacks?.connect);
-    }
-    return socketServer;
-}
-
-
-/**
- *
- *
- * @param {*} socketOptions
  * @param {*} socket
  * @return {*} ServerInstance
  * 
  */
 function socketServerListen(socketOptions, socketServer) {
+    let controller;
+    socketOptions.options = {
+        allowHalfOpen: false, highWaterMark: stream.getDefaultHighWaterMark(),
+        pauseOnConnect: false, noDelay: false,
+        keepAlive: false, keepAliveInitialDelay: 0,
+        signal: controller.signal,
+        ...socketOptions?.options
+    }
+
     if (!socketServer) {
         let sc = socketServerCreate(socketOptions);
         socketServer = sc.socketServer;
         controller = sc.controller;
+    }
+
+    socketOptions.listenOptions = {
+        port: null, host: null,
+        path: null, backlog: 0,
+        exclusive: false, readableAll: false,
+        writableAll: false, ipv6Only: false,
+        signal: controller.signal || null,
+        ...socketOptions?.listenOptions
     }
 
     if (!socketOptions?.callbacks?.serverlistener) {
@@ -270,15 +331,20 @@ function socketServerListen(socketOptions, socketServer) {
         `);
     }
 
-    if (!!socketOptions?.backlog) {
-        if (!socketOptions?.host) {
-            socketServer.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
-        } else {
-            socketServer.listen(socketOptions?.path || socketOptions?.handle, socketOptions?.host, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+    if (socketOptions?.listenOptions) {
+        socketServer.listen(socketOptions?.listenOptions, socketOptions?.callbacks?.serverlistening);
+    } else {
+        if ((!!socketOptions?.port || !!socketOptions?.path || !!socketOptions?.handle) && (!!socketOptions?.host) && (!!socketOptions?.backlog)) {
+            socketServer.listen(socketOptions?.port || socketOptions?.path || socketOptions?.handle, socketOptions?.host, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+        } else if ((!!socketOptions?.port || !!socketOptions?.path || !!socketOptions?.handle) && (!socketOptions?.host)) {
+            socketServer.listen(socketOptions?.port || socketOptions?.path || socketOptions?.handle, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+        } else if (!socketOptions?.port && !socketOptions?.path && !socketOptions?.handle && !socketOptions?.host) {
+            socketServer.listen(socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+        } else if (!socketOptions?.backlog && !socketOptions?.port && !socketOptions?.path && !socketOptions?.handle && !socketOptions?.host) {
+            socketServer.listen(socketOptions?.callbacks?.serverlistening);
         }
-    } else if (socketOptions?.options) {
-        socketServer.listen(socketOptions?.options, socketOptions?.callbacks?.serverlistening);
     }
+
     return { socketServer, controller };
 }
 
