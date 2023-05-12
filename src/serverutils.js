@@ -157,6 +157,8 @@ function createNetProxy(socketOptions, proxySocketOptions) {
 
     // create socket client
     let scc = socketClient(proxySocketOptions);
+
+    scc.connect()
     // take all incoming socket server requests to socket client
     return { socketServer: scs, proxySocket: scc };
 }

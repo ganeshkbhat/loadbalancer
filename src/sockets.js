@@ -233,6 +233,24 @@ function socketServerCreate(socketOptions) {
  *
  *
  * @param {*} socketOptions
+ * @param {*} socketServer
+ */
+function socketServerConnect(socketOptions, socketServer) {
+    if (!!socketOptions?.host && !!socketOptions?.port) {
+        socketServer.connect(socketOptions?.port, socketOptions?.host, socketOptions?.callbacks?.connect);
+    } else if (!!socketOptions?.port) {
+        socketServer.connect(socketOptions?.port, socketOptions?.callbacks?.connect);
+    } else if (!!socketOptions?.options) {
+        socketServer.connect(socketOptions?.options, socketOptions?.callbacks?.connect);
+    }
+    return socketServer;
+}
+
+
+/**
+ *
+ *
+ * @param {*} socketOptions
  * @param {*} socket
  * @return {*} ServerInstance
  * 
