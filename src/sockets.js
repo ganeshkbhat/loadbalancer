@@ -655,8 +655,6 @@ function httpsSocketClient(serverOptions) {
  *
  *
  * @param {*} serverOptions
- * @param {*} callback
- * @param {*} listencallback
  * @return {*} 
  */
 function wsSocketServer(serverOptions) {
