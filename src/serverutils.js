@@ -149,10 +149,16 @@ function createNetProxy(socketOptions, proxySocketOptions) {
     const net = require('net');
     const url = require('url');
 
+    socketOptions = {};
+    proxySocketOptions = {};
+
     // create socket server
+    let scs = socketServer(socketOptions);
+
     // create socket client
+    let scc = socketClient(proxySocketOptions);
     // take all incoming socket server requests to socket client
-    return { socketServer, proxySocket };
+    return { socketServer: scs, proxySocket: scc };
 }
 
 
