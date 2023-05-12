@@ -224,19 +224,17 @@ function socketConnect(socketOptions, socket) {
  *
  *
  * @param {*} socketOptions
+ * @param {string} [method="createConnection"]
  * @return {*} SocketInstance || ErrorInstance
  */
-function socketCreateConnection(socketOptions) {
+function socketCreateConnection(socketOptions, method = "createConnection") {
     const net = require("net");
 
     socketOptions.options = {
-        fd: null, allowHalfOpen: false,
-        readable: false, writable: false,
-        signal: null, port: null, host: 'localhost',
-        localAddress: "", localPort: null,
-        family: 0, hints: null,
-        lookup: () => { }, noDelay: false,
-        keepAlive: false, keepAliveInitialDelay: 0,
+        fd: null, allowHalfOpen: false, readable: false, writable: false,
+        signal: null, port: null, host: 'localhost', localAddress: "", localPort: null,
+        family: 0, hints: null, keepAlive: false, keepAliveInitialDelay: 0,
+        noDelay: false, lookup: () => { },
         autoSelectFamily: net.getDefaultAutoSelectFamily(),
         autoSelectFamilyAttemptTimeout: net.getDefaultAutoSelectFamilyAttemptTimeout(),
         ...socketOptions?.options
@@ -334,14 +332,16 @@ function socketServerListen(socketOptions, socketServer) {
     if (socketOptions?.listenOptions) {
         socketServer.listen(socketOptions?.listenOptions, socketOptions?.callbacks?.serverlistening);
     } else {
-        if ((!!socketOptions?.port || !!socketOptions?.path || !!socketOptions?.handle) && (!!socketOptions?.host) && (!!socketOptions?.backlog)) {
+        if ((!!socketOptions?.port || !!socketOptions?.path || !!socketOptions?.handle) && !!socketOptions?.host && !!socketOptions?.backlog) {
             socketServer.listen(socketOptions?.port || socketOptions?.path || socketOptions?.handle, socketOptions?.host, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
-        } else if ((!!socketOptions?.port || !!socketOptions?.path || !!socketOptions?.handle) && (!socketOptions?.host)) {
+        } else if ((!!socketOptions?.port || !!socketOptions?.path || !!socketOptions?.handle) && !!socketOptions?.backlog) {
             socketServer.listen(socketOptions?.port || socketOptions?.path || socketOptions?.handle, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
-        } else if (!socketOptions?.port && !socketOptions?.path && !socketOptions?.handle && !socketOptions?.host) {
+        } else if ((!!socketOptions?.port || !!socketOptions?.path || !!socketOptions?.handle) && !!socketOptions?.backlog) {
+            socketServer.listen(socketOptions?.port || socketOptions?.path || socketOptions?.handle, socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
+        } else if (!!socketOptions?.backlog) {
             socketServer.listen(socketOptions?.backlog, socketOptions?.callbacks?.serverlistening);
-        } else if (!socketOptions?.backlog && !socketOptions?.port && !socketOptions?.path && !socketOptions?.handle && !socketOptions?.host) {
-            socketServer.listen(socketOptions?.callbacks?.serverlistening);
+        } else {
+            socketServer.listen({}, socketOptions?.callbacks?.serverlistening);
         }
     }
 
@@ -371,7 +371,7 @@ function socketServer(socketOptions) {
 function socketClient(socketOptions) {
     const fs = require("fs");
     const net = require("net");
-    return socketConnect(socketOptions);
+    return socketCreateConnection(socketOptions);
 }
 
 
