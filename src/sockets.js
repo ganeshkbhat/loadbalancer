@@ -663,7 +663,7 @@ function wsSocketServer(serverOptions) {
 }
 
 
-function sendWebSocketMessage(websocket, data) {
+function wsSendMessage(websocket, data) {
     // // Construct a msg object containing the data the server needs to process the message from the chat client.
     // const msg = {
     //   type: "message",
@@ -687,7 +687,7 @@ function wsSocketClient(serverOptions) {
     // event.data : data sent by the event
     websocket.onopen = (event) => { serverOptions?.callbacks?.open(event); };
     // event.data : data sent by the event
-    websocket.onmessage = (event) => { serverOptions?.callbacks?.message(event); };
+    websocket.onmessage = (!serverOptions?.callbacks?.message) ? (event) => { serverOptions?.callbacks?.message(event); } : wsSendMessage(websocket, socketOptions.data);
     // CloseEvent.code : Read only : Returns an unsigned short containing the close code sent by the server.
     // CloseEvent.reason : Read only: Returns a string indicating the reason the server closed the connection. This is specific to the particular server and sub-protocol.
     // CloseEvent.wasClean : Read only: Returns a boolean value that Indicates whether or not the connection was cleanly closed.
@@ -705,9 +705,10 @@ function wsSocketClient(serverOptions) {
  * @return {*} 
  */
 function wssSocketServer(serverOptions, callbacks, options) {
-    serverOptions.protocol = "https";
+    serverOptions["protocol"] = "https";
     return websocket(serverOptions, callbacks, options);
 }
+
 
 /**
  *
