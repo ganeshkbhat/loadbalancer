@@ -16,12 +16,14 @@
 
 'use strict';
 
+'use strict';
+var path = require("path");
 var loadbalancer = require("../index").loadbalancer;
 var httpSocketServer = require("../index").sockets.httpSocketServer;
 var server = require("./express-app");
 
 loadbalancer.threading({
-    "server": server,
+    "server": null,
     "protocol": "http",
     "createCerts": true,
     "host": "localhost",
@@ -45,7 +47,7 @@ loadbalancer.threading({
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        httpSocketServer(opts);
+        // httpSocketServer(opts);
     },
     "callbacks": {
         "wsOnData": null,
@@ -54,4 +56,4 @@ loadbalancer.threading({
         "server": null,
         "listen": null
     }
-});
+}, [{ filename: path.join(__filename), options: {} }])

@@ -61,9 +61,10 @@ function threadingMultiple(serverOptions, workerFunctions) {
         }
     }
 
-    if (serverOptions?.threads <= 0) return; // base case: stop recursion when n is 0 or negative
+    // base case: stop recursion when n is 0 or negative
+    if (serverOptions?.threads <= 0) return;
 
-    const worker = new Worker(workerFunctions[0]);
+    let worker = new Worker(workerFunctions[0]?.filename && workerFunctions[0]?.options || {});
 
     worker.on('message', (msg) => {
         console.log(`Received message from thread ${worker.threadId}: ${msg}`);
@@ -150,7 +151,7 @@ function threading(serverOptions, workerFunction) {
         return;
     };
 
-    const worker = new Worker(workerFunction);
+    const worker = new Worker(workerFunction[0]?.filename || workerFunction[0], workerFunction[0]?.options || {});
 
     worker.on('message', (msg) => {
         console.log(`Received message from thread ${worker.threadId}: ${msg}`);
@@ -176,6 +177,7 @@ function threading(serverOptions, workerFunction) {
     //     }, 1000);
     // });
 }
+
 
 /**
  *

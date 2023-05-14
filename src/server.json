@@ -21,8 +21,11 @@
     "threads": 10,
     "mainProcessCallback": null,
     "forkCallback": null,
-    "callbacks": { 
-        "server": null, 
-        "listen": null 
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
     }
 }

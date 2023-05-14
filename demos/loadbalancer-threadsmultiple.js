@@ -15,13 +15,13 @@
 /* eslint no-console: 0 */
 
 'use strict';
-
+var path = require("path");
 var loadbalancer = require("../index").loadbalancer;
 var httpSocketServer = require("../index").sockets.httpSocketServer;
 var server = require("./express-app");
 
-loadbalancer.loadbalancer({
-    "server": server,
+loadbalancer.threadingMultiple({
+    "server": null,
     "protocol": "http",
     "createCerts": true,
     "host": "localhost",
@@ -45,7 +45,7 @@ loadbalancer.loadbalancer({
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        httpSocketServer(opts);
+        // httpSocketServer(opts);
     },
     "callbacks": {
         "wsOnData": null,
@@ -54,4 +54,4 @@ loadbalancer.loadbalancer({
         "server": null,
         "listen": null
     }
-})
+}, [__filename])
