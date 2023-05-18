@@ -8,11 +8,15 @@
     "import": "./index.mjs"
   },
   "directories": {
-    "test": "test",
+    "test": "tests",
     "lib": "./src/**"
   },
   "scripts": {
-    "test": "mocha --reporter spec --recursive  --timeout 60000"
+    "test": "mocha --reporter spec --recursive  --timeout 60000",
+    "asbuild:debug": "asc assembly/index.ts --target debug",
+    "asbuild:release": "asc assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
+    "start": "npx serve ."
   },
   "repository": {
     "type": "git",
@@ -22,6 +26,7 @@
   "author": "Ganesh B <ganeshsurfs@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "assemblyscript": "^0.27.5",
     "chai": "^4.3.7",
     "express": "^4.18.2",
     "mocha": "^10.2.0",
@@ -35,5 +40,6 @@
     "socks5-client": "^1.2.8",
     "udp-io": "^1.1.0",
     "uuid": "^9.0.0"
-  }
+  },
+  "type": "module"
 }

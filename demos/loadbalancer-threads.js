@@ -36,8 +36,8 @@ loadbalancer.threading({
         "proxyPort": 9000
     },
     "certs": {
-        "key": "./certs/ssl.key",
-        "cert": "./certs/ssl.cert"
+        "key": "../certs/ssl.key",
+        "cert": "../certs/ssl.cert"
     },
     "port": 8000,
     "ws": true,
