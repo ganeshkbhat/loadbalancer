@@ -169,7 +169,8 @@ function SocketBlocklist() {
         return blockList.check(ipaddress);
     }
 
-    return blockList;
+    this.rules = () => blockList.rules;
+
 }
 
 

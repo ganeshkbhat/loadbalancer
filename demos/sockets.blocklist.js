@@ -20,12 +20,12 @@ var SocketBlocklist = require("../index").sockets.SocketBlocklist;
 
 let sbl = new SocketBlocklist();
 
-console.log(sbl.rules);
+console.log(sbl.rules());
 
 sbl.addAddress("127.0.0.1");
 sbl.addRange("192.168.0.1", "192.168.0.10");
 sbl.addSubnet("127.0.0.1", 32);
 console.log(sbl.check("129.0.0.1"));
 
-console.log(sbl.rules);
+console.log(sbl.rules());
 
