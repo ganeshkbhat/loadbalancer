@@ -16,7 +16,15 @@
 
 'use strict';
 
-
+/**
+ * 
+ * checkServerIdentity
+ *
+ * @param {*} host
+ * @param {*} cert
+ * @return {*} 
+ * 
+ */
 const checkServerIdentity = function (host, cert) {
     const tls = require('tls');
     const crypto = require('crypto');
@@ -70,9 +78,11 @@ const checkServerIdentity = function (host, cert) {
 
 
 /**
- *
+ * 
+ * echoServer
  *
  * @return {*} 
+ * 
  */
 function echoServer() {
     const pid = process.pid;
@@ -81,7 +91,8 @@ function echoServer() {
 
 
 /**
- *
+ * 
+ * serverStartCallback
  *
  * @param {*} host
  * @param {*} port
@@ -94,7 +105,8 @@ function serverStartCallback(host, port) {
 
 
 /**
- *
+ * 
+ * server
  *
  * @param {*} serverOptions
  * @return {*} ServerInstance 
@@ -163,6 +175,7 @@ function SocketBlocklist() {
  *
  * @param {*} socketOptions
  * @return {*} 
+ * 
  */
 function socketAddress(socketOptions) {
     return new net.SocketAddress(socketOptions);
@@ -170,7 +183,8 @@ function socketAddress(socketOptions) {
 
 
 /**
- *
+ * 
+ * socketCreate
  *
  * @param {*} socketOptions
  * @return {*} SocketInstance
@@ -216,7 +230,8 @@ function socketCreate(socketOptions) {
 
 
 /**
- *
+ * 
+ * socketConnect
  *
  * @param {*} socketOptions
  * @param {*} socket
@@ -292,6 +307,7 @@ function socketConnect(socketOptions, socket) {
 
 /**
  *
+ * socketCreateConnection
  *
  * @param {*} socketOptions
  * @param {string} [method="createConnection"]
@@ -329,7 +345,8 @@ function socketCreateConnection(socketOptions, method = "createConnection") {
 
 
 /**
- *
+ * 
+ * socketServerCreate
  *
  * @param {*} socketOptions
  * @return {*} ServerInstance
@@ -364,7 +381,8 @@ function socketServerCreate(socketOptions) {
 
 
 /**
- *
+ * 
+ * socketServerListen
  *
  * @param {*} socketOptions
  * @param {*} socket
@@ -426,6 +444,7 @@ function socketServerListen(socketOptions, socketServer) {
 
 /**
  *
+ * socketServer
  *
  * @param {*} socketOptions
  * @return {*} ServerInstance
@@ -438,6 +457,7 @@ function socketServer(socketOptions) {
 
 /**
  *
+ * socketClient
  *
  * @param {*} socketOptions
  * @return {*} SocketInstance
@@ -451,7 +471,8 @@ function socketClient(socketOptions) {
 
 
 /**
- *
+ * 
+ * websocket
  *
  * @param {*} serverOptions
  * @return {*} ServerInstance
@@ -616,9 +637,11 @@ function websocket(serverOptions) {
 
 /**
  *
+ * httpClient
  *
  * @param {*} serverOptions
  * @return {*} 
+ * 
  */
 function httpClient(serverOptions) {
     const https = require(protocol || 'https');
@@ -679,11 +702,13 @@ function httpClient(serverOptions) {
 
 /**
  *
+ * httpSocketServer
  *
  * @param {*} serverOptions
  * @param {*} callback
  * @param {*} listencallback
  * @return {*} 
+ * 
  */
 function httpSocketServer(serverOptions) {
     serverOptions.protocol = "http";
@@ -693,9 +718,11 @@ function httpSocketServer(serverOptions) {
 
 /**
  *
+ * httpSocketClient
  *
  * @param {*} serverOptions
  * @return {Promise} 
+ * 
  */
 function httpSocketClient(serverOptions) {
     serverOptions.protocol = "http";
@@ -705,9 +732,11 @@ function httpSocketClient(serverOptions) {
 
 /**
  *
+ * httpsSocketServer
  *
  * @param {*} serverOptions
  * @return {*} 
+ * 
  */
 function httpsSocketServer(serverOptions) {
     serverOptions.protocol = "https";
@@ -717,8 +746,11 @@ function httpsSocketServer(serverOptions) {
 
 /**
  *
+ * httpsSocketClient
+ * 
  * @param {*} serverOptions
  * @return {Promise} 
+ * 
  */
 function httpsSocketClient(serverOptions) {
     serverOptions.protocol = "https";
@@ -729,9 +761,11 @@ function httpsSocketClient(serverOptions) {
 
 /**
  *
+ * wsSocketServer
  *
  * @param {*} serverOptions
  * @return {*} 
+ * 
  */
 function wsSocketServer(serverOptions) {
     serverOptions.protocol = "http";
@@ -742,9 +776,11 @@ function wsSocketServer(serverOptions) {
 
 /**
  *
+ * wsSendMessage
  *
  * @param {*} websocket
  * @param {*} data
+ * 
  */
 function wsSendMessage(websocket, data) {
     // // Construct a msg object containing the data the server needs to process the message from the chat client.
@@ -760,6 +796,7 @@ function wsSendMessage(websocket, data) {
 
 /**
  *
+ * wsSocketClient
  *
  * @param {*} serverOptions
  * @return {*} 
@@ -784,9 +821,11 @@ function wsSocketClient(serverOptions) {
 
 /**
  *
+ * wssSocketServer
  *
  * @param {*} serverOptions
  * @return {*} 
+ * 
  */
 function wssSocketServer(serverOptions) {
     serverOptions["protocol"] = "https";
@@ -797,9 +836,11 @@ function wssSocketServer(serverOptions) {
 
 /**
  *
+ * wssSocketClient
  *
  * @param {*} serverOptions
  * @return {*} 
+ * 
  */
 function wssSocketClient(serverOptions) {
     serverOptions.protocol = "https";
