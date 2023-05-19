@@ -6,7 +6,7 @@
  * Install: npm i loadbalancer --save
  * Github: https://github.com/ganeshkbhat/loadbalancer
  * npmjs Link: https://www.npmjs.com/package/loadbalancer
- * File: demos/express-app.js
+ * File: demos/expressapp.js
  * File Description: A simple threaded and clustered load balancer for nodejs
  * 
  * 
@@ -28,6 +28,5 @@ express.get("/test", (req, res) => {
         res.status(200).send(`{ 'hello': 'server', 'pid': ${process.pid} }`)
 })
 
-express.listen(8000);
-// module.exports = express;
+express.listen(10000, "127.0.0.1");
 

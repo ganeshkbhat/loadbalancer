@@ -127,6 +127,50 @@ function server(serverOptions) {
 
 /**
  *
+ * socketBlocklist
+ *
+ */
+function SocketBlocklist() {
+    const blockList = new net.BlockList();
+
+    this.addAddress = (ipaddress) => {
+        if (!!type) blockList.addAddress(ipaddress, type);
+        blockList.addAddress(ipaddress);
+    }
+
+    this.addRange = (start, end, type) => {
+        if (!!type) blockList.addRange(start, end, type);
+        blockList.addRange(start, end);
+    }
+
+    this.addSubnet = (ipaddress, prefix, type) => {
+        if (!!type) blockList.addSubnet(ipaddress, prefix, type);
+        blockList.addSubnet(ipaddress, prefix);
+    }
+
+    this.check = (ipaddress, type) => {
+        if (!!type) return blockList.check(ipaddress, type);
+        return blockList.check(ipaddress);
+    }
+
+    this.rules = (() => { return blockList.rules })();
+}
+
+
+/**
+ *
+ * socketAddress
+ *
+ * @param {*} socketOptions
+ * @return {*} 
+ */
+function socketAddress(socketOptions) {
+    return new net.SocketAddress(socketOptions);
+}
+
+
+/**
+ *
  *
  * @param {*} socketOptions
  * @return {*} SocketInstance
@@ -678,6 +722,7 @@ function httpsSocketServer(serverOptions) {
  */
 function httpsSocketClient(serverOptions) {
     serverOptions.protocol = "https";
+    serverOptions.ws = true;
     return httpClient(serverOptions);
 }
 
@@ -690,10 +735,17 @@ function httpsSocketClient(serverOptions) {
  */
 function wsSocketServer(serverOptions) {
     serverOptions.protocol = "http";
-    return websocket(serverOptions,);
+    serverOptions.ws = true;
+    return websocket(serverOptions);
 }
 
 
+/**
+ *
+ *
+ * @param {*} websocket
+ * @param {*} data
+ */
 function wsSendMessage(websocket, data) {
     // // Construct a msg object containing the data the server needs to process the message from the chat client.
     // const msg = {
@@ -714,6 +766,9 @@ function wsSendMessage(websocket, data) {
  * 
  */
 function wsSocketClient(serverOptions) {
+    serverOptions.protocol = "http";
+    serverOptions.ws = true;
+
     let webSocket = new WebSocket(serverOptions?.url, serverOptions?.protocols);
     // event.data : data sent by the event
     websocket.onopen = (event) => { serverOptions?.callbacks?.open(event); };
@@ -731,13 +786,12 @@ function wsSocketClient(serverOptions) {
  *
  *
  * @param {*} serverOptions
- * @param {*} callbacks
- * @param {*} options
  * @return {*} 
  */
-function wssSocketServer(serverOptions, callbacks, options) {
+function wssSocketServer(serverOptions) {
     serverOptions["protocol"] = "https";
-    return websocket(serverOptions, callbacks, options);
+    serverOptions.ws = true;
+    return websocket(serverOptions);
 }
 
 
@@ -748,6 +802,8 @@ function wssSocketServer(serverOptions, callbacks, options) {
  * @return {*} 
  */
 function wssSocketClient(serverOptions) {
+    serverOptions.protocol = "https";
+    serverOptions.ws = true;
     return wsSocketClient(serverOptions);
 }
 
@@ -787,6 +843,8 @@ module.exports.server = server;
 module.exports.socketServerCreate = socketServerCreate;
 module.exports.socketServerListen = socketServerListen;
 
+module.exports.SocketBlocklist = SocketBlocklist;
+module.exports.socketAddress = socketAddress;
 module.exports.socketCreate = socketCreate;
 module.exports.socketConnect = socketConnect;
 module.exports.socketCreateConnection = socketCreateConnection;

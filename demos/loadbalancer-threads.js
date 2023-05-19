@@ -19,7 +19,7 @@
 var path = require("path");
 var loadbalancer = require("../index").loadbalancer;
 var httpSocketServer = require("../index").sockets.httpSocketServer;
-var express = require("./expressapp");
+// var express = require("./expressapp");
 
 loadbalancer.threading({
     "server": null,
@@ -56,3 +56,4 @@ loadbalancer.threading({
         "listen": null
     }
 }, [{ filename: path.join(__dirname, "./expressapp.js"), options: {} }])
+

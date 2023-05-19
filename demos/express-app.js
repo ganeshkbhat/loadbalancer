@@ -28,7 +28,6 @@ express.get("/test", (req, res) => {
         res.status(200).send(`{ 'hello': 'server', 'pid': ${process.pid} }`)
 })
 
-// // express.listen(8000);
+
 module.exports = express;
 
-// app.handle(req, res, next);
