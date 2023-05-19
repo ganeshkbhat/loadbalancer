@@ -20,6 +20,41 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { Worker } = require('worker_threads');
 
+const threadingMultiple = require('../index').loadbalancer.threadingMultiple;
+
+describe('multiple threading and loadbalancer', () => {
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('should create the specified number of threads', () => {
+
+  });
+
+  it('should start the correct worker function in each thread', () => {
+
+  });
+
+  it('should handle worker errors', () => {
+
+  });
+
+  it('should handle worker exit', () => {
+
+  });
+
+});
+
+
+/* eslint no-console: 0 */
+
+'use strict';
+
+const { expect } = require('chai');
+const sinon = require('sinon');
+const { Worker } = require('worker_threads');
+
 const threading = require('../index').loadbalancer.threading;
 
 describe('threading and loadbalancer', () => {

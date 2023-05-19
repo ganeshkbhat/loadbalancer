@@ -146,9 +146,10 @@ function server(serverOptions) {
  *
  */
 function SocketBlocklist() {
+    const net = require("net");
     const blockList = new net.BlockList();
 
-    this.addAddress = (ipaddress) => {
+    this.addAddress = (ipaddress, type) => {
         if (!!type) blockList.addAddress(ipaddress, type);
         blockList.addAddress(ipaddress);
     }
@@ -168,7 +169,7 @@ function SocketBlocklist() {
         return blockList.check(ipaddress);
     }
 
-    this.rules = (() => { return blockList.rules })();
+    return blockList;
 }
 
 
