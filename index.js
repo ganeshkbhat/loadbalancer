@@ -28,10 +28,11 @@ const {
     echoServer, checkServerIdentity, serverStartCallback,
     server, websocket, socketServer, socketClient,
     socketServerCreate, socketServerListen, socketCreate, socketConnect, socketCreateConnection,
-    httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
+    socketAddress, httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
-    sshSocketServer, sshSocketClient
+    sshSocketServer, sshSocketClient,
+    SocketBlocklist, WssSocketServer, WssSocketClient
 } = require("./src/sockets");
 
 const { generateCertificates } = require("./src/certificates");
@@ -50,10 +51,11 @@ module.exports.sockets = {
     echoServer, checkServerIdentity, serverStartCallback,
     server, websocket, socketServer, socketClient,
     socketServerCreate, socketServerListen, socketCreate, socketConnect, socketCreateConnection,
-    httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
+    socketAddress, httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
-    sshSocketServer, sshSocketClient
+    sshSocketServer, sshSocketClient,
+    SocketBlocklist, WssSocketServer, WssSocketClient
 };
 
 module.exports.certificates = { generateCertificates };
@@ -70,10 +72,11 @@ module.exports.default = {
     echoServer, checkServerIdentity, serverStartCallback,
     server, websocket, socketServer, socketClient,
     socketServerCreate, socketServerListen, socketCreate, socketConnect, socketCreateConnection,
-    httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
+    socketAddress, httpSocketServer, httpSocketClient, httpsSocketServer, httpsSocketClient,
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
     sshSocketServer, sshSocketClient,
+    SocketBlocklist, WssSocketServer, WssSocketClient,
 
     generateCertificates
 }

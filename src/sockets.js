@@ -117,8 +117,10 @@ function serverStartCallback(host, port) {
 function server(serverOptions) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
+
     var callback;
     if (!callback) callback = echoServer();
+
     serverOptions.port = serverOptions?.port || 8000;
     serverOptions.host = serverOptions?.host || "localhost";
 
@@ -140,6 +142,7 @@ function server(serverOptions) {
 /**
  *
  * socketBlocklist
+ * 
  *
  */
 function SocketBlocklist() {
@@ -485,7 +488,7 @@ function websocket(serverOptions) {
     const https = require('https');
     const crypto = require('crypto');
 
-    serverOptions = serverOptions || {
+    serverOptions = {
         "server": null,
         "protocol": "http",
         "createCerts": true,
@@ -514,13 +517,14 @@ function websocket(serverOptions) {
             "wsUpgrade": null,
             "server": null,
             "listen": null
-        }
+        },
+        ...serverOptions
     }
 
     serverOptions.port = serverOptions?.port || 8000;
     serverOptions.host = serverOptions?.host || "localhost";
 
-    serverOptions.server = (!!serverOptions?.server) ? serverOptions?.server : callback
+    serverOptions.server = (!!serverOptions?.server) ? serverOptions?.server : serverOptions?.callbacks?.server;
     serverOptions.callbacks.listen = listencallback || serverStartCallback(serverOptions?.host, serverOptions?.port);
     serverOptions.callbacks.upgrade = () => { console.log("Upgrade Function Invoked"); }
 
@@ -650,24 +654,27 @@ function httpClient(serverOptions) {
         const postData = JSON.stringify(data);
 
         var options = {
-            hostname: host,
-            port: port,
-            path: url,
-            method: method,
+            hostname: serverOptions.host,
+            port: serverOptions.port,
+            path: serverOptions.url,
+            method: serverOptions.method,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Content-Length': postData.length,
-                ...headers
+                ...serverOptions.headers
             },
-            agent: false
+            agent: serverOptions.agent || false,
+            ...serverOptions
         };
 
-        options = { ...options, ...serverOptions };
-        if ((!!serverOptions.keyPath && !!serverOptions.certPath) && (!serverOptions.key || !serverOptions.cert)) {
+        serverOptions = { ...options, ...serverOptions };
+        if ((!!serverOptions.certs.keyPath && !!serverOptions.certs.certPath) && (!serverOptions.certs.key || !serverOptions.certs.cert)) {
             serverOptions = {
-                ...serverOptions,
-                key: fs.readFileSync(serverOptions.key),
-                cert: fs.readFileSync(serverOptions.cert)
+                certs: {
+                    key: fs.readFileSync(serverOptions.keyPath),
+                    cert: fs.readFileSync(serverOptions.certPath)
+                },
+                ...serverOptions
             };
         } else {
             throw new Error("Request Error: 'keyPath' and 'certPath' have to be specified OR 'key' and 'cert' have to be specified");
@@ -677,7 +684,8 @@ function httpClient(serverOptions) {
         if (!!serverOptions.agent) { serverOptions.agent = new https.Agent(serverOptions); }
 
         return new Promise((resolve, reject) => {
-            const req = https.request(url, options, (res) => {
+
+            const req = https.request(url, serverOptions, (res) => {
                 if (res.statusCode < 200 || res.statusCode > 299) reject(new Error(`HTTP status code ${res.statusCode}`));
                 const body = [];
                 res.on('data', (chunk) => body.push(chunk));
@@ -688,10 +696,12 @@ function httpClient(serverOptions) {
             });
 
             req.on('error', (err) => { reject(err); });
+
             req.on('timeout', () => {
                 req.destroy();
                 reject(new Error('Request time out'));
             });
+
             if (["post", "put", "patch"].includes(method.toLowerCase())) { req.write(postData); }
             req.end();
         })
@@ -849,6 +859,100 @@ function wssSocketClient(serverOptions) {
 }
 
 
+/**
+ *
+ * WssSocketClient
+ *
+ * @param {*} serverOptions
+ */
+function WssSocketClient(serverOptions) {
+    this.socketOptions = {
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
+        },
+        "certs": {
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
+        },
+        "port": 8000,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { },
+        "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
+            "server": null,
+            "listen": null
+        },
+        ...serverOptions
+    };
+
+    this.websocket = (this.socketOptions.protocol === "https") ? this.wssSocketClient(this.socketOptions) : this.wsSocketClient(this.socketOptions);
+    this.wsSocketClient = (this.socketOptions.protocol === "https") ? () => { return wsSocketClient(this.socketOptions); } : () => { return wssSocketClient(this.socketOptions); };
+    this.send = (data) => { return wsSendMessage(this.websocket, data); }
+}
+
+
+/**
+ *
+ * WssSocketServer
+ *
+ * @param {*} serverOptions
+ */
+function WssSocketServer(serverOptions) {
+    WssSocketClient.call(this, serverOptions);
+
+    this.socketOptions = {
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
+        },
+        "certs": {
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
+        },
+        "port": 8000,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { },
+        "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
+            "server": null,
+            "listen": null
+        },
+        ...serverOptions
+    };
+
+    this.websocket = (this.socketOptions.protocol === "https") ? this.wssSocketServer(this.socketOptions) : this.wsSocketServer(this.socketOptions);
+    this.wsSocketServer = (this.socketOptions.protocol === "https") ? () => { return wsSocketServer(this.socketOptions); } : () => { return wssSocketServer(this.socketOptions); };
+    this.send = (data) => { return wsSendMessage(this.websocket, data); }
+}
+
+
 function tcpSocketServer(serverOptions) {
 
 }
@@ -884,7 +988,6 @@ module.exports.server = server;
 module.exports.socketServerCreate = socketServerCreate;
 module.exports.socketServerListen = socketServerListen;
 
-module.exports.SocketBlocklist = SocketBlocklist;
 module.exports.socketAddress = socketAddress;
 module.exports.socketCreate = socketCreate;
 module.exports.socketConnect = socketConnect;
@@ -893,17 +996,20 @@ module.exports.socketCreateConnection = socketCreateConnection;
 module.exports.socketClient = socketClient;
 module.exports.socketServer = socketServer;
 
-module.exports.httpSocketServer = httpSocketServer;
-module.exports.httpSocketClient = httpSocketClient;
-module.exports.httpsSocketServer = httpsSocketServer;
-module.exports.httpsSocketClient = httpsSocketClient;
-
-
 module.exports.websocket = websocket;
 module.exports.wsSocketServer = wsSocketServer;
 module.exports.wsSocketClient = wsSocketClient;
 module.exports.wssSocketServer = wssSocketServer;
 module.exports.wssSocketClient = wssSocketClient;
+
+module.exports.SocketBlocklist = SocketBlocklist;
+module.exports.WssSocketServer = WssSocketServer;
+module.exports.WssSocketClient = WssSocketClient;
+
+module.exports.httpSocketServer = httpSocketServer;
+module.exports.httpSocketClient = httpSocketClient;
+module.exports.httpsSocketServer = httpsSocketServer;
+module.exports.httpsSocketClient = httpsSocketClient;
 
 module.exports.udpSocketServer = udpSocketServer;
 module.exports.udpSocketClient = udpSocketClient;
