@@ -15,10 +15,10 @@
 /* eslint no-console: 0 */
 
 'use strict';
+
 var path = require("path");
 var loadbalancer = require("../index").loadbalancer;
 var httpSocketServer = require("../index").sockets.httpSocketServer;
-var server = require("./express-app");
 
 loadbalancer.threadingMultiple({
     "server": null,
@@ -34,13 +34,13 @@ loadbalancer.threadingMultiple({
         "proxyPort": 9000
     },
     "certs": {
-        "key": "./certs/ssl.key",
-        "cert": "./certs/ssl.cert"
+        "key": "../certs/ssl.key",
+        "cert": "../certs/ssl.cert"
     },
     "port": 8000,
     "ws": true,
     "processes": 5,
-    "threads": 10,
+    "threads": 3,
     "mainProcessCallback": () => { },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
@@ -54,4 +54,8 @@ loadbalancer.threadingMultiple({
         "server": null,
         "listen": null
     }
-}, [__filename])
+}, [
+    { filename: path.join(__dirname, "./expressapp.js"), options: {} },
+    { filename: path.join(__dirname, "./expressapp.js"), options: {} },
+    { filename: path.join(__dirname, "./expressapp.js"), options: {} }
+])

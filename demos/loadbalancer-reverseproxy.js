@@ -20,7 +20,7 @@ var loadbalancer = require("../index").loadbalancer;
 var reverseProxy = require("../index").serverutils.reverseProxy;
 var server = require("./express-app");
 
-loadbalancer.loadbalancer({
+loadbalancer.reverseProxy({
     "server": server,
     "protocol": "http",
     "createCerts": true,

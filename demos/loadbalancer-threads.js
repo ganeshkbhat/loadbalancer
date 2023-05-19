@@ -16,11 +16,10 @@
 
 'use strict';
 
-'use strict';
 var path = require("path");
 var loadbalancer = require("../index").loadbalancer;
 var httpSocketServer = require("../index").sockets.httpSocketServer;
-var server = require("./express-app");
+var express = require("./expressapp");
 
 loadbalancer.threading({
     "server": null,
@@ -42,7 +41,7 @@ loadbalancer.threading({
     "port": 8000,
     "ws": true,
     "processes": 5,
-    "threads": 10,
+    "threads": 1,
     "mainProcessCallback": () => { },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
@@ -56,4 +55,4 @@ loadbalancer.threading({
         "server": null,
         "listen": null
     }
-}, [{ filename: path.join(__filename), options: {} }])
+}, [{ filename: path.join(__dirname, "./expressapp.js"), options: {} }])

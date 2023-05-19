@@ -28,8 +28,10 @@ const { ServerResponse } = require('http');
  */
 function threadingMultiple(serverOptions, workerFunctions) {
     const { Worker } = require('worker_threads');
+    let wkrFnsCopy = new Array(...workerFunctions);
+    let wkrFns;
 
-    serverOptions = serverOptions || {
+    serverOptions = {
         "server": null,
         "protocol": "http",
         "createCerts": true,
@@ -46,7 +48,7 @@ function threadingMultiple(serverOptions, workerFunctions) {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
-        "port": 8080,
+        "port": 8000,
         "ws": true,
         "processes": 5,
         "threads": 10,
@@ -58,48 +60,28 @@ function threadingMultiple(serverOptions, workerFunctions) {
             "wsUpgrade": null,
             "server": null,
             "listen": null
-        }
+        },
+        ...serverOptions
     }
 
     // base case: stop recursion when n is 0 or negative
     if (serverOptions?.threads <= 0) return;
 
-    let worker = new Worker(workerFunctions[0]?.filename && workerFunctions[0]?.options || {});
+    for (let i = 0; i < serverOptions.threads; i++) {
+        serverOptions.threads = serverOptions?.threads - 1;
 
-    worker.on('message', (msg) => {
-        console.log(`Received message from thread ${worker.threadId}: ${msg}`);
-    });
+        let wkFns;
+        if (!!Array.isArray(workerFunctions) && workerFunctions.length > 1) {
+            wkrFns = workerFunctions[i];
+        } else if (!!Array.isArray(workerFunctions) && workerFunctions.length === 1) {
+            wkFns = workerFunctions[0];
+        } else if (typeof workerFunctions === "object") {
+            wkFns = workerFunctions;
+        }
+        wkrFns[i] = threading(serverOptions, wkFns);
+    }
 
-    worker.on('error', (err) => {
-        console.error(`Error in thread ${worker.threadId}:`, err);
-    });
-
-    worker.on('exit', (code) => {
-        console.log(`Thread ${worker.threadId} exited with code ${code}`);
-    });
-
-    threadingMultiple(serverOptions?.threads - 1, workerFunctions.slice(1)); // recursive call with remaining functions
-
-    // // Example usage
-    // threadingMultiple(serverOptions, [
-    //     () => {
-    //          // This is the worker function that will run in the first thread
-    //          console.log(`Worker thread ${worker.threadId} started`);
-    //          setInterval(() => {
-    //              worker.postMessage(`Hello from thread ${worker.threadId}`);
-    //          }, 1000);
-    //     },
-    //     () => {
-    //          // This is the worker function that will run in the second thread
-    //          console.log(`Worker thread ${worker.threadId} started`);
-    //          // ...
-    //     },
-    //     () => {
-    //          // This is the worker function that will run in the third thread
-    //          console.log(`Worker thread ${worker.threadId} started`);
-    //          // ...
-    //     }
-    // ]);
+    return wkrFns;
 }
 
 
@@ -113,7 +95,7 @@ function threadingMultiple(serverOptions, workerFunctions) {
 function threading(serverOptions, workerFunction) {
     const { Worker } = require('worker_threads');
 
-    serverOptions = serverOptions || {
+    serverOptions = {
         "server": null,
         "protocol": "http",
         "createCerts": true,
@@ -130,10 +112,10 @@ function threading(serverOptions, workerFunction) {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
-        "port": 8080,
+        "port": 8000,
         "ws": true,
         "processes": 5,
-        "threads": 10,
+        "threads": 1,
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
@@ -142,7 +124,8 @@ function threading(serverOptions, workerFunction) {
             "wsUpgrade": null,
             "server": null,
             "listen": null
-        }
+        },
+        ...serverOptions
     }
 
     // base case: stop recursion when n is 0 or negative
@@ -151,7 +134,7 @@ function threading(serverOptions, workerFunction) {
         return;
     };
 
-    const worker = new Worker(workerFunction[0]?.filename || workerFunction[0], workerFunction[0]?.options || {});
+    const worker = new Worker((!!workerFunction[0]?.filename) ? workerFunction[0]?.filename : (!workerFunction[0]) ? workerFunction[0] : workerFunction);
 
     worker.on('message', (msg) => {
         console.log(`Received message from thread ${worker.threadId}: ${msg}`);
@@ -165,7 +148,7 @@ function threading(serverOptions, workerFunction) {
         console.log(`Thread ${worker.threadId} exited with code ${code}`);
     });
 
-    threading(serverOptions?.threads - 1, workerFunction); // recursive call
+    // threading(serverOptions?.threads - 1, workerFunction); // recursive call
 
     // // USAGE
     // // Example usage
@@ -176,6 +159,8 @@ function threading(serverOptions, workerFunction) {
     //     worker.postMessage(`Hello from thread ${worker.threadId}`);
     //     }, 1000);
     // });
+
+    return worker;
 }
 
 
@@ -216,7 +201,7 @@ function threading(serverOptions, workerFunction) {
     }
  */
 function loadbalancer(serverOptions) {
-    serverOptions = serverOptions || {
+    serverOptions = {
         "server": null,
         "protocol": "http",
         "createCerts": true,
@@ -231,7 +216,7 @@ function loadbalancer(serverOptions) {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
-        "port": 8080,
+        "port": 8000,
         "ws": true,
         "processes": 5,
         "threads": 10,
@@ -240,7 +225,8 @@ function loadbalancer(serverOptions) {
         "callbacks": {
             "server": null,
             "listen": null
-        }
+        },
+        ...serverOptions
     }
 
     const cluster = require('cluster');

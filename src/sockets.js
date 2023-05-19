@@ -86,6 +86,7 @@ function echoServer() {
  * @param {*} host
  * @param {*} port
  * @return {*} 
+ * 
  */
 function serverStartCallback(host, port) {
     return () => { console.log('Started process at ' + host + " and port " + port); };
@@ -99,6 +100,7 @@ function serverStartCallback(host, port) {
  * @return {*} ServerInstance 
  * 
  * ServerInstance : typeof Server<Request extends typeof IncomingMessage = typeof IncomingMessage,  Response extends typeof ServerResponse = typeof ServerResponse>
+ * 
  */
 function server(serverOptions) {
     const fs = require("fs");
@@ -128,6 +130,9 @@ function server(serverOptions) {
  *
  * @param {*} socketOptions
  * @return {*} SocketInstance
+ * 
+ * Socket APIs:
+ * https://nodejs.org/api/net.html#class-netsocket
  * 
  */
 function socketCreate(socketOptions) {
@@ -173,8 +178,29 @@ function socketCreate(socketOptions) {
  * @param {*} socket
  * @return {*} SocketInstance
  * 
+ * Socket APIs: 
+ * https://nodejs.org/api/net.html#class-netsocket
+ * 
  */
 function socketConnect(socketOptions, socket) {
+
+    // 
+    // declare interface Socket {
+    //   get readable(): ReadableStream;
+    //   get writable(): WritableStream;
+    //   get closed(): Promise<void>;
+    //   close(): Promise<void>;
+    //   startTls(): Socket;
+    // }
+    // declare interface SocketOptions {
+    //   secureTransport?: string;
+    //   allowHalfOpen: boolean;
+    // }
+    // declare interface SocketAddress {
+    //   hostname: string;
+    //   port: number;
+    // }
+    // 
 
     socketOptions.options = {
         fd: null, allowHalfOpen: false,
@@ -226,6 +252,11 @@ function socketConnect(socketOptions, socket) {
  * @param {*} socketOptions
  * @param {string} [method="createConnection"]
  * @return {*} SocketInstance || ErrorInstance
+ * 
+ * Socket APIs: 
+ * https://nodejs.org/api/net.html#netconnect 
+ * https://nodejs.org/api/net.html#netcreateconnection
+ * 
  */
 function socketCreateConnection(socketOptions, method = "createConnection") {
     const net = require("net");

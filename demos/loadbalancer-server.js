@@ -18,9 +18,10 @@
 
 var loadbalancer = require("../index").loadbalancer;
 var server = require("../index").sockets.server;
+var express = require("./express-app");
 
 loadbalancer.loadbalancer({
-    "server": server,
+    "server": express,
     "protocol": "http",
     "createCerts": true,
     "host": "localhost",
