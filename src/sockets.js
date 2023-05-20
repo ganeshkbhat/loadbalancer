@@ -198,36 +198,12 @@ function socketAddress(socketOptions) {
 function SocketClass(serverOptions) {
 
     this.serverOptions = {
-        "server": null,
-        "protocol": "http",
-        "createCerts": true,
-        "host": "localhost",
-        "proxy": {
-            "proxy": true,
-            "protocol": "http",
-            "host": "localhost",
-            "port": 7000,
-            "proxyHost": "",
-            "proxyPort": 9000
-        },
-        "certs": {
-            "key": "./certs/ssl.key",
-            "cert": "./certs/ssl.cert"
-        },
-        "port": 8000,
-        "ws": true,
-        "processes": 5,
-        "threads": 10,
-        "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { },
-        "callbacks": {
-            "wsOnData": null,
-            "wsOnEnd": null,
-            "wsUpgrade": null,
-            "server": null,
-            "listen": null
-        },
-        ...serverOptions
+        ...require("./server.json"),
+        ...{
+            "mainProcessCallback": () => { },
+            "forkCallback": (opts, pr) => { },
+            ...serverOptions
+        }
     }
 
     SocketBlocklist.call(this, ...arguments);
@@ -559,36 +535,12 @@ function websocket(serverOptions) {
     const crypto = require('crypto');
 
     serverOptions = {
-        "server": null,
-        "protocol": "http",
-        "createCerts": true,
-        "host": "localhost",
-        "proxy": {
-            "proxy": true,
-            "protocol": "http",
-            "host": "localhost",
-            "port": 7000,
-            "proxyHost": "",
-            "proxyPort": 9000
-        },
-        "certs": {
-            "key": "./certs/ssl.key",
-            "cert": "./certs/ssl.cert"
-        },
-        "port": 8000,
-        "ws": true,
-        "processes": 5,
-        "threads": 10,
-        "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { },
-        "callbacks": {
-            "wsOnData": null,
-            "wsOnEnd": null,
-            "wsUpgrade": null,
-            "server": null,
-            "listen": null
-        },
-        ...serverOptions
+        ...require("./server.json"),
+        ...{
+            "mainProcessCallback": () => { },
+            "forkCallback": (opts, pr) => { },
+            ...serverOptions
+        }
     }
 
     serverOptions.port = serverOptions?.port || 8000;
@@ -937,36 +889,12 @@ function wssSocketClient(serverOptions) {
  */
 function WssSocketClient(serverOptions) {
     this.socketOptions = {
-        "server": null,
-        "protocol": "http",
-        "createCerts": true,
-        "host": "localhost",
-        "proxy": {
-            "proxy": true,
-            "protocol": "http",
-            "host": "localhost",
-            "port": 7000,
-            "proxyHost": "",
-            "proxyPort": 9000
-        },
-        "certs": {
-            "key": "./certs/ssl.key",
-            "cert": "./certs/ssl.cert"
-        },
-        "port": 8000,
-        "ws": true,
-        "processes": 5,
-        "threads": 10,
-        "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { },
-        "callbacks": {
-            "wsOnData": null,
-            "wsOnEnd": null,
-            "wsUpgrade": null,
-            "server": null,
-            "listen": null
-        },
-        ...serverOptions
+        ...require("./server.json"),
+        ...{
+            "mainProcessCallback": () => { },
+            "forkCallback": (opts, pr) => { },
+            ...serverOptions
+        }
     };
 
     this.websocket = (this.socketOptions.protocol === "https") ? this.wssSocketClient(this.socketOptions) : this.wsSocketClient(this.socketOptions);
@@ -985,37 +913,13 @@ function WssSocketServer(serverOptions) {
     WssSocketClient.call(this, serverOptions);
 
     this.socketOptions = {
-        "server": null,
-        "protocol": "http",
-        "createCerts": true,
-        "host": "localhost",
-        "proxy": {
-            "proxy": true,
-            "protocol": "http",
-            "host": "localhost",
-            "port": 7000,
-            "proxyHost": "",
-            "proxyPort": 9000
-        },
-        "certs": {
-            "key": "./certs/ssl.key",
-            "cert": "./certs/ssl.cert"
-        },
-        "port": 8000,
-        "ws": true,
-        "processes": 5,
-        "threads": 10,
-        "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { },
-        "callbacks": {
-            "wsOnData": null,
-            "wsOnEnd": null,
-            "wsUpgrade": null,
-            "server": null,
-            "listen": null
-        },
-        ...serverOptions
-    };
+        ...require("./server.json"),
+        ...{
+            "mainProcessCallback": () => { },
+            "forkCallback": (opts, pr) => { },
+            ...serverOptions
+        }
+    }
 
     this.wsSocketServer = (!!this.socketOptions.protocol === "https") ? () => { return wssSocketServer(this.socketOptions); } : () => { return wsSocketServer(this.socketOptions); };
     this.send = (data) => { return wsSendMessage(this.websocket, data); }
