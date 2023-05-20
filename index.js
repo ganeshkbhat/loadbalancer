@@ -32,13 +32,10 @@ const {
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
     sshSocketServer, sshSocketClient,
-    SocketBlocklist, WssSocketServer, WssSocketClient,
+    SocketBlocklist, WssSocketServer, WssSocketClient, SocketClass,
 
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
-    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6,
-
-    SocketClass
-    
+    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6
 } = require("./src/sockets");
 const { generateCertificates } = require("./src/certificates");
 
@@ -60,12 +57,10 @@ module.exports.sockets = {
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
     sshSocketServer, sshSocketClient,
-    SocketBlocklist, WssSocketServer, WssSocketClient,
+    SocketBlocklist, WssSocketServer, WssSocketClient, SocketClass,
 
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
-    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6,
-
-    SocketClass
+    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6
 };
 
 
@@ -87,12 +82,11 @@ module.exports.default = {
     wsSocketServer, wsSocketClient, wssSocketServer, wssSocketClient,
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
     sshSocketServer, sshSocketClient,
-    SocketBlocklist, WssSocketServer, WssSocketClient,
+    SocketBlocklist, WssSocketServer, WssSocketClient, SocketClass,
 
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
     setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6,
 
-    SocketClass, 
     generateCertificates
 }
 

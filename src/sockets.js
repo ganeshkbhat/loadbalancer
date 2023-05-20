@@ -1099,8 +1099,6 @@ module.exports.server = server;
 module.exports.socketServerCreate = socketServerCreate;
 module.exports.socketServerListen = socketServerListen;
 
-module.exports.SocketClass = SocketClass;
-
 module.exports.socketAddress = socketAddress;
 module.exports.socketCreate = socketCreate;
 module.exports.socketConnect = socketConnect;
@@ -1115,6 +1113,7 @@ module.exports.wsSocketClient = wsSocketClient;
 module.exports.wssSocketServer = wssSocketServer;
 module.exports.wssSocketClient = wssSocketClient;
 
+module.exports.SocketClass = SocketClass;
 module.exports.SocketBlocklist = SocketBlocklist;
 module.exports.WssSocketServer = WssSocketServer;
 module.exports.WssSocketClient = WssSocketClient;
