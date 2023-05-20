@@ -953,8 +953,7 @@ function WssSocketServer(serverOptions) {
         ...serverOptions
     };
 
-    this.websocket = (this.socketOptions.protocol === "https") ? this.wssSocketServer(this.socketOptions) : this.wsSocketServer(this.socketOptions);
-    this.wsSocketServer = (this.socketOptions.protocol === "https") ? () => { return wsSocketServer(this.socketOptions); } : () => { return wssSocketServer(this.socketOptions); };
+    this.wsSocketServer = (!!this.socketOptions.protocol === "https") ? () => { return wssSocketServer(this.socketOptions); } : () => { return wsSocketServer(this.socketOptions); };
     this.send = (data) => { return wsSendMessage(this.websocket, data); }
 }
 
