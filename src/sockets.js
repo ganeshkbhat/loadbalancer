@@ -181,8 +181,12 @@ function SocketBlocklist() {
  * @param {*} socketOptions
  * @return {*} 
  * 
+ * Socket Address: 
+ * https://nodejs.org/api/net.html#class-netsocketaddress
+ * 
  */
 function socketAddress(socketOptions) {
+    const net = require("net");
     return new net.SocketAddress(socketOptions);
 }
 

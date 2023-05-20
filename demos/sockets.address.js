@@ -16,4 +16,12 @@
 
 'use strict';
 
+var SocketAddress = require("../index").sockets.socketAddress;
+
+let sa = new SocketAddress({ address: "127.0.0.1" });
+
+console.log(sa.address);
+console.log(sa.family);
+console.log(sa.flowlabel);
+console.log(sa.port);
 
