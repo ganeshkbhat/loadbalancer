@@ -35,7 +35,9 @@ const {
     SocketBlocklist, WssSocketServer, WssSocketClient,
 
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
-    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6
+    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6,
+
+    SocketClass
     
 } = require("./src/sockets");
 const { generateCertificates } = require("./src/certificates");
@@ -61,7 +63,9 @@ module.exports.sockets = {
     SocketBlocklist, WssSocketServer, WssSocketClient,
 
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
-    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6
+    setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6,
+
+    SocketClass
 };
 
 
@@ -88,6 +92,7 @@ module.exports.default = {
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
     setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6,
 
+    SocketClass, 
     generateCertificates
 }
 

@@ -195,24 +195,63 @@ function socketAddress(socketOptions) {
  * SocketClass
  *
  */
-function SocketClass() {
-    server.call(this, ...arguments);
+function SocketClass(serverOptions) {
+
+    this.serverOptions = {
+        "server": null,
+        "protocol": "http",
+        "createCerts": true,
+        "host": "localhost",
+        "proxy": {
+            "proxy": true,
+            "protocol": "http",
+            "host": "localhost",
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
+        },
+        "certs": {
+            "key": "./certs/ssl.key",
+            "cert": "./certs/ssl.cert"
+        },
+        "port": 8000,
+        "ws": true,
+        "processes": 5,
+        "threads": 10,
+        "mainProcessCallback": () => { },
+        "forkCallback": (opts, pr) => { },
+        "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
+            "server": null,
+            "listen": null
+        },
+        ...serverOptions
+    }
+
     SocketBlocklist.call(this, ...arguments);
 
-    this.socketAddress = socketAddress;
-    this.socketConnect = socketConnect;
-    this.socketServer = socketServer;
-    this.socketClient = socketClient;
+    this.server = (s) => server(s || serverOptions);
 
-    this.socketCreateConnection = socketCreateConnection;
-    this.getDefaultAutoSelectFamily = getDefaultAutoSelectFamily;
-    this.setDefaultAutoSelectFamily = setDefaultAutoSelectFamily;
-    this.getDefaultAutoSelectFamilyAttemptTimeout = getDefaultAutoSelectFamilyAttemptTimeout;
-    this.setDefaultAutoSelectFamilyAttemptTimeout = setDefaultAutoSelectFamilyAttemptTimeout;
+    this.socketAddress = (s) => socketAddress(s);
+    this.socketConnect = (s, c) => socketConnect(s || socketOptions, c);
+    this.socketClient = (s) => socketClient(s || socketOptions);
+    this.socketCreateConnection = (s, m) => socketCreateConnection(s || socketOptions, m);
 
-    this.isIP = isIP;
-    this.isIPv4 = isIPv4;
-    this.isIPv6 = isIPv6;
+    this.socketServer = (s) => socketServer(s);
+
+    this.wssSocketServer = (s) => wssSocketServer(s);
+    this.wsSocketServer = (s) => wsSocketServer(s);
+
+    this.getDefaultAutoSelectFamily = () => getDefaultAutoSelectFamily();
+    this.setDefaultAutoSelectFamily = (v) => setDefaultAutoSelectFamily(v);
+    this.getDefaultAutoSelectFamilyAttemptTimeout = (v) => getDefaultAutoSelectFamilyAttemptTimeout(v);
+    this.setDefaultAutoSelectFamilyAttemptTimeout = (v) => setDefaultAutoSelectFamilyAttemptTimeout(v);
+
+    this.isIP = (i) => isIP(i);
+    this.isIPv4 = (i) => isIPv4(i);
+    this.isIPv6 = (i) => isIPv6(i);
 }
 
 
@@ -1059,6 +1098,8 @@ module.exports.server = server;
 
 module.exports.socketServerCreate = socketServerCreate;
 module.exports.socketServerListen = socketServerListen;
+
+module.exports.SocketClass = SocketClass;
 
 module.exports.socketAddress = socketAddress;
 module.exports.socketCreate = socketCreate;
