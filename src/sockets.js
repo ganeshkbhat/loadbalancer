@@ -192,6 +192,31 @@ function socketAddress(socketOptions) {
 
 
 /**
+ * SocketClass
+ *
+ */
+function SocketClass() {
+    server.call(this, ...arguments);
+    SocketBlocklist.call(this, ...arguments);
+
+    this.socketAddress = socketAddress;
+    this.socketConnect = socketConnect;
+    this.socketServer = socketServer;
+    this.socketClient = socketClient;
+
+    this.socketCreateConnection = socketCreateConnection;
+    this.getDefaultAutoSelectFamily = getDefaultAutoSelectFamily;
+    this.setDefaultAutoSelectFamily = setDefaultAutoSelectFamily;
+    this.getDefaultAutoSelectFamilyAttemptTimeout = getDefaultAutoSelectFamilyAttemptTimeout;
+    this.setDefaultAutoSelectFamilyAttemptTimeout = setDefaultAutoSelectFamilyAttemptTimeout;
+
+    this.isIP = isIP;
+    this.isIPv4 = isIPv4;
+    this.isIPv6 = isIPv6;
+}
+
+
+/**
  * 
  * socketCreate
  *
