@@ -988,6 +988,48 @@ function sshSocketClient(serverOptions) {
 }
 
 
+function getDefaultAutoSelectFamily() {
+    const net = require("net");
+    return net.getDefaultAutoSelectFamily();
+}
+
+
+function setDefaultAutoSelectFamily(value) {
+    const net = require("net");
+    return net.setDefaultAutoSelectFamily(value);
+}
+
+
+function getDefaultAutoSelectFamilyAttemptTimeout() {
+    const net = require("net");
+    return net.getDefaultAutoSelectFamilyAttemptTimeout();
+}
+
+
+function setDefaultAutoSelectFamilyAttemptTimeout(value) {
+    const net = require("net");
+    return net.setDefaultAutoSelectFamilyAttemptTimeout(value);
+}
+
+
+function isIP(input) {
+    const net = require("net");
+    return net.isIP(input);
+}
+
+
+function isIPv4(input) {
+    const net = require("net");
+    return net.isIPv4(input);
+}
+
+
+function isIPv6(input) {
+    const net = require("net");
+    return net.isIPv6(input);
+}
+
+
 module.exports.server = server;
 
 module.exports.socketServerCreate = socketServerCreate;
@@ -1027,4 +1069,13 @@ module.exports.sshSocketClient = sshSocketClient;
 
 module.exports.socketServer = socketServer;
 module.exports.socketClient = socketClient;
+
+
+module.exports.getDefaultAutoSelectFamily = getDefaultAutoSelectFamily;
+module.exports.setDefaultAutoSelectFamily = setDefaultAutoSelectFamily;
+module.exports.getDefaultAutoSelectFamilyAttemptTimeout = getDefaultAutoSelectFamilyAttemptTimeout;
+module.exports.setDefaultAutoSelectFamilyAttemptTimeout = setDefaultAutoSelectFamilyAttemptTimeout;
+module.exports.isIP = isIP;
+module.exports.isIPv4 = isIPv4;
+module.exports.isIPv6 = isIPv6;
 
