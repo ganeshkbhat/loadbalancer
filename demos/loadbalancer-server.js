@@ -21,10 +21,10 @@ var server = require("../index").sockets.server;
 var express = require("./express-app");
 
 loadbalancer.loadbalancer({
-    "server": express,
+    "server": null,
     "protocol": "http",
     "createCerts": true,
-    "host": "localhost",
+    "host": "127.0.0.1",
     "proxy": {
         "proxy": true,
         "protocol": "http",

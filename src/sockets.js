@@ -118,16 +118,15 @@ function server(serverOptions) {
     const fs = require("fs");
     const http = require(serverOptions?.protocol || 'http');
 
-    var callback;
-    if (!callback) callback = echoServer();
-
     serverOptions.port = serverOptions?.port || 8000;
     serverOptions.host = serverOptions?.host || "localhost";
 
-    if (!serverOptions.server) throw new Error("Error: serverOptions.server - server or callback is not defined.");
     if (!serverOptions.callbacks) serverOptions.callbacks = {};
 
     serverOptions.callbacks.listen = (!!serverOptions.callbacks?.listen) ? serverOptions.callbacks.listen : serverStartCallback(serverOptions.host, serverOptions.port);
+    if (!serverOptions?.server) serverOptions.server = serverOptions?.server || serverOptions?.callbacks?.server || echoServer();
+
+    if (!serverOptions.server) throw new Error("Error: serverOptions.server - server or callback is not defined.");
 
     let srv = (!serverOptions?.protocol === "https") ?
         http.createServer(serverOptions?.server) : http.createServer({

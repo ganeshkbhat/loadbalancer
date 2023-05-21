@@ -54,4 +54,4 @@ loadbalancer.loadbalancer({
         "server": null,
         "listen": null
     }
-})
+});
