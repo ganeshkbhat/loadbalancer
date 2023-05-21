@@ -24,7 +24,7 @@ loadbalancer.createNetProxy({
     "server": expressapp,
     "protocol": "http",
     "createCerts": true,
-    "host": "localhost",
+    "host": "127.0.0.1",
     "proxy": {
         "proxy": true,
         "protocol": "http",
