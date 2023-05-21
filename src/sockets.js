@@ -785,7 +785,7 @@ function httpsSocketServer(serverOptions) {
  */
 function httpsSocketClient(serverOptions) {
     serverOptions.protocol = "https";
-    serverOptions.ws = true;
+    // serverOptions.ws = true;
     return httpClient(serverOptions);
 }
 
