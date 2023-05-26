@@ -17,7 +17,7 @@
 'use strict';
 
 const { loadbalancer, threadingMultiple, threading } = require("./src/loadbalancer");
-const { reverseProxy, createNetProxy, sqlKvStore } = require("./src/serverutils");
+const { reverseProxy, createNetProxy, httpProxy, sqlKvStore } = require("./src/serverutils");
 const {
     poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
     randomize, sequential, sticky, weighted, singleMaxload,
@@ -40,7 +40,7 @@ const { generateCertificates } = require("./src/certificates");
 
 
 module.exports.loadbalancer = { loadbalancer, threadingMultiple, threading };
-module.exports.serverutils = { reverseProxy, createNetProxy, sqlKvStore };
+module.exports.serverutils = { reverseProxy, createNetProxy, httpProxy, sqlKvStore };
 
 module.exports.algorithms = {
     poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
@@ -57,6 +57,7 @@ module.exports.sockets = {
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
     sshSocketServer, sshSocketClient,
     SocketBlocklist, WssSocketServer, WssSocketClient, SocketClass,
+
 
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
     setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6
@@ -82,6 +83,7 @@ module.exports.default = {
     tcpSocketServer, tcpSocketClient, udpSocketServer, udpSocketClient,
     sshSocketServer, sshSocketClient,
     SocketBlocklist, WssSocketServer, WssSocketClient, SocketClass,
+    httpProxy,
 
     getDefaultAutoSelectFamily, setDefaultAutoSelectFamily, getDefaultAutoSelectFamilyAttemptTimeout,
     setDefaultAutoSelectFamilyAttemptTimeout, isIP, isIPv4, isIPv6,

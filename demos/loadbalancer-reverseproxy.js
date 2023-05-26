@@ -31,7 +31,8 @@ loadbalancer.reverseProxy({
         "host": "localhost",
         "port": 7000,
         "proxyHost": "",
-        "proxyPort": 9000
+        "proxyPort": 9000,
+        "secure": true
     },
     "certs": {
         "key": "./certs/ssl.key",
@@ -44,7 +45,6 @@ loadbalancer.reverseProxy({
     "mainProcessCallback": () => { },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
-        // console.log(opts);
         reverseProxy(opts);
     },
     "callbacks": {
@@ -52,7 +52,9 @@ loadbalancer.reverseProxy({
         "wsOnEnd": null,
         "wsUpgrade": null,
         "server": null,
-        "listen": null
+        "listen": null,
+        "proxyListen": null,
+        "proxyInterceptor": null
     }
 })
 

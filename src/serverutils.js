@@ -17,6 +17,7 @@
 'use strict';
 
 
+const { EventEmitter } = require("stream");
 const {
     echoServer, checkServerIdentity, serverStartCallback,
     server, websocket, socketServer, socketClient,
@@ -88,12 +89,13 @@ function reverseProxy(serverOptions) {
     if (!!serverOptions?.callbacks) {
         if (!serverOptions?.callbacks?.server) {
             serverOptions.callbacks.server = (req, res) => {
-                const options = {
-                    hostname: serverOptions?.proxy?.host,
-                    port: serverOptions?.proxy?.port,
+                req = {
                     path: req.url,
                     method: req.method,
-                    headers: req.headers
+                    headers: req.headers,
+                    ...req,
+                    hostname: serverOptions?.proxy?.host,
+                    port: serverOptions?.proxy?.port
                 };
 
                 // const proxyReq = https.request(options, (proxyRes) => {
@@ -138,6 +140,83 @@ function reverseProxy(serverOptions) {
 /**
  *
  *
+ * @param {*} serverOptions
+ * @return {*} 
+ * 
+ * Main server port (via loadbalancer) => proxyHost port => proxy port
+ * 
+ */
+function httpProxy(serverOptions) {
+    var http = require('http'), httpProxy = require('http-proxy');
+    var proxy = httpProxy.createProxyServer({}).listen(serverOptions.port, serverOptions.host, serverOptions.callbacks.proxyListen);
+
+    const EE = new EventEmitter();
+    EE.addListener("closeProxy", function (e) {
+        proxy.close();
+    }.bind(null, serverOptions, proxy, EE))
+
+    /** https://www.npmjs.com/package/http-proxy#setup-a-stand-alone-proxy-server-with-proxy-request-header-re-writing */
+    /** https://www.npmjs.com/package/http-proxy#listening-for-proxy-events */
+    proxy.on('error', serverOptions?.callbacks?.proxyError.bind(null, serverOptions, proxy, EE) || function (err, req, res) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end({ ...err, message: 'Something went wrong. And we are reporting a custom error message.' });
+    }.bind(null, serverOptions, proxy, EE));
+
+    proxy.on('proxyReq', serverOptions?.callbacks?.proxyInterceptorRequest.bind(null, serverOptions, proxy, EE) || function (proxyReq, req, res, options) { }.bind(null, serverOptions, proxy, EE));
+    proxy.on('proxyReqWs', serverOptions?.callbacks?.proxyInterceptorRequestWS.bind(null, serverOptions, proxy, EE) || function (proxyReqWs, req, res, options) { }.bind(null, serverOptions, proxy, EE));
+    proxy.on('proxyRes', serverOptions?.callbacks?.proxyInterceptorResponse.bind(null, serverOptions, proxy, EE) || function (proxyRes, req, res, options) { }.bind(null, serverOptions, proxy, EE));
+
+    proxy.on('open', serverOptions?.callbacks?.proxyOpen.bind(null, serverOptions, proxy, EE) || function (proxySocket) {
+        proxySocket.on('data', serverOptions?.callbacks.proxySocketData.bind(null, serverOptions, proxy, EE) || function (d) { console.log(d) });
+    }.bind(null, serverOptions, proxy, EE));
+
+    proxy.on('close', serverOptions?.callbacks?.proxyClose.bind(null, serverOptions, proxy, EE) || function (res, socket, head) {
+        // // view disconnected websocket connections
+        // console.log('Client disconnected');
+    }.bind(null, serverOptions, proxy, EE));
+
+    var proxyServer = http.createServer(function (req, res) {
+        let opts = { "target": { "protocol": serverOptions?.proxy?.protocol + ":", "host": serverOptions?.proxy?.host, "port": serverOptions?.proxy?.port } }
+
+        /** https://www.npmjs.com/package/http-proxy#https---http */
+        /** https://www.npmjs.com/package/http-proxy#https---https */
+        /** HTTPS -> HTTP */
+        /** HTTPS -> HTTPS */
+
+        /** 1. */
+        /** ssl certificates */
+        opts = {
+            ...opts, "ssl": {
+                "key": (!serverOptions?.cert?.keyPath) ? fs.readFileSync(serverOptions?.cert?.keyPath, 'utf8') : serverOptions?.cert?.key,
+                "cert": (!serverOptions?.cert?.certPath) ? fs.readFileSync(serverOptions?.cert?.certPath, 'utf8') : serverOptions?.cert?.cert
+            }
+        }
+
+        /** 2. */
+        /** changeOrigin and Secure options additions */
+        opts = { ...opts, "changeOrigin": serverOptions?.proxy?.changeOrigin || true, "secure": serverOptions?.proxy?.secure || true }
+
+        /** https://www.npmjs.com/package/http-proxy#http---https-using-a-pkcs12-client-certificate */
+        /** HTTP -> HTTPS (using a PKCS12 client certificate) */
+
+        /** 3. */
+        /** pfx and passphrase */
+        if (!!serverOptions?.cert?.pfx) opts = { ...opts, "pfx": (!!serverOptions?.cert?.pfx) ? fs.readFileSync(serverOptions?.cert?.pfx) : null }
+        if (!!serverOptions?.cert?.passphrase) opts = { ...opts, "passphrase": (!!serverOptions?.cert?.passphrase) ? serverOptions?.cert?.passphrase : null }
+
+        proxy.web(req, res, opts);
+    }.bind(null, serverOptions, proxy, EE));
+
+    proxyServer.on('upgrade', serverOptions?.callbacks?.proxyUpgrade.bind(null, serverOptions, proxy, EE) || function (req, socket, head) { proxy.ws(req, socket, head); }.bind(null, serverOptions, proxy, EE));
+    proxyServer.listen(serverOptions?.proxyPort, serverOptions?.proxyHost, serverOptions?.callbacks?.proxyServerListen);
+
+    return { proxy, proxyServer };
+}
+
+
+/**
+ *
+ *
  * @param {*} socketOptions
  * @param {*} proxySocketOptions
  * @return {*} 
@@ -171,7 +250,7 @@ function createNetProxy(socketOptions, proxySocketOptions) {
  * @param {*} tablename
  */
 function sqlKvStore(filepath, tablename) {
-    
+
 }
 
 
@@ -245,6 +324,7 @@ function clusterChildCallback(cluster, proc) {
 }
 
 
+module.exports.httpProxy = httpProxy;
 module.exports.serverProxy = serverProxy;
 module.exports.reverseProxy = reverseProxy;
 module.exports.createNetProxy = createNetProxy;
