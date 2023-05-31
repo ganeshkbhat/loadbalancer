@@ -6,7 +6,35 @@ A simple threaded and clustered load balancer for nodejs with different forwardi
 
 ### DEMOS
 
+
 Find the demos in the [demo folder](https://github.com/ganeshkbhat/loadbalancer/tree/main/demos)
+
+
+### FEATURES
+
+
+Supports creating server using the following protocols:
+
+- HTTP, HTTPS
+- TCP
+- TLS
+- UDP
+- FTP
+- SFTP
+- Unix Socket 
+- SocksV3, SocksV4, SocksV5
+
+
+Supports creating client agents using the following protocols:
+
+- HTTP, HTTPS
+- TCP
+- TLS
+- UDP
+- FTP
+- SFTP
+- Unix Socket 
+- SocksV3, SocksV4, SocksV5
 
 
 
