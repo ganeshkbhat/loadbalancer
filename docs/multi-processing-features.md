@@ -1,0 +1,164 @@
+
+### TECHNICAL FEATURES OF LOADBALANCERS
+
+- [x] Algorithms
+    - [x] execute with random
+    - [x] execute with sequential
+    - [x] execute with sticky
+    - [x] execute with single max load
+- [] Cluster Processes (Multi-Processesing)
+    - [x] Cluster Base
+    - [x] Cluster Base with Execution of Callback function
+    - [x] Cluster Base with Execution of File
+    - [] Normal Processes - execute function
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute file
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute http server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute https server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute http proxy server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute https proxy server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute http-https server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute http-ws server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute https-ws server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute socket server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+    - [] Normal Processes - execute secure socket server
+        - [] Normal Processes - execute with algorithms
+            - [] Normal Processes - execute with random
+            - [] Normal Processes - execute with sequential
+            - [] Normal Processes - execute with sticky
+            - [] Normal Processes - execute with single max load
+- [] Thread
+    - [] Thread Base
+    - [] Thread Base with Execution of Callback function
+    - [] Thread Base with Execution of File
+    - [] Normal Thread - execute function
+    - [] Normal Thread - execute file
+    - [] Normal Thread - execute http server
+    - [] Normal Thread - execute https server
+    - [] Normal Thread - execute http proxy server
+    - [] Normal Thread - execute https proxy server
+    - [] Normal Thread - execute http-https server
+    - [] Normal Thread - execute http-ws server
+    - [] Normal Thread - execute https-ws server
+    - [] Normal Thread - execute socket server
+    - [] Normal Thread - execute secure socket server
+- [] Multi Threading
+    - [] Multi Threading Base
+    - [] Multi Threading Base with Execution of Callback function
+    - [] Multi Threading Base with Execution of File
+    - [] Normal Threads - execute function
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute file
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute http server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute https server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute http proxy server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute https proxy server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute http-https server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute http-ws server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute https-ws server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute socket server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+    - [] Normal Threads - execute secure socket server
+        - [] Normal Threads - execute with algorithms
+            - [] Normal Threads - execute with random
+            - [] Normal Threads - execute with sequential
+            - [] Normal Threads - execute with sticky
+            - [] Normal Threads - execute with single max load
+

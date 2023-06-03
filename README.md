@@ -3,48 +3,34 @@
 A simple threaded and clustered load balancer for nodejs with different forwarding algorithms and server request handling options. 
 
 
-
-### DEMOS
-
+## DEMOS
 
 Find the demos in the [demo folder](https://github.com/ganeshkbhat/loadbalancer/tree/main/demos)
 
 
-### FEATURES
+## FEATURES
+
+The following features are inbuilt into the loadbalancer:
+- [] Main Features 
+    - [] Multi Processing and Multi Threading with Algorithm based routing
+    - [] Detailed Support based on development
+- [] Loadbalanced Server (Multi Protocol Support)
+- [] Loadbalanced Client (Multi Protocol Support)
 
 
-Supports creating server using the following protocols:
+## .loadbalancer module
 
-- HTTP, HTTPS
-- TCP
-- TLS
-- UDP
-- FTP
-- SFTP
-- Unix Socket 
-- SocksV3, SocksV4, SocksV5
+There are three modules in the loadbalancer module: `loadbalancer (clustered processes)`, `threadingMultiple`, `threading`
 
 
-Supports creating client agents using the following protocols:
+## .loadbalancer (clustered processes) module
 
-- HTTP, HTTPS
-- TCP
-- TLS
-- UDP
-- FTP
-- SFTP
-- Unix Socket 
-- SocksV3, SocksV4, SocksV5
-
-
-
-### .loadbalancer module
-
-loadbalancer (clustered processes), threadingMultiple, threading
+`loadbalancer`
 
 ```
-var loadbalancer = require("../index").loadbalancer;
-var httpSocketServer = require("../index").sockets.httpSocketServer;
+
+var loadbalancer = require("loadbalancerjs").loadbalancer;
+var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
 var server = require("./express-app");
 
 loadbalancer({
@@ -83,37 +69,48 @@ loadbalancer({
     }
 })
 
-
 ```
 
-threadingMultiple
+## .loadbalancer threading module
 
-```
-
-```
-
-threading
+`threading`
 
 ```
 
 ```
 
 
-### .serverutils module
+## .loadbalancer multi threading module
 
-server, reverseProxy, createNetProxy, websocket_secure, websocket, sqlKvStore
+`threadingMultiple`
 
-### .algorithms module
+```
 
-randomize, sequential, sticky, weighted, singlemaxload
+```
 
-Randomize, Sequential, Sticky, Weighted, SingleMaxload
+<!-- 
+## .serverutils module
 
-### .certificates module
+server, reverseProxy, createNetProxy, websocket_secure, websocket, sqlKvStore -->
 
-generateCertificates
+## .algorithms module
 
-### Architechure
+The following algorithms are supported: `randomize, sequential, sticky, weighted, singlemaxload`
+
+- `Randomize`, 
+- `Sequential`, 
+- `Sticky`, 
+- `Weighted`, 
+- `SingleMaxload`
+
+
+## .certificates module
+
+Generate the Public and Private keys function: `generateCertificates`
+
+`generateCertificates()`
+
+## Architechure
 
 
 

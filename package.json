@@ -12,6 +12,8 @@
     "lib": "./src/**"
   },
   "scripts": {
+    "postinstall": "npm link ../protocolservers && npm link ../noserver-expressjs && npm link ../require-urls/apis-hasher",
+    "postupdate": "npm link ../protocolservers && npm link ../noserver-expressjs && npm link ../require-urls/apis-hasher",
     "test": "mocha --reporter spec --recursive  --timeout 60000 ./tests/*.js",
     "asbuild:debug": "asc assembly/index.ts --target debug",
     "asbuild:release": "asc assembly/index.ts --target release",
@@ -37,13 +39,8 @@
     "@haxtra/kvstore-sqlite": "^0.9.0",
     "async-lock": "^1.4.0",
     "hasher-apis": "^0.2.7",
-    "http-proxy": "^1.18.1",
-    "node-ipc": "^11.1.0",
     "noserve": "^1.1.0",
-    "socks5-client": "^1.2.8",
-    "ssh2": "^1.13.0",
-    "ssh2-streams": "^0.4.10",
-    "udp-io": "^1.1.0",
+    "socketsjs": "^0.0.1",
     "uuid": "^9.0.0"
   }
 }
