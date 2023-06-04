@@ -38,7 +38,13 @@ const {
  */
 function serverProxy(serverOptions) {
     const fs = require("fs");
-    const http = require(serverOptions?.protocol || 'http');
+    var http;
+
+    if (serverOptions?.protocol === "http-https") {
+        http = require("http-https");
+    } else {
+        http = require(serverOptions?.protocol || 'http');
+    }
 
     var callback = function (req, res) {
         const options = {
