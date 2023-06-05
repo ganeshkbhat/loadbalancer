@@ -1,11 +1,10 @@
-## What is the problem this feature will solve?
+### What is the problem this feature will solve?
 
 `Clustering of threads`, basically `similar to clustered thread pools with features same as Cluster module`.
 
-[https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/nodejs.proposal.md](https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/nodejs.proposal.md)
+[https://github.com/ganeshkbhat/loadbalancer/blob/4f15c79434797ccaf17aeae6f6a3f4c47f0e5703/nodejs.proposal.md](https://github.com/ganeshkbhat/loadbalancer/blob/4f15c79434797ccaf17aeae6f6a3f4c47f0e5703/nodejs.proposal.md)
 
-
-## What is the feature you are proposing to solve the problem?
+### What is the feature you are proposing to solve the problem?
 
 
 `Clustered threads module`: The module `Clustered threads module` which is basically `Clustering of threads` will be `similar to clustered thread pools with features same as inbuilt Cluster module` based on child_process.fork() features with minor differences.
@@ -37,7 +36,7 @@
 
 ### CHILD PROCESS PORT SHARING: 
 
-* `shares the same port` [process.same.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/demos/process.different.port.js):
+* `shares the same port` [process.same.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/4f15c79434797ccaf17aeae6f6a3f4c47f0e5703/demos/process.same.port.js):
 ```
 const cluster = require('node:cluster');
 const http = require('node:http');
@@ -66,7 +65,7 @@ if (cluster.isPrimary) {
 ```
 
 
-* `shares a different port` [process.different.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/demos/process.different.port.js):
+* `shares a different port` [process.different.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/4f15c79434797ccaf17aeae6f6a3f4c47f0e5703/demos/process.different.port.js):
 ```
 const cluster = require('node:cluster');
 const http = require('node:http');
@@ -162,7 +161,6 @@ if (cluster_thread.isMainThread) {
 ```
 
 
-
-## What alternatives have you considered?
+### What alternatives have you considered?
 
 #### `nodejs module: cluster` [cluster](https://nodejs.org/api/cluster.html#how-it-works) basd on `child_process` will be more resource intensive than worker_threads based `cluster_threads` module
