@@ -2,8 +2,11 @@
 
 `Clustering of threads`, basically `similar to clustered thread pools with features same as Cluster module`.
 
+[https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/nodejs.proposal.md](https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/nodejs.proposal.md)
+
 
 ## What is the feature you are proposing to solve the problem?
+
 
 `Clustered threads module`: The module `Clustered threads module` which is basically `Clustering of threads` will be `similar to clustered thread pools with features same as inbuilt Cluster module` based on child_process.fork() features with minor differences.
 
@@ -34,7 +37,7 @@
 
 ### CHILD PROCESS PORT SHARING: 
 
-* `shares the same port` [process.same.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/d9e0d5fca5c47e940c483cfdc336e12aeeb437eb/demos/process.same.port.js):
+* `shares the same port` [process.same.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/demos/process.different.port.js):
 ```
 const cluster = require('node:cluster');
 const http = require('node:http');
@@ -63,7 +66,7 @@ if (cluster.isPrimary) {
 ```
 
 
-* `shares a different port` [process.different.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/d9e0d5fca5c47e940c483cfdc336e12aeeb437eb/demos/process.different.port.js):
+* `shares a different port` [process.different.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/9db5431216505e78ab09c1166407c5153c5d26c5/demos/process.different.port.js):
 ```
 const cluster = require('node:cluster');
 const http = require('node:http');
@@ -114,7 +117,7 @@ if (cluster_thread.isPrimary) {
   }
 
   workers[i].on('exit', (worker, code, signal) => {
-   console.log(`worker ${worker.process.pid}, ${worker.threadId} died`);
+   console.log(`worker ${worker.process.pid} died`);
   });
 } else {
   http.createServer((req, res) => {
@@ -122,7 +125,7 @@ if (cluster_thread.isPrimary) {
     res.end('hello world\n');
   }).listen(8000);
 
-  console.log(`Worker ${process.pid}, ${worker.threadId} started`);
+  console.log(`Worker ${process.pid}, ${cluster_thread.worker.threadId} started`);
 }
 ```
 
@@ -146,17 +149,18 @@ if (cluster_thread.isMainThread) {
   }
 
   workers[i].on('exit', (worker, code, signal) => {
-    console.log(`worker ${worker.process.pid}, ${worker.threadId} died`);
+    console.log(`worker ${worker.process.pid} died`);
   });
 } else {
   http.createServer((req, res) => {
     res.writeHead(200);
     res.end('hello world\n');
-  }).listen(worker.threadId);
+  }).listen(cluster_thread.worker.threadId);
 
-  console.log(`Worker ${process.pid}, ${worker.threadId} started`);
+  console.log(`Worker ${process.pid}, ${cluster_thread.worker.threadId} started`);
 }
 ```
+
 
 
 ## What alternatives have you considered?
