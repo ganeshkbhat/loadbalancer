@@ -28,5 +28,5 @@ express.get("/test", (req, res) => {
         res.status(200).send(`{ 'hello': 'server', 'pid': ${process.pid} }`)
 })
 
-express.listen(10000, "127.0.0.1");
+express.listen(process.env.port || 10000, process.env.host || "127.0.0.1");
 
