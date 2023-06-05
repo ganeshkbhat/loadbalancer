@@ -94,7 +94,7 @@ if (cluster.isPrimary) {
 
 ### RECOMMENDED AND EXPECTED WORKER THREAD CLUSTER MODULE AND PORT SHARING like cluster module: 
 
-* `shares the same port` [cluster_thread.same.port.js]():
+* `shares the same port`:
 
 ```
 const cluster_thread = require('node:cluster_thread');
@@ -127,7 +127,7 @@ if (cluster_thread.isPrimary) {
 ```
 
 
-* `shares a different port` [cluster_thread.different.port.js]():
+* `shares a different port`:
 ```
 const cluster_thread = require('node:cluster_thread');
 const http = require('node:http');
