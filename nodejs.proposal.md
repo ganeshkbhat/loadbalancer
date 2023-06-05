@@ -34,7 +34,7 @@
 
 ### CHILD PROCESS PORT SHARING: 
 
-* `shares the same port` [process.same.port.js]():
+* `shares the same port` [process.same.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/d9e0d5fca5c47e940c483cfdc336e12aeeb437eb/demos/process.same.port.js):
 ```
 const cluster = require('node:cluster');
 const http = require('node:http');
@@ -63,7 +63,7 @@ if (cluster.isPrimary) {
 ```
 
 
-* `shares a different port` [process.different.port.js]():
+* `shares a different port` [process.different.port.js](https://github.com/ganeshkbhat/loadbalancer/blob/d9e0d5fca5c47e940c483cfdc336e12aeeb437eb/demos/process.different.port.js):
 ```
 const cluster = require('node:cluster');
 const http = require('node:http');
