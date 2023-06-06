@@ -85,11 +85,15 @@ cluster({
 
 ## .loadbalancer processing module
 
+`processing`
+
 ```
 
 ```
 
 ## .loadbalancer multi processing module
+
+`processingMultiple`
 
 ```
 
