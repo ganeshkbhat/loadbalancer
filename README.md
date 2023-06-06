@@ -110,7 +110,7 @@ cluster({
 
 ## .loadbalancer multi threading module
 
-`threadingMultiple`
+`threadingMultiple` or `threadPool`
 
 ```
 
