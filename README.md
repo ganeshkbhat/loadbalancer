@@ -23,17 +23,28 @@ The following features are inbuilt into the loadbalancer:
 There are three modules in the loadbalancer module: `loadbalancer (clustered processes)`, `threadingMultiple`, `threading`
 
 
-## .loadbalancer (clustered processes) module
+## .loadbalancer module
 
 `loadbalancer`
 
 ```
 
-var loadbalancer = require("loadbalancerjs").loadbalancer;
+
+```
+
+
+## .loadbalancer cluster module
+
+
+`cluster`
+
+```
+
+var cluster = require("loadbalancerjs").cluster;
 var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
 var server = require("./express-app");
 
-loadbalancer({
+cluster({
     "server": server,
     "protocol": "http",
     "createCerts": true,
@@ -71,6 +82,17 @@ loadbalancer({
 
 ```
 
+
+## .loadbalancer processing module
+
+```
+
+```
+
+## .loadbalancer multi processing module
+
+
+
 ## .loadbalancer threading module
 
 `threading`
@@ -87,6 +109,8 @@ loadbalancer({
 ```
 
 ```
+
+
 
 <!-- 
 ## .serverutils module
