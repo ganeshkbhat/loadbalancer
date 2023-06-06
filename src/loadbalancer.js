@@ -52,6 +52,14 @@ function threadingMultiple(serverOptions, workerFunctions) {
         "ws": true,
         "processes": 5,
         "threads": 10,
+        // Consider: setupPrimary or runtime
+        "runtime": {
+            "type": "", // exec, execFile, fork, spawn, execFileSync, execSync, spawnSync
+            "command": "",
+            "args": {},
+            "env": {},
+            "options": {}
+        },
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
@@ -85,6 +93,8 @@ function threadingMultiple(serverOptions, workerFunctions) {
     return wkrFns;
 }
 
+const threadpool = threadingMultiple;
+
 
 /**
  *
@@ -116,7 +126,15 @@ function threading(serverOptions, workerFunction) {
         "port": 8000,
         "ws": true,
         "processes": 5,
-        "threads": 1,
+        "threads": 10,
+        // Consider: setupPrimary or runtime
+        "runtime": {
+            "type": "", // exec, execFile, fork, spawn, execFileSync, execSync, spawnSync
+            "command": "",
+            "args": {},
+            "env": {},
+            "options": {}
+        },
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
@@ -197,7 +215,9 @@ function clustering(serverOptions) {
             "proxy": true,
             "protocol": "http",
             "host": "localhost",
-            "port": 7000
+            "port": 7000,
+            "proxyHost": "",
+            "proxyPort": 9000
         },
         "certs": {
             "key": "./certs/ssl.key",
@@ -207,9 +227,20 @@ function clustering(serverOptions) {
         "ws": true,
         "processes": 5,
         "threads": 10,
+        // Consider: setupPrimary or runtime
+        "runtime": {
+            "type": "", // exec, execFile, fork, spawn, execFileSync, execSync, spawnSync
+            "command": "",
+            "args": {},
+            "env": {},
+            "options": {}
+        },
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
+            "wsOnData": null,
+            "wsOnEnd": null,
+            "wsUpgrade": null,
             "server": null,
             "listen": null
         },
@@ -312,7 +343,7 @@ function clustering(serverOptions) {
  * @param {*} serverOptions
  */
 function processing(serverOptions, workerFunction) {
-    const { execFile } = require("child_process");
+    const { execFile, spawn, fork } = require("child_process");
 
 }
 
@@ -342,6 +373,14 @@ function processingMultiple(serverOptions, workerFunctions) {
         "ws": true,
         "processes": 5,
         "threads": 10,
+        // Consider: setupPrimary or runtime
+        "runtime": {
+            "type": "", // exec, execFile, fork, spawn, execFileSync, execSync, spawnSync
+            "command": "",
+            "args": {},
+            "env": {},
+            "options": {}
+        },
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
@@ -396,10 +435,18 @@ function processingMultiple(serverOptions, workerFunctions) {
             "key": "./certs/ssl.key",
             "cert": "./certs/ssl.cert"
         },
-        "port": 8080,
+        "port": 8000,
         "ws": true,
         "processes": 5,
         "threads": 10,
+        // Consider: setupPrimary or runtime
+        "runtime": {
+            "type": "", // exec, execFile, fork, spawn, execFileSync, execSync, spawnSync
+            "command": "",
+            "args": {},
+            "env": {},
+            "options": {}
+        },
         "mainProcessCallback": () => { },
         "forkCallback": (opts, pr) => { },
         "callbacks": {
@@ -408,129 +455,41 @@ function processingMultiple(serverOptions, workerFunctions) {
             "wsUpgrade": null,
             "server": null,
             "listen": null
-        }
+        },
+        ...serverOptions
     }
  */
 function loadbalancer(serverOptions) {
 
-    serverOptions = {
-        "server": null,
-        "protocol": "http",
-        "createCerts": true,
-        "host": "localhost",
-        "proxy": {
-            "proxy": true,
-            "protocol": "http",
-            "host": "localhost",
-            "port": 7000
-        },
-        "certs": {
-            "key": "./certs/ssl.key",
-            "cert": "./certs/ssl.cert"
-        },
-        "port": 8000,
-        "ws": true,
-        "processes": 5,
-        "threads": 10,
-        "mainProcessCallback": () => { },
-        "forkCallback": (opts, pr) => { },
-        "callbacks": {
-            "server": null,
-            "listen": null
-        },
-        ...serverOptions
-    }
+    // TODO: 
+    // Move to mix of Processing, Clustering, Threads, ThreadPool based mixed implementation
+    // Specifications will be in serverOptions
+    // Process > Cluster/ ProcessingMulti/ Process > Parent Algo + Parent Callback > Worker Callback > Worker Can implement their own threads
+    // Thread > ThreadPool/ ThreadingMulti/ Thread > Parent Algo + Parent Callback > Worker Callback > Worker Can implement their own processes
 
-    const cluster = require('cluster');
-    const process = require('process');
-    const os = require('os');
+    /** 
+        Loadbalancer.call(this, serverOptions);
 
-    // cluster.js
-    if (cluster.isMaster) {
-        const cpus = serverOptions?.processes || os.cpus().length;
-        // console.log(`Forking for ${cpus} CPUs`);
+        this.processing = (serverOptions, workerFunction) => processing(serverOptions, workerFunction);
+        this.processingMultiple = (serverOptions, workerFunctions) => processing(serverOptions, workerFunctions);
+        this.cluster = (serverOptions) => clustering(serverOptions);
+        this.threading = threading(serverOptions, workerFunction);
+        this.threadingMultiple = threadingMultiple(serverOptions, workerFunctions);
+        this.loadbalancer = function (serverOptions) {
 
-        for (let i = 0; i < cpus; i++) {
-            if (!!serverOptions.setupPrimary) {
-                // { exec: 'worker.js', args: ['--use', 'http'] }
-                cluster.setupPrimary(serverOptions.setupPrimary);
-            }
-            cluster.fork();
-        }
-
-        // Right after the fork loop within the isMaster=true block
-        const updateWorkers = (cpus) => {
-            const usersCount = cpus;
-            Object.values(cluster.workers).forEach(worker => {
-                worker.send({ usersCount });
-            });
         };
+     */
 
-        updateWorkers(cpus);
-        setInterval(updateWorkers, 10000);
+    return clustering(serverOptions);
 
-        const workerEvents = () => {
-            Object.values(cluster.workers).forEach(worker => {
-                worker.on("close", function (data) {
-                    console.log(`A worker ${worker.id} is now closing connection to ${data} - ${arguments}`);
-                });
-
-                worker.on("exit", function (code, signal) {
-                    console.log(`A worker ${worker.id} is now exiting connection: ${code}, ${signal} - ${arguments}`);
-                });
-
-                worker.on("error", function (err) {
-                    console.log(`A worker ${worker.id} is facing error in connection to - ${err} - ${arguments}`);
-                });
-            });
-        }
-
-        cluster.on('disconnect', (worker) => {
-            console.log(`A worker ${worker.id} is now disconnected.`);
-        });
-
-        cluster.on('exit', (worker, code, signal) => {
-            if (code !== 0 && !worker.exitedAfterDisconnect) {
-                console.log(`Worker ${worker.id} crashed. ` + 'Starting a new worker.');
-                cluster.fork();
-            }
-        });
-
-        cluster.on('listening', (worker, address) => {
-            console.log(`A worker ${worker.id} is now connected to ${address.address}:${address.port}.`);
-        });
-
-        cluster.on('online', (worker) => {
-            console.log(`A worker ${worker.id} has responded after it was forked.`);
-        });
-
-        cluster.on('setup', (worker) => {
-            console.log(`A worker ${worker.id} has responded after it was forked setup.`);
-        });
-
-        cluster.on('fork', (worker) => {
-            console.log(`A worker ${worker.id} has responded after it was forked.`);
-        });
-
-        Object.values(cluster.workers).forEach(worker => {
-            worker.send(`Hello to Worker - ${worker.id}`);
-        });
-
-        if (!!serverOptions?.mainProcessCallback) {
-            serverOptions.mainProcessCallback(serverOptions);
-        }
-
-        console.log(`Cluster started on ${process.env.NODE_UNIQUE_ID}`);
-    } else {
-        if (!!serverOptions?.forkCallback) {
-            serverOptions.forkCallback(serverOptions, process);
-        } else {
-            throw new Error("No forkCallback specified in serverOptions");
-        }
-    }
 }
 
 
-module.exports.loadbalancer = loadbalancer;
+
 module.exports.threading = threading;
 module.exports.threadingMultiple = threadingMultiple;
+module.exports.processing = processing;
+module.exports.processingMultiple = processingMultiple;
+module.exports.clustering = clustering;
+module.exports.loadbalancer = loadbalancer;
+
