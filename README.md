@@ -25,18 +25,55 @@ There are six modules in the loadbalancer module: `loadbalancer`, `clustering`, 
 
 ## .loadbalancer module
 
-`loadbalancer`
+`.loadbalancer`
 
 ```
+var loadbalancer = require("loadbalancerjs").loadbalancer;
+var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
+var server = require("./express-app");
 
-
+loadbalancer({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
+    },
+    "certs": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8000,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => { },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        httpSocketServer(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
+    }
+})
 ```
 
 
 ## .loadbalancer cluster module
 
 
-`cluster`
+`.cluster`
 
 ```
 
@@ -85,26 +122,140 @@ cluster({
 
 ## .loadbalancer processing module
 
-`processing`
+`.processing`
 
 ```
+var processing = require("loadbalancerjs").processing;
+var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
+var server = require("./express-app");
 
+processing({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
+    },
+    "certs": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8000,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => { },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        httpSocketServer(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
+    }
+})
 ```
 
 ## .loadbalancer multi processing module
 
-`processingMultiple`
+`.processingMultiple`
 
 ```
+var processingMultiple = require("loadbalancerjs").processingMultiple;
+var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
+var server = require("./express-app");
 
+processingMultiple({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
+    },
+    "certs": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8000,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => { },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        httpSocketServer(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
+    }
+})
 ```
 
 ## .loadbalancer threading module
 
-`threading`
+`.threading`
 
 ```
+var threading = require("loadbalancerjs").threading;
+var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
+var server = require("./express-app");
 
+threading({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
+    },
+    "certs": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8000,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => { },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        httpSocketServer(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
+    }
+})
 ```
 
 
@@ -112,8 +263,93 @@ cluster({
 
 `threadingMultiple` or `threadPool`
 
+
+`.threadingMultiple`
+
+```
+var threadingMultiple = require("loadbalancerjs").threadingMultiple;
+var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
+var server = require("./express-app");
+
+threadingMultiple({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
+    },
+    "certs": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8000,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => { },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        httpSocketServer(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
+    }
+})
 ```
 
+`.threadPool`
+
+```
+var threadPool = require("loadbalancerjs").threadPool;
+var httpSocketServer = require("loadbalancerjs").sockets.httpSocketServer;
+var server = require("./express-app");
+
+threadPool({
+    "server": server,
+    "protocol": "http",
+    "createCerts": true,
+    "host": "localhost",
+    "proxy": {
+        "proxy": true,
+        "protocol": "http",
+        "host": "localhost",
+        "port": 7000,
+        "proxyHost": "",
+        "proxyPort": 9000
+    },
+    "certs": {
+        "key": "./certs/ssl.key",
+        "cert": "./certs/ssl.cert"
+    },
+    "port": 8000,
+    "ws": true,
+    "processes": 5,
+    "threads": 10,
+    "mainProcessCallback": () => { },
+    "forkCallback": (opts, pr) => {
+        // console.log(opts, pr);
+        // console.log(opts);
+        httpSocketServer(opts);
+    },
+    "callbacks": {
+        "wsOnData": null,
+        "wsOnEnd": null,
+        "wsUpgrade": null,
+        "server": null,
+        "listen": null
+    }
+})
 ```
 
 

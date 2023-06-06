@@ -19,6 +19,13 @@
     "ws": true,
     "processes": 5,
     "threads": 10,
+    "runtime": {
+        "type": "", 
+        "command": "",
+        "args": {},
+        "env": {},
+        "options": {}
+    },
     "mainProcessCallback": null,
     "forkCallback": null,
     "callbacks": {
