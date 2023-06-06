@@ -20,7 +20,7 @@ The following features are inbuilt into the loadbalancer:
 
 ## .loadbalancer module
 
-There are three modules in the loadbalancer module: `loadbalancer (clustered processes)`, `clustering`, `processingMultiple`, `processing`, `threadingMultiple`, `threading`
+There are three modules in the loadbalancer module: `loadbalancer`, `clustering`, `processingMultiple`, `processing`, `threadingMultiple`, `threading`
 
 
 ## .loadbalancer module
