@@ -16,7 +16,7 @@
 
 'use strict';
 
-import { default as balancer, loadbalancer, serverutils, algorithms, certificates, sockets } from "./index.js";
+import { default as balancer, loadbalancer, threadingMultiple, threading, clustering, processing, processingMultiple, serverutils, algorithms, certificates, sockets } from "./index.js";
 
 export default balancer;
-export { loadbalancer, serverutils, algorithms, certificates, sockets };
+export { loadbalancer, threadingMultiple, threading, clustering, processing, processingMultiple, serverutils, algorithms, certificates, sockets };

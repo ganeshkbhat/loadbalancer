@@ -16,7 +16,7 @@
 
 'use strict';
 
-const { loadbalancer, threadingMultiple, threading } = require("./src/loadbalancer");
+const { loadbalancer, threadingMultiple, threading, clustering, processing, processingMultiple } = require("./src/loadbalancer");
 const { reverseProxy, createNetProxy, httpProxy, sqlKvStore } = require("./src/serverutils");
 const {
     poolsInstance, sortPoolsByKeys, sortPoolsByKey, closeConnections,
@@ -39,7 +39,12 @@ const {
 const { generateCertificates } = require("./src/certificates");
 
 
-module.exports.loadbalancer = { loadbalancer, threadingMultiple, threading };
+module.exports.loadbalancer = loadbalancer;
+module.exports.threadingMultiple = threadingMultiple;
+module.exports.threading = threading;
+module.exports.clustering = clustering;
+module.exports.processing = processing;
+module.exports.processingMultiple = processingMultiple;
 module.exports.serverutils = { reverseProxy, createNetProxy, httpProxy, sqlKvStore };
 
 module.exports.algorithms = {
