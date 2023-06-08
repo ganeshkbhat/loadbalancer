@@ -23,7 +23,7 @@
  * @param {*} pools
  * @return {*} 
  */
-function poolsInstance(pools) {
+function PoolsInstance(pools) {
 
     this.pools = (!!pools) ? this.addPools(pools) : [];
 
@@ -280,7 +280,7 @@ function singlemaxload(pools, lastIndex, nextIndex, algorithm = "sequential") {
  * @param {*} pools
  */
 function Weighted(pools) {
-    poolsInstance.call(this);
+    PoolsInstance.call(this);
     this.addPools(pools);
     this.pools = sortPoolsByKey(this.pools, "weight", "desc");
 
@@ -306,7 +306,7 @@ function Weighted(pools) {
  * @param {*} pools
  */
 function Randomize(pools) {
-    poolsInstance.call(this);
+    PoolsInstance.call(this);
     this.addPools(pools);
 
     this.min = 0;
@@ -331,7 +331,7 @@ function Randomize(pools) {
  * @param {*} pools
  */
 function Sequential(pools) {
-    poolsInstance.call(this);
+    PoolsInstance.call(this);
     this.addPools(pools);
 
     this.min = 0;
@@ -358,7 +358,7 @@ function Sequential(pools) {
  * @param {*} pools
  */
 function Sticky(pools) {
-    poolsInstance.call(this);
+    PoolsInstance.call(this);
     this.addPools(pools);
 
     this.min = 0;
@@ -386,7 +386,7 @@ function Sticky(pools) {
  * @param {string} [algorithm="sequential"] Options: sequential, randomize, weighted, sticky
  */
 function SingleMaxload(pools, algorithm = "sequential") {
-    poolsInstance.call(this, pools);
+    PoolsInstance.call(this, pools);
     this.addPools(pools);
 
     this.min = 0;
@@ -405,7 +405,7 @@ function SingleMaxload(pools, algorithm = "sequential") {
 }
 
 
-module.exports.poolsInstance = poolsInstance;
+module.exports.PoolsInstance = PoolsInstance;
 module.exports.sortPoolsByKeys = sortPoolsByKeys;
 module.exports.sortPoolsByKey = sortPoolsByKey;
 module.exports.closeConnections = closeConnections;
