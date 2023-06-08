@@ -17,6 +17,37 @@
 'use strict';
 
 const { ServerResponse } = require('http');
+const { Randomize, Sequential, Sticky, Weighted, SingleMaxload } = require("./algorithms");
+
+
+function processRouterAlgorithm(serverOptions, cluster) {
+    let fnName = serverOptions.router;
+    let router = null;
+    switch (fnName) {
+        case Randomize:
+            router = Randomize();
+            break;
+        case Sequential:
+            router = Sequential();
+            break;
+        case Sticky:
+            router = Sticky();
+            break;
+        case Weighted:
+            router = Weighted();
+            break;
+        case SingleMaxload:
+            router = SingleMaxload();
+            break;
+        case "default":
+            router = Randomize();
+            break;
+    }
+
+    if (router !== null) {
+
+    }
+}
 
 
 /**
@@ -323,7 +354,7 @@ function clustering(serverOptions) {
         });
 
         if (!!serverOptions?.mainProcessCallback) {
-            serverOptions.mainProcessCallback(serverOptions);
+            serverOptions.mainProcessCallback(serverOptions, cluster);
         }
 
         console.log(`Cluster started on ${process.env.NODE_UNIQUE_ID}`);

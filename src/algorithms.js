@@ -24,14 +24,16 @@
  * @return {*} 
  */
 function poolsInstance(pools) {
-    this.pools = [];
+
+    this.pools = (!!pools) ? this.addPools(pools) : [];
+
     this.addPools = function (pools) {
         if (typeof pools === "string") {
-            this.pools.push({ host: pools, weight: 1, max: pools?.max || 1000, requests: 0, total: 0, open: 0, closed: 0, currentWeight: 0 });
+            this.pools.push({ host: pools, weight: 1, max: 1000, requests: 0, total: 0, open: 0, closed: 0, currentWeight: 0 });
         } else if (Array.isArray(pools)) {
             for (let i = 0; i < pools.length; i++) {
                 if (typeof pools[i] === "string") {
-                    this.pools.push({ host: pools[i], weight: 1, max: pools?.max || 1000, requests: 0, total: 0, open: 0, closed: 0, currentWeight: 0 });
+                    this.pools.push({ host: pools[i], weight: 1, max: 1000, requests: 0, total: 0, open: 0, closed: 0, currentWeight: 0 });
                 } else if (typeof pools[i] === "object") {
                     if (!pools[i]?.host) throw new Error("Host not provided");
                     this.pools.push({ host: pools[i]?.host, weight: (!pools[i]?.weight) ? pools[i]?.weight : 1, max: pools?.max || 1000, requests: 0, total: 0, open: 0, closed: 0, currentWeight: 0 });
@@ -42,7 +44,32 @@ function poolsInstance(pools) {
         }
     }.bind(this);
 
-    this.pools = (!!pools) ? this.addPools(pools) : [];
+    this.get = function (index) {
+        return this.pools[index];
+    }.bind(this);
+
+    this.set = function (index, value) {
+        this.pools[index] = value;
+        return this.pools[index];
+    }.bind(this);
+
+    this.closeOpen = function (index) {
+        this.pools = closeConnections(this.pools, index);
+        return this.pools[index];
+    }.bind(this);
+
+    this.addOpen = function (index) {
+        this.pools = openConnections(pools, index)
+        return this.pools[index];
+    }.bind(this);
+
+    this.sortBykeys = function (key, order) {
+        this.pools = sortPoolsByKeys(this.pools, key, order);
+    }.bind(this);
+
+    this.sortBykey = function (key, order) {
+        this.pools = sortPoolsByKey(this.pools, key, order);
+    }.bind(this);
 
     this.len = () => this.pools.length;
 }
@@ -107,6 +134,19 @@ function sortPoolsByKeys(arr, key, key2, order = "desc") {
 function closeConnections(pools, index) {
     pools[index].open = pools[index].open - 1;
     pools[index].closed = pools[index].closed + 1;
+    return pools;
+}
+
+
+/**
+ *
+ *
+ * @param {*} pools
+ * @param {*} index
+ * @return {*} 
+ */
+function openConnections(pools, index) {
+    pools[index].open = pools[index].open + 1;
     return pools;
 }
 
@@ -369,6 +409,7 @@ module.exports.poolsInstance = poolsInstance;
 module.exports.sortPoolsByKeys = sortPoolsByKeys;
 module.exports.sortPoolsByKey = sortPoolsByKey;
 module.exports.closeConnections = closeConnections;
+module.exports.openConnections = openConnections;
 
 
 module.exports.randomize = randomize;
