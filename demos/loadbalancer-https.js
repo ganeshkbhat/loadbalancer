@@ -16,7 +16,7 @@
 
 'use strict';
 
-var loadbalancer = require("../index").loadbalancer;
+var loadbalancer = require("../index");
 var httpsSocketServer = require("../index").sockets.httpsSocketServer;
 var server = require("./express-app");
 

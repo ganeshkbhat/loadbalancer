@@ -16,7 +16,7 @@
 
 'use strict';
 
-var loadbalancer = require("../index").loadbalancer;
+var loadbalancer = require("../index").serverutils;
 var createNetProxy = require("../index").serverutils.createNetProxy;
 var expressapp = require("./express-app");
 

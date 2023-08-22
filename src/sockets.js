@@ -403,6 +403,7 @@ function socketCreateConnection(socketOptions, method = "createConnection") {
 function socketServerCreate(socketOptions) {
     const fs = require("fs");
     const net = require("net");
+    const stream = require("stream");
     const controller = new AbortController();
 
     socketOptions.options = {
@@ -415,7 +416,7 @@ function socketServerCreate(socketOptions) {
 
     var socketServer;
     if (!socketOptions?.options) {
-        socketServer = new net.Server(socketOptions?.options, socketOptions?.callbacks.serverlistener);
+        socketServer = new net.Server(socketOptions?.options, socketOptions?.callbacks?.serverlistener);
     }
 
     socketServer.on("listening", socketOptions?.callbacks?.listening);
@@ -438,7 +439,8 @@ function socketServerCreate(socketOptions) {
  * 
  */
 function socketServerListen(socketOptions, socketServer) {
-    let controller;
+    const controller = new AbortController();
+    const stream = require("stream");
     socketOptions.options = {
         allowHalfOpen: false, highWaterMark: stream.getDefaultHighWaterMark(),
         pauseOnConnect: false, noDelay: false,

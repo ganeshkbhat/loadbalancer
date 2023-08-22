@@ -6,7 +6,7 @@
  * Install: npm i loadbalancer --save
  * Github: https://github.com/ganeshkbhat/loadbalancer
  * npmjs Link: https://www.npmjs.com/package/loadbalancer
- * File: demos/loadbalancer-http.js
+ * File: demos/loadbalancer-threads.js
  * File Description: A simple threaded and clustered load balancer for nodejs
  * 
  * 
@@ -16,12 +16,13 @@
 
 'use strict';
 
-var loadbalancer = require("../index");
+var path = require("path");
+var loadbalancer = require("../index").loadbalancer;
 var httpSocketServer = require("../index").sockets.httpSocketServer;
-var server = require("./express-app");
+// var express = require("./expressapp");
 
-loadbalancer.loadbalancer({
-    "server": server,
+loadbalancer.threading({
+    "server": null,
     "protocol": "http",
     "createCerts": true,
     "host": "127.0.0.1",
@@ -34,18 +35,18 @@ loadbalancer.loadbalancer({
         "proxyPort": 9000
     },
     "certs": {
-        "key": "./certs/ssl.key",
-        "cert": "./certs/ssl.cert"
+        "key": "../certs/ssl.key",
+        "cert": "../certs/ssl.cert"
     },
     "port": 8000,
     "ws": true,
     "processes": 5,
-    "threads": 10,
+    "threads": 1,
     "mainProcessCallback": () => { },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        httpSocketServer(opts);
+        // httpSocketServer(opts);
     },
     "callbacks": {
         "wsOnData": null,
@@ -54,4 +55,5 @@ loadbalancer.loadbalancer({
         "server": null,
         "listen": null
     }
-})
+}, [{ filename: path.join(__dirname, "./postmessage.js"), options: {} }])
+

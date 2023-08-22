@@ -16,11 +16,11 @@
 
 'use strict';
 
-var loadbalancer = require("../index").loadbalancer;
+var loadbalancer = require("../index").serverutils;
 var httpProxy = require("../index").serverutils.httpProxy;
 var server = require("./express-app");
 
-httpProxy({
+loadbalancer.httpProxy({
     "server": server,
     "protocol": "http",
     "createCerts": true,

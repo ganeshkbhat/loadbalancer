@@ -16,7 +16,7 @@
 
 'use strict';
 
-var loadbalancer = require("../index").loadbalancer;
+var loadbalancer = require("../index");
 var httpSocketServer = require("../index").sockets.httpSocketServer;
 var server = require("./express-app");
 
@@ -42,13 +42,14 @@ loadbalancer.loadbalancer({
     "processes": 5,
     "threads": 10,
     "mainProcessCallback": (opts, cluster) => {
-        processRouterAlgorithm(opts, cluster);
+        // processRouterAlgorithm(opts, cluster);
+        // loadbalancer.Randomize()
     },
     "forkCallback": (opts, pr) => {
         // console.log(opts, pr);
         // console.log(opts);
-        // httpSocketServer(opts);
-        processHttpSocketServer(opts, pr);
+        httpSocketServer(opts);
+        // processHttpSocketServer(opts, pr);
     },
     "callbacks": {
         "wsOnData": null,

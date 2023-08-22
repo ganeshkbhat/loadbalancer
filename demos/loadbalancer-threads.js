@@ -17,7 +17,7 @@
 'use strict';
 
 var path = require("path");
-var loadbalancer = require("../index").loadbalancer;
+var loadbalancer = require("../index");
 var httpSocketServer = require("../index").sockets.httpSocketServer;
 // var express = require("./expressapp");
 
@@ -44,7 +44,7 @@ loadbalancer.threading({
     "threads": 1,
     "mainProcessCallback": () => { },
     "forkCallback": (opts, pr) => {
-        // console.log(opts, pr);
+        console.log(opts, pr);
         // console.log(opts);
         // httpSocketServer(opts);
     },

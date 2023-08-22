@@ -187,6 +187,7 @@ function threading(serverOptions, workerFunction) {
     const worker = new Worker((!!workerFunction[0]?.filename) ? workerFunction[0]?.filename : (!workerFunction[0]) ? workerFunction[0] : workerFunction, {
 
     });
+
     // {
     //     argv: [""], env: {},
     //     eval: false, execArgv: [],
